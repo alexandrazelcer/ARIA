@@ -1,0 +1,3350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ARIA — Aisle Retail Intelligence Assistant | Brand Experience Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<style>
+/* ═════════════════════════════════════════════════════════
+   BEL + ARIA · DESIGN SYSTEM
+   Brand Experience Lab — Aisle Retail Intelligence Assistant
+   ═════════════════════════════════════════════════════════ */
+:root {
+  /* Surfaces */
+  --bg:              #0a0a0d;
+  --bg-grad-1:       #0b0a10;
+  --bg-grad-2:       #131218;
+  --surface:         #15141b;
+  --surface-2:       #1d1c25;
+  --surface-3:       #26242f;
+  --surface-hover:   #2a2833;
+  --line:            rgba(255,255,255,0.07);
+  --line-strong:     rgba(255,255,255,0.14);
+
+  /* Text */
+  --ink:             #f6f4ef;
+  --ink-soft:        rgba(246,244,239,0.74);
+  --ink-mute:        rgba(246,244,239,0.50);
+  --ink-faint:       rgba(246,244,239,0.30);
+
+  /* Brand accents */
+  --gold:            #c9a861;
+  --gold-bright:     #e2c184;
+  --gold-soft:       rgba(201,168,97,0.14);
+  --gold-line:       rgba(201,168,97,0.35);
+
+  --wine:            #8a2f3f;
+  --wine-deep:       #5a1f2b;
+  --wine-soft:       rgba(138,47,63,0.20);
+
+  --sage:            #8aa78b;
+  --sage-soft:       rgba(138,167,139,0.14);
+
+  --blush:           #d4a5a5;
+
+  /* Status */
+  --ok:              #6fbf7a;
+  --warn:            #e2a648;
+  --info:            #6aa5d4;
+
+  /* Type */
+  --font-sans:       'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro', system-ui, sans-serif;
+  --font-serif:      'Fraunces', 'Cormorant Garamond', Georgia, serif;
+
+  /* Radii */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  /* Shadow */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.25);
+  --shadow-md: 0 8px 28px rgba(0,0,0,0.45);
+  --shadow-lg: 0 24px 64px rgba(0,0,0,0.55);
+  --glow-gold: 0 0 32px rgba(201,168,97,0.18);
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+body {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(201,168,97,0.08), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 90% 100%, rgba(138,47,63,0.10), transparent 60%),
+    linear-gradient(180deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 100%);
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Selection */
+::selection { background: var(--gold-soft); color: var(--gold-bright); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--surface-hover); }
+
+/* ───────────────────────────────────────────────
+   TOP BAR  — BEL + ARIA co-brand, status, locale
+   ─────────────────────────────────────────────── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  background: rgba(10,10,13,0.78);
+  backdrop-filter: blur(20px) saturate(120%);
+  -webkit-backdrop-filter: blur(20px) saturate(120%);
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1f1d27 0%, #2c2a36 100%);
+  border: 1px solid var(--gold-line);
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.brand-mark::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 25%, rgba(201,168,97,0.30), transparent 60%);
+}
+.brand-mark svg { width: 26px; height: 26px; position: relative; z-index: 1; }
+
+.brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-text .product {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  color: var(--ink);
+}
+.brand-text .by {
+  font-size: 0.68rem;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 4px;
+  font-weight: 500;
+}
+.brand-text .by .bel { color: var(--gold); font-weight: 600; }
+
+.divider-v {
+  width: 1px;
+  height: 28px;
+  background: var(--line-strong);
+}
+
+.brand-tag {
+  font-size: 0.78rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.2px;
+  max-width: 340px;
+}
+.brand-tag strong { color: var(--ink-soft); font-weight: 500; }
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  background: rgba(255,255,255,0.03);
+  border-radius: var(--r-pill);
+  color: var(--ink-soft);
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+  letter-spacing: 0.2px;
+}
+.pill-btn:hover { border-color: var(--gold-line); color: var(--ink); background: var(--gold-soft); }
+.pill-btn.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold-soft);
+  box-shadow: var(--glow-gold);
+}
+.pill-btn .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--ok); box-shadow: 0 0 8px var(--ok);
+  display: inline-block;
+}
+.pill-btn svg { width: 14px; height: 14px; }
+
+/* ───────────────────────────────────────────────
+   LAYOUT
+   ─────────────────────────────────────────────── */
+.shell {
+  flex: 1;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 28px 56px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  align-items: start;
+  transition: grid-template-columns 0.35s var(--ease);
+}
+
+.context-panel { display: none; }
+
+.shell.associate-on {
+  grid-template-columns: minmax(0, 1fr) 320px;
+}
+
+.shell.associate-on .context-panel {
+  display: flex;
+  animation: slideIn 0.4s var(--ease);
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@media (max-width: 1024px) {
+  .shell.associate-on { grid-template-columns: 1fr; }
+  .shell.associate-on .context-panel { order: -1; }
+}
+
+/* ───────────────────────────────────────────────
+   HERO  — ARIA greeting block
+   ─────────────────────────────────────────────── */
+.hero {
+  padding: 36px 36px 32px;
+  border-radius: var(--r-xl);
+  background:
+    radial-gradient(circle at 90% 10%, rgba(201,168,97,0.10), transparent 50%),
+    radial-gradient(circle at 10% 90%, rgba(138,47,63,0.14), transparent 50%),
+    linear-gradient(135deg, rgba(29,28,37,0.92) 0%, rgba(20,19,27,0.92) 100%);
+  border: 1px solid var(--line-strong);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--gold-line);
+  border-radius: var(--r-pill);
+  font-size: 0.7rem;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+  background: var(--gold-soft);
+  margin-bottom: 18px;
+}
+.hero-eyebrow .pulse {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.4); }
+}
+
+.hero h1 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  line-height: 1.15;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+.hero h1 .accent { color: var(--gold); font-style: italic; }
+
+.hero p {
+  color: var(--ink-soft);
+  font-size: 1rem;
+  max-width: 620px;
+  line-height: 1.6;
+}
+
+.hero-shortcuts {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+}
+.hero-shortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  color: var(--ink-soft);
+  font-size: 0.83rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+.hero-shortcut:hover {
+  background: var(--gold-soft);
+  border-color: var(--gold-line);
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+.hero-shortcut svg { width: 14px; height: 14px; opacity: 0.8; }
+
+/* ───────────────────────────────────────────────
+   MODE TABS
+   ─────────────────────────────────────────────── */
+.mode-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  margin-bottom: 22px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.mode-tabs::-webkit-scrollbar { display: none; }
+
+.mode-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  white-space: nowrap;
+  justify-content: center;
+  height: 42px;
+  padding: 0 18px;
+  background: transparent;
+  border: none;
+  border-radius: var(--r-pill);
+  color: var(--ink-mute);
+  font-family: var(--font-sans);
+  font-size: 0.86rem;
+  font-weight: 500;
+  letter-spacing: 0.15px;
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+}
+.mode-tab:hover { color: var(--ink-soft); background: rgba(255,255,255,0.03); }
+.mode-tab.active {
+  background: linear-gradient(135deg, #2a2833 0%, #221f29 100%);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--gold-line);
+}
+.mode-tab .icon {
+  width: 16px; height: 16px;
+  opacity: 0.7;
+}
+.mode-tab.active .icon { color: var(--gold); opacity: 1; }
+
+/* ───────────────────────────────────────────────
+   PANEL  — main interaction surface
+   ─────────────────────────────────────────────── */
+.panel {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: 28px;
+  box-shadow: var(--shadow-md);
+  min-height: 280px;
+}
+
+.panel-prompt {
+  font-family: var(--font-serif);
+  font-size: 1.18rem;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 16px;
+  letter-spacing: -0.2px;
+}
+.panel-prompt .label {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.panel-sub {
+  font-size: 0.88rem;
+  color: var(--ink-mute);
+  margin-bottom: 22px;
+  max-width: 560px;
+}
+
+/* ───── Quick chips ───── */
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-strong);
+  background: rgba(255,255,255,0.03);
+  color: var(--ink-soft);
+  font-size: 0.83rem;
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  font-weight: 500;
+}
+.chip:hover {
+  border-color: var(--gold-line);
+  color: var(--ink);
+  background: var(--gold-soft);
+}
+.chip.gold {
+  border-color: var(--gold-line);
+  color: var(--gold);
+  background: var(--gold-soft);
+}
+.chip.gold:hover { background: rgba(201,168,97,0.22); }
+
+/* ───── Input ───── */
+.input-block {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  margin-top: 8px;
+}
+.input-field {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 56px;
+  padding: 0 20px;
+  background: rgba(0,0,0,0.30);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+}
+.input-field:focus-within {
+  border-color: var(--gold-line);
+  background: rgba(0,0,0,0.45);
+  box-shadow: 0 0 0 4px var(--gold-soft);
+}
+.input-field svg { width: 18px; height: 18px; color: var(--ink-mute); flex-shrink: 0; }
+.input-field input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 400;
+}
+.input-field input::placeholder { color: var(--ink-faint); }
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 56px;
+  padding: 0 26px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 100%);
+  color: #1a1611;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: transform 0.1s var(--ease), box-shadow 0.2s var(--ease);
+  box-shadow: var(--shadow-sm), var(--glow-gold);
+}
+.btn-primary:hover { box-shadow: var(--shadow-md), var(--glow-gold); }
+.btn-primary:active { transform: scale(0.97); }
+.btn-primary svg { width: 16px; height: 16px; }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+}
+.btn-secondary:hover {
+  border-color: var(--gold-line);
+  color: var(--ink);
+  background: var(--gold-soft);
+}
+.btn-secondary svg { width: 14px; height: 14px; }
+
+/* ───── ARIA conversation card ───── */
+.aria-thread { display: flex; flex-direction: column; gap: 16px; }
+
+.bubble {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  animation: fadeUp 0.4s var(--ease);
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.bubble-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-bright) 100%);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: #1a1611;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.6px;
+  position: relative;
+  box-shadow: var(--glow-gold);
+}
+.bubble-avatar::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-line);
+}
+
+.bubble-content { flex: 1; min-width: 0; }
+.bubble-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.bubble-meta .who {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.2px;
+}
+.bubble-meta .role {
+  font-size: 0.66rem;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+}
+.bubble-text {
+  font-size: 0.96rem;
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+.bubble-text strong { color: var(--ink); font-weight: 600; }
+
+/* ───── Loading dots ───── */
+.thinking {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0;
+}
+.thinking .d {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: bounce 1.1s infinite ease-in-out;
+  opacity: 0.5;
+}
+.thinking .d:nth-child(2) { animation-delay: 0.15s; }
+.thinking .d:nth-child(3) { animation-delay: 0.30s; }
+@keyframes bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+  30% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* ───── Wine cards (cinematic) ───── */
+.wine-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.wine-card {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 18px;
+  padding: 18px;
+  background: linear-gradient(135deg, rgba(38,36,47,0.85) 0%, rgba(29,28,37,0.85) 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  transition: all 0.25s var(--ease);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.wine-card:hover {
+  border-color: var(--gold-line);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.wine-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 60%, var(--gold-soft) 100%);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+  pointer-events: none;
+}
+.wine-card:hover::before { opacity: 1; }
+
+.bottle-art {
+  width: 96px;
+  height: 144px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--surface-3) 0%, var(--surface) 100%);
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+}
+.bottle-art svg { width: 56px; height: 100px; }
+.bottle-art .shine {
+  position: absolute;
+  top: 0; left: 50%;
+  width: 24px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.10) 0%, transparent 60%);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.wine-body { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.wine-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.wine-name {
+  font-family: var(--font-serif);
+  font-size: 1.12rem;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.1px;
+}
+.wine-vintage {
+  font-size: 0.78rem;
+  color: var(--ink-mute);
+  font-weight: 400;
+}
+.wine-region {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.wine-region svg { width: 11px; height: 11px; }
+
+.wine-notes {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.wine-why {
+  font-size: 0.82rem;
+  color: var(--ink-mute);
+  font-style: italic;
+  line-height: 1.55;
+  padding: 8px 12px;
+  border-left: 2px solid var(--gold-line);
+  background: var(--gold-soft);
+  border-radius: 0 8px 8px 0;
+  margin-top: 6px;
+}
+
+.wine-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+.price-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+.badge-gold     { background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold-line); }
+.badge-wine     { background: var(--wine-soft); color: #d99fa9; border: 1px solid rgba(217,159,169,0.30); }
+.badge-sage     { background: var(--sage-soft); color: var(--sage); border: 1px solid rgba(138,167,139,0.30); }
+.badge-info     { background: rgba(106,165,212,0.14); color: var(--info); border: 1px solid rgba(106,165,212,0.30); }
+.badge svg { width: 10px; height: 10px; }
+
+.aisle {
+  font-size: 0.72rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.aisle svg { width: 12px; height: 12px; }
+
+.stock-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  color: var(--ink-mute);
+}
+.stock-dot .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+}
+.stock-dot.in .dot  { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+.stock-dot.low .dot { background: var(--warn); }
+.stock-dot.out .dot { background: var(--ink-faint); }
+
+.wine-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-strong);
+  background: rgba(255,255,255,0.04);
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+}
+.action-btn:hover {
+  border-color: var(--gold-line);
+  color: var(--ink);
+  background: var(--gold-soft);
+}
+.action-btn svg { width: 13px; height: 13px; }
+
+/* ───── Tasting profile bars ───── */
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 22px;
+  padding: 16px 18px;
+  background: rgba(0,0,0,0.30);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  margin-top: 14px;
+}
+.profile-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.profile-bar .lbl {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.4px;
+}
+.profile-bar .lbl b { color: var(--ink-soft); font-weight: 500; }
+.profile-bar .track {
+  height: 4px;
+  background: rgba(255,255,255,0.08);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
+.profile-bar .fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) 100%);
+  border-radius: var(--r-pill);
+  transition: width 0.5s var(--ease);
+}
+
+/* ───── Build My Dinner ───── */
+.bmd-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 22px;
+}
+.bmd-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+.bmd-num {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--gold-soft);
+  border: 1px solid var(--gold-line);
+  color: var(--gold);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 0.86rem;
+  flex-shrink: 0;
+  font-family: var(--font-serif);
+}
+.bmd-content { flex: 1; min-width: 0; }
+.bmd-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  color: var(--ink);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.bmd-desc {
+  font-size: 0.85rem;
+  color: var(--ink-mute);
+  margin-bottom: 12px;
+}
+
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+.option-card {
+  padding: 14px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  text-align: center;
+}
+.option-card:hover {
+  border-color: var(--gold-line);
+  background: var(--gold-soft);
+  transform: translateY(-1px);
+}
+.option-card.selected {
+  border-color: var(--gold);
+  background: var(--gold-soft);
+  box-shadow: var(--glow-gold);
+}
+.option-card .ico { font-size: 1.6rem; line-height: 1; margin-bottom: 6px; }
+.option-card .lbl { font-size: 0.82rem; color: var(--ink); font-weight: 500; }
+.option-card .sub { font-size: 0.7rem; color: var(--ink-mute); margin-top: 2px; }
+
+/* ───── Shopping list ───── */
+.cart {
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-lg);
+  padding: 22px;
+  background: linear-gradient(135deg, rgba(38,36,47,0.5) 0%, rgba(20,19,27,0.5) 100%);
+  margin-top: 20px;
+}
+.cart-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.cart-head .title {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+.cart-head .total {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--gold);
+}
+.cart-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.cart-row:last-of-type { border-bottom: none; }
+.cart-row .item { font-size: 0.92rem; color: var(--ink); }
+.cart-row .item .sub { font-size: 0.74rem; color: var(--ink-mute); margin-top: 2px; }
+.cart-row .item-aisle { font-size: 0.72rem; color: var(--ink-mute); }
+.cart-row .item-price { font-size: 0.92rem; font-weight: 500; color: var(--ink-soft); }
+
+.cart-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.qr-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px dashed var(--gold-line);
+  border-radius: var(--r-md);
+  background: var(--gold-soft);
+}
+.qr-box .qr {
+  width: 48px; height: 48px;
+  background: var(--ink);
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  color: var(--bg);
+}
+.qr-box .copy .t1 { font-size: 0.82rem; color: var(--ink); font-weight: 600; }
+.qr-box .copy .t2 { font-size: 0.72rem; color: var(--ink-mute); }
+
+/* ───── Region explorer ───── */
+.region-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 14px;
+}
+.region-card {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: linear-gradient(160deg, rgba(38,36,47,0.7) 0%, rgba(20,19,27,0.7) 100%);
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+  position: relative;
+  overflow: hidden;
+  min-height: 140px;
+}
+.region-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--bg-pattern, none);
+  opacity: 0.05;
+  pointer-events: none;
+}
+.region-card:hover {
+  border-color: var(--gold-line);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+.region-card .flag { font-size: 1.6rem; margin-bottom: 10px; }
+.region-card .name {
+  font-family: var(--font-serif);
+  font-size: 1.08rem;
+  color: var(--ink);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.region-card .desc {
+  font-size: 0.78rem;
+  color: var(--ink-mute);
+  line-height: 1.5;
+}
+.region-card .stat {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  font-size: 0.7rem;
+  color: var(--gold);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* ───── Scan grid ───── */
+.scan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+.scan-card {
+  padding: 18px 14px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line-strong);
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+  transition: all 0.22s var(--ease);
+  text-align: center;
+}
+.scan-card:hover {
+  border-color: var(--gold-line);
+  background: var(--gold-soft);
+  transform: translateY(-2px);
+}
+.scan-card .ico { font-size: 1.8rem; margin-bottom: 8px; }
+.scan-card .name { font-size: 0.83rem; color: var(--ink); font-weight: 500; }
+.scan-card .sub  { font-size: 0.7rem; color: var(--ink-mute); margin-top: 2px; }
+
+/* ───────────────────────────────────────────────
+   CONTEXT PANEL  — store / integrations sidebar
+   ─────────────────────────────────────────────── */
+.context-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ctx-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 20px;
+}
+.ctx-card .ctx-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.ctx-card .ctx-head .ico {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: var(--gold-soft);
+  display: grid;
+  place-items: center;
+  color: var(--gold);
+}
+.ctx-card .ctx-head .ico svg { width: 14px; height: 14px; }
+.ctx-card .ctx-head .title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.ctx-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 0;
+  font-size: 0.84rem;
+}
+.ctx-row .k { color: var(--ink-mute); }
+.ctx-row .v { color: var(--ink); font-weight: 500; }
+.ctx-row .v.gold { color: var(--gold); }
+.ctx-row .v.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ctx-row .v.live::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 6px var(--ok);
+}
+
+.integration-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.integration {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--line);
+}
+.integration .iico {
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  background: var(--surface-3);
+  display: grid;
+  place-items: center;
+  font-size: 0.86rem;
+}
+.integration .body { flex: 1; min-width: 0; }
+.integration .body .n { font-size: 0.82rem; color: var(--ink); font-weight: 500; }
+.integration .body .s { font-size: 0.7rem; color: var(--ink-mute); }
+.integration .status {
+  font-size: 0.66rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.integration .status.live { color: var(--ok); }
+.integration .status.mock { color: var(--warn); }
+
+/* ───────────────────────────────────────────────
+   FOOTER
+   ─────────────────────────────────────────────── */
+footer {
+  width: 100%;
+  border-top: 1px solid var(--line);
+  background: rgba(0,0,0,0.4);
+  padding: 18px 28px;
+  text-align: center;
+}
+.footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+footer .copy {
+  font-size: 0.74rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.4px;
+}
+footer .copy .gold { color: var(--gold); font-weight: 600; }
+footer .legal {
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+/* ───── Responsive ───── */
+@media (max-width: 760px) {
+  .topbar-inner { padding: 14px 18px; gap: 14px; }
+  .brand-tag { display: none; }
+  .shell { padding: 22px 18px 40px; }
+  .hero { padding: 26px 22px 24px; }
+  .panel { padding: 22px 18px; }
+  .wine-card { grid-template-columns: 64px 1fr; padding: 14px; gap: 14px; }
+  .bottle-art { width: 64px; height: 96px; }
+  .bottle-art svg { width: 36px; height: 64px; }
+  .profile-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .topbar-actions .pill-btn span:not(.dot) { display: none; }
+  .pill-btn { width: 36px; padding: 0; justify-content: center; }
+  .hero h1 { font-size: 1.5rem; }
+  .input-block { flex-direction: column; }
+  .btn-primary { width: 100%; justify-content: center; }
+}
+
+/* ───── Subtle utilities ───── */
+.hidden { display: none !important; }
+.spacer-8 { height: 8px; }
+.spacer-16 { height: 16px; }
+.flex-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.muted { color: var(--ink-mute); }
+.gold { color: var(--gold); }
+.divider {
+  height: 1px;
+  background: var(--line);
+  margin: 18px 0;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     TOP BAR  · BEL + ARIA co-brand
+     ═══════════════════════════════════════════════════════ -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-lockup">
+        <div class="brand-mark" aria-hidden="true">
+          <!-- ARIA monogram -->
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="ariaG" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#e2c184"/>
+                <stop offset="100%" stop-color="#c9a861"/>
+              </linearGradient>
+            </defs>
+            <path d="M16 4 L26 26 L22 26 L20 21 L12 21 L10 26 L6 26 Z M14 17 L18 17 L16 11 Z"
+                  fill="url(#ariaG)" stroke="none"/>
+            <circle cx="24" cy="6" r="2" fill="#e2c184"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="product">ARIA</span>
+          <span class="by">by <span class="bel">BEL</span> · Brand Experience Lab</span>
+        </div>
+      </div>
+      <div class="divider-v"></div>
+      <div class="brand-tag" data-i18n="brand.tag" data-i18n-html="true">
+        <strong>Aisle Retail Intelligence Assistant</strong> — conversational AI for the retail floor.
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button class="pill-btn" id="locale-btn" title="Language">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8h14M5 12h14M5 16h14"/></svg>
+        <span class="locale-label">EN</span>
+      </button>
+      <button class="pill-btn" id="associate-btn" title="Associate mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c-4 0-7 2-7 5v1h14v-1c0-3-3-5-7-5z"/></svg>
+        <span data-i18n="pill.associate">Associate</span>
+      </button>
+      <button class="pill-btn" id="status-btn" title="System status">
+        <span class="dot"></span>
+        <span data-i18n="pill.live">Live</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SHELL
+     ═══════════════════════════════════════════════════════ -->
+<div class="shell">
+
+  <!-- MAIN COLUMN -->
+  <div class="main-col">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow">
+        <span class="pulse"></span>
+        <span data-i18n="hero.eyebrow">ARIA Online · Wine &amp; Spirits Aisle</span>
+      </div>
+      <h1 data-i18n="hero.h1" data-i18n-html="true">I'm <span class="accent">ARIA</span>. <br>Tell me what you're shopping for tonight.</h1>
+      <p data-i18n="hero.p">I help shoppers and associates find exactly the right bottle — and everything that goes with it. Ask me anything, scan a label, or let me build your dinner.</p>
+
+      <div class="hero-shortcuts">
+        <button class="hero-shortcut" data-quick="dinner-party">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4zm0 5l9 4 9-4M3 17l9 4 9-4"/></svg>
+          <span data-i18n="shortcut.dinner">Plan a dinner party</span>
+        </button>
+        <button class="hero-shortcut" data-quick="weeknight">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <span data-i18n="shortcut.weeknight">Weeknight under $20</span>
+        </button>
+        <button class="hero-shortcut" data-quick="gift">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 7v14M12 7s-3-4-6-4-3 4 0 4h6zm0 0s3-4 6-4 3 4 0 4h-6z"/></svg>
+          <span data-i18n="shortcut.gift">A great gift</span>
+        </button>
+        <button class="hero-shortcut" data-quick="adventure">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>
+          <span data-i18n="shortcut.adventure">Surprise me</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- MODE TABS -->
+    <div class="mode-tabs" role="tablist">
+      <button class="mode-tab active" data-mode="discover" role="tab">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        <span data-i18n="tab.discover">Discover</span>
+      </button>
+      <button class="mode-tab" data-mode="dinner" role="tab">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11h18M5 11V7a2 2 0 012-2h10a2 2 0 012 2v4M5 11v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>
+        <span data-i18n="tab.dinner">Build My Dinner</span>
+      </button>
+      <button class="mode-tab" data-mode="pair" role="tab">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v8a3 3 0 003 3v7M16 3v8a3 3 0 01-3 3"/></svg>
+        <span data-i18n="tab.pair">Pair</span>
+      </button>
+      <button class="mode-tab" data-mode="region" role="tab">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>
+        <span data-i18n="tab.region">Explore</span>
+      </button>
+      <button class="mode-tab" data-mode="scan" role="tab">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 12h10"/></svg>
+        <span data-i18n="tab.scan">Scan</span>
+      </button>
+    </div>
+
+    <!-- PANEL HOST  ── content rendered here -->
+    <section class="panel" id="panel"></section>
+
+  </div>
+
+  <!-- CONTEXT PANEL  — only shown when Associate mode is active -->
+  <aside class="context-panel">
+    <div class="ctx-card">
+      <div class="ctx-head">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div>
+        <div class="title" data-i18n="ctx.thisStore">This Store</div>
+      </div>
+      <div class="ctx-row"><span class="k" data-i18n="ctx.location">Location</span><span class="v" data-i18n="ctx.locationVal">Concept Store · SF</span></div>
+      <div class="ctx-row"><span class="k" data-i18n="ctx.aisle">Aisle</span><span class="v" data-i18n="ctx.aisleVal">Wine &amp; Spirits · 14</span></div>
+      <div class="ctx-row"><span class="k" data-i18n="ctx.time">Time</span><span class="v" id="ctx-time">—</span></div>
+      <div class="ctx-row"><span class="k" data-i18n="ctx.traffic">Foot traffic</span><span class="v gold" data-i18n="ctx.trafficVal">High</span></div>
+      <div class="ctx-row"><span class="k" data-i18n="ctx.inventory">Inventory sync</span><span class="v live" data-i18n="ctx.inventoryVal">Live</span></div>
+    </div>
+
+    <div class="ctx-card">
+      <div class="ctx-head">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></div>
+        <div class="title" data-i18n="ctx.picks">Tonight's Picks</div>
+      </div>
+      <div class="ctx-row"><span class="k" data-i18n="ctx.featured">Featured varietal</span><span class="v gold">Pinot Noir</span></div>
+      <div class="ctx-row"><span class="k" data-i18n="ctx.asked">Most asked</span><span class="v" data-i18n="ctx.askedVal">Steak pairings</span></div>
+      <div class="ctx-row"><span class="k" data-i18n="ctx.promo">Promo</span><span class="v" data-i18n="ctx.promoVal">Save 15% on cases</span></div>
+    </div>
+
+    <div class="ctx-card">
+      <div class="ctx-head">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <div class="title" data-i18n="ctx.stack">Retail Stack</div>
+      </div>
+      <div class="integration-list">
+        <div class="integration"><div class="iico">📦</div><div class="body"><div class="n" data-i18n="int.inventory">Inventory</div><div class="s" data-i18n="int.inventorySub">Real-time SKU sync</div></div><div class="status mock" data-i18n="int.mock">Mock</div></div>
+        <div class="integration"><div class="iico">💳</div><div class="body"><div class="n" data-i18n="int.pos">POS handoff</div><div class="s" data-i18n="int.posSub">Add-to-cart bridge</div></div><div class="status mock" data-i18n="int.mock">Mock</div></div>
+        <div class="integration"><div class="iico">⭐</div><div class="body"><div class="n" data-i18n="int.loyalty">Loyalty</div><div class="s" data-i18n="int.loyaltySub">Personalization</div></div><div class="status mock" data-i18n="int.mock">Mock</div></div>
+        <div class="integration"><div class="iico">📱</div><div class="body"><div class="n" data-i18n="int.qr">QR handoff</div><div class="s" data-i18n="int.qrSub">Save to phone</div></div><div class="status live" data-i18n="int.live">Live</div></div>
+        <div class="integration"><div class="iico">📊</div><div class="body"><div class="n" data-i18n="int.analytics">Analytics</div><div class="s" data-i18n="int.analyticsSub">Engagement telemetry</div></div><div class="status live" data-i18n="int.live">Live</div></div>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="copy" data-i18n="footer.copy" data-i18n-html="true">Powered by <span class="gold">BEL + ARIA</span> · Retail Intelligence by Brand Experience Lab</div>
+    <div class="legal" data-i18n="footer.legal">v1.0 · Concept · Kiosk Build</div>
+  </div>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   ARIA · ENGINE
+   ───────────────────────────────────────────────────────────────────
+   Modules:
+     1. CONFIG        — copy, palette, locale
+     2. CATALOG       — wine + complementary product database
+     3. PAIRINGS      — food taxonomy and rule weights
+     4. SCORER        — weighted recommendation engine
+     5. SESSION       — user state (preferences, cart, signals)
+     6. INTEGRATIONS  — stubs for inventory / POS / loyalty / QR
+     7. RENDER        — per-mode UI controllers
+     8. ARIA          — conversational micro-agent
+     9. BOOT          — wires everything together
+   ═══════════════════════════════════════════════════════════════════ */
+
+
+/* ───────────────────────────────────────────────────────────────────
+   1. CONFIG
+   ─────────────────────────────────────────────────────────────────── */
+const CONFIG = {
+  brand: {
+    product: 'ARIA',
+    parent:  'BEL',
+    full:    'Aisle Retail Intelligence Assistant',
+    tagline: 'Retail Intelligence by Brand Experience Lab'
+  },
+  locale: 'en',
+  store: {
+    name: 'Concept Store · SF',
+    aisle: 'Wine & Spirits · 14',
+    currency: 'USD'
+  },
+  scoringWeights: {
+    pairing:    0.40,   // food/varietal compatibility
+    preference: 0.25,   // declared user taste
+    price:      0.15,   // budget fit
+    inventory:  0.10,   // in-stock + freshness
+    popularity: 0.05,   // sales velocity
+    premium:    0.05    // upsell nudge
+  }
+};
+
+
+/* ───────────────────────────────────────────────────────────────────
+   2. CATALOG  — Wine + complementary SKUs
+   ───────────────────────────────────────────────────────────────────
+   Each wine record supports the full data model:
+     sku, name, vintage, varietal, region, country,
+     tasting{ acidity, tannin, sweetness, body, alcohol },
+     notes, pairings[], price, inventory, popularity,
+     image (color tint stand-in), aisle, badges[], tags[]
+   ─────────────────────────────────────────────────────────────────── */
+const CATALOG = {
+  wines: [
+    {
+      sku: 'JC-CAB-750',
+      name: 'Josh Cellars Cabernet Sauvignon',
+      vintage: '2021',
+      varietal: 'Cabernet Sauvignon',
+      region: 'North Coast',
+      country: 'USA',
+      colorTint: ['#5a1f2b', '#2d0e14'],
+      tasting: { acidity: 3, tannin: 4, sweetness: 1, body: 4, alcohol: 13.5 },
+      notes: 'Dark cherry, cassis, mocha and toasted cedar with supple tannins and a long, velvety finish.',
+      pairings: ['beef', 'lamb', 'aged-cheese', 'grilled', 'rich-pasta'],
+      price: 15.99, msrp: 16.99,
+      inventory: { stock: 'in', count: 32 },
+      popularity: 0.94,
+      aisle: 'A14 · Shelf 3',
+      badges: ['bestseller'],
+      tags: ['bold-red', 'crowd-pleaser', 'gift-worthy']
+    },
+    {
+      sku: 'MM-PIN-750',
+      name: 'Meiomi Pinot Noir',
+      vintage: '2022',
+      varietal: 'Pinot Noir',
+      region: 'Sonoma · Monterey · Santa Barbara',
+      country: 'USA',
+      colorTint: ['#8a2f3f', '#3d1219'],
+      tasting: { acidity: 4, tannin: 2, sweetness: 1, body: 3, alcohol: 13.5 },
+      notes: 'Strawberry, boysenberry and dark cherry layered with vanilla and a whisper of mocha. Silky, lush, lingering.',
+      pairings: ['salmon', 'duck', 'mushroom', 'roast-chicken', 'charcuterie'],
+      price: 18.49, msrp: 19.99,
+      inventory: { stock: 'in', count: 48 },
+      popularity: 0.97,
+      aisle: 'A14 · Shelf 4',
+      badges: ['top-rated', 'featured'],
+      tags: ['versatile', 'silky', 'crowd-pleaser']
+    },
+    {
+      sku: 'KC-SVB-750',
+      name: 'Kim Crawford Sauvignon Blanc',
+      vintage: '2023',
+      varietal: 'Sauvignon Blanc',
+      region: 'Marlborough',
+      country: 'New Zealand',
+      colorTint: ['#c8d4a1', '#7a8c5a'],
+      tasting: { acidity: 5, tannin: 0, sweetness: 1, body: 2, alcohol: 12.5 },
+      notes: 'Explosively aromatic — passionfruit, lime zest, grapefruit and crushed herb over a racy mineral finish.',
+      pairings: ['salmon', 'shellfish', 'goat-cheese', 'salad', 'thai', 'sushi'],
+      price: 14.99, msrp: 15.99,
+      inventory: { stock: 'in', count: 62 },
+      popularity: 0.91,
+      aisle: 'A14 · Shelf 6',
+      badges: ['staff-pick'],
+      tags: ['crisp-white', 'food-friendly', 'aperitif']
+    },
+    {
+      sku: 'LM-PRS-750',
+      name: 'La Marca Prosecco',
+      vintage: 'NV',
+      varietal: 'Glera',
+      region: 'Treviso DOC',
+      country: 'Italy',
+      colorTint: ['#e8d68a', '#a89642'],
+      tasting: { acidity: 4, tannin: 0, sweetness: 2, body: 1, alcohol: 11 },
+      notes: 'Honeysuckle, ripe peach and a hint of cream framed by fine, persistent bubbles and a clean dry finish.',
+      pairings: ['shellfish', 'prosciutto', 'fruit', 'brunch', 'sushi', 'celebration'],
+      price: 16.49, msrp: 17.99,
+      inventory: { stock: 'in', count: 88 },
+      popularity: 0.93,
+      aisle: 'A14 · Shelf 1',
+      badges: ['bestseller'],
+      tags: ['sparkling', 'occasion', 'gift-worthy']
+    },
+    {
+      sku: 'KJ-CHD-750',
+      name: 'Kendall-Jackson Vintner\'s Reserve Chardonnay',
+      vintage: '2022',
+      varietal: 'Chardonnay',
+      region: 'California',
+      country: 'USA',
+      colorTint: ['#e0c875', '#9a7c2c'],
+      tasting: { acidity: 3, tannin: 0, sweetness: 1, body: 4, alcohol: 13.5 },
+      notes: 'Layered tropical fruit and vanilla over a rich, creamy palate with toasted oak and a sleek finish.',
+      pairings: ['roast-chicken', 'cream-sauce', 'lobster', 'salmon', 'risotto'],
+      price: 16.99, msrp: 18.49,
+      inventory: { stock: 'in', count: 41 },
+      popularity: 0.88,
+      aisle: 'A14 · Shelf 5',
+      badges: [],
+      tags: ['rich-white', 'oaky', 'crowd-pleaser']
+    },
+    {
+      sku: 'WA-ROS-750',
+      name: 'Whispering Angel Rosé',
+      vintage: '2023',
+      varietal: 'Grenache · Cinsault · Vermentino',
+      region: 'Côtes de Provence',
+      country: 'France',
+      colorTint: ['#f3c2c2', '#c47888'],
+      tasting: { acidity: 4, tannin: 1, sweetness: 1, body: 2, alcohol: 13 },
+      notes: 'Pale salmon. Fresh strawberry, white peach and rose petal over a long, refined, dry finish.',
+      pairings: ['shellfish', 'salad', 'tuna', 'charcuterie', 'cheese', 'fruit'],
+      price: 24.99, msrp: 26.99,
+      inventory: { stock: 'in', count: 24 },
+      popularity: 0.85,
+      aisle: 'A14 · Shelf 7',
+      badges: ['premium-pick'],
+      tags: ['premium-rosé', 'occasion', 'gift-worthy']
+    },
+    {
+      sku: 'SM-PGR-750',
+      name: 'Santa Margherita Pinot Grigio',
+      vintage: '2023',
+      varietal: 'Pinot Grigio',
+      region: 'Alto Adige',
+      country: 'Italy',
+      colorTint: ['#d3dfa6', '#8a9655'],
+      tasting: { acidity: 4, tannin: 0, sweetness: 0, body: 2, alcohol: 12.5 },
+      notes: 'Bracing acidity, golden apple, lime zest and a clean, mineral-driven finish — the benchmark Italian PG.',
+      pairings: ['shellfish', 'pasta', 'sushi', 'salad', 'antipasti', 'lemon-chicken'],
+      price: 22.49, msrp: 24.99,
+      inventory: { stock: 'in', count: 19 },
+      popularity: 0.82,
+      aisle: 'A14 · Shelf 6',
+      badges: [],
+      tags: ['light-white', 'food-friendly']
+    },
+    {
+      sku: 'APO-RED-750',
+      name: 'Apothic Red Blend',
+      vintage: '2022',
+      varietal: 'Zinfandel · Merlot · Syrah · Cab',
+      region: 'California',
+      country: 'USA',
+      colorTint: ['#6a1f2b', '#2a0a10'],
+      tasting: { acidity: 3, tannin: 3, sweetness: 2, body: 4, alcohol: 13.5 },
+      notes: 'Blackberry, dark chocolate-covered espresso and vanilla — a lush, smooth, just-off-dry crowd-pleaser.',
+      pairings: ['bbq', 'pizza', 'burger', 'pork', 'rich-pasta'],
+      price: 11.99, msrp: 12.99,
+      inventory: { stock: 'in', count: 56 },
+      popularity: 0.92,
+      aisle: 'A14 · Shelf 2',
+      badges: ['best-value'],
+      tags: ['red-blend', 'smooth', 'budget']
+    },
+    {
+      sku: 'BAR-MOS-750',
+      name: 'Barefoot Moscato',
+      vintage: 'NV',
+      varietal: 'Moscato',
+      region: 'California',
+      country: 'USA',
+      colorTint: ['#f6e3a3', '#b88f2c'],
+      tasting: { acidity: 3, tannin: 0, sweetness: 5, body: 2, alcohol: 9 },
+      notes: 'Lavishly aromatic — peach, apricot and honey at low alcohol and a touch of sweetness.',
+      pairings: ['spicy', 'thai', 'mexican', 'dessert', 'fruit', 'cheese'],
+      price: 7.99, msrp: 8.99,
+      inventory: { stock: 'in', count: 73 },
+      popularity: 0.90,
+      aisle: 'A14 · Shelf 9',
+      badges: ['best-value'],
+      tags: ['sweet', 'budget', 'spice-tamer']
+    },
+    {
+      sku: 'MW-PIN-750',
+      name: 'Mark West Pinot Noir',
+      vintage: '2022',
+      varietal: 'Pinot Noir',
+      region: 'California',
+      country: 'USA',
+      colorTint: ['#9c4659', '#4a1a23'],
+      tasting: { acidity: 4, tannin: 2, sweetness: 1, body: 3, alcohol: 13.5 },
+      notes: 'Bright cherry and raspberry with earthy undertones and a clean, easy finish — true value Pinot.',
+      pairings: ['salmon', 'roast-chicken', 'mushroom', 'charcuterie', 'pizza'],
+      price: 11.99, msrp: 12.99,
+      inventory: { stock: 'low', count: 8 },
+      popularity: 0.78,
+      aisle: 'A14 · Shelf 4',
+      badges: ['best-value'],
+      tags: ['light-red', 'budget', 'versatile']
+    },
+    {
+      sku: 'BOG-RED-750',
+      name: 'Bogle Essential Red Blend',
+      vintage: '2021',
+      varietal: 'Old Vine Zin · Petite Sirah · Cab',
+      region: 'California',
+      country: 'USA',
+      colorTint: ['#732734', '#341019'],
+      tasting: { acidity: 3, tannin: 3, sweetness: 1, body: 4, alcohol: 13.5 },
+      notes: 'Plum, dark cherry and a hint of chocolate framed by a smooth, medium-long finish — honest California value.',
+      pairings: ['bbq', 'burger', 'pizza', 'pork', 'rich-pasta'],
+      price: 10.49, msrp: 11.49,
+      inventory: { stock: 'in', count: 44 },
+      popularity: 0.84,
+      aisle: 'A14 · Shelf 2',
+      badges: ['best-value'],
+      tags: ['red-blend', 'budget']
+    },
+    {
+      sku: 'TAI-RBL-750',
+      name: 'Tablas Creek Patelin Rouge',
+      vintage: '2022',
+      varietal: 'Syrah · Grenache · Mourvèdre',
+      region: 'Paso Robles',
+      country: 'USA',
+      colorTint: ['#7b2538', '#3a121b'],
+      tasting: { acidity: 4, tannin: 3, sweetness: 0, body: 3, alcohol: 13.5 },
+      notes: 'Black raspberry, garrigue and a savoury smoke. A Rhône-style blend with elegance and energy.',
+      pairings: ['lamb', 'duck', 'mushroom', 'grilled', 'aged-cheese'],
+      price: 24.99, msrp: 28.00,
+      inventory: { stock: 'in', count: 12 },
+      popularity: 0.66,
+      aisle: 'A14 · Shelf 3',
+      badges: ['premium-pick', 'organic'],
+      tags: ['rhone-blend', 'food-friendly', 'adventurous']
+    },
+    {
+      sku: 'OYS-CHA-750',
+      name: 'Domaine Bouchard Petit Chablis',
+      vintage: '2022',
+      varietal: 'Chardonnay',
+      region: 'Chablis',
+      country: 'France',
+      colorTint: ['#dfe3b2', '#8a9c4a'],
+      tasting: { acidity: 5, tannin: 0, sweetness: 0, body: 2, alcohol: 12.5 },
+      notes: 'Wet stone, lemon pith and green apple. Steely, mineral, completely unoaked — Chablis at its most precise.',
+      pairings: ['oysters', 'shellfish', 'sushi', 'goat-cheese', 'salad'],
+      price: 22.99, msrp: 25.99,
+      inventory: { stock: 'in', count: 14 },
+      popularity: 0.62,
+      aisle: 'A14 · Shelf 5',
+      badges: ['premium-pick'],
+      tags: ['mineral-white', 'food-friendly']
+    },
+    {
+      sku: 'RIO-TEM-750',
+      name: 'Muga Reserva Rioja',
+      vintage: '2019',
+      varietal: 'Tempranillo · Garnacha · Mazuelo',
+      region: 'Rioja Alta',
+      country: 'Spain',
+      colorTint: ['#6b2030', '#2c0c14'],
+      tasting: { acidity: 4, tannin: 3, sweetness: 0, body: 4, alcohol: 14 },
+      notes: 'Black cherry, leather, dried herbs and toasted vanilla. Polished, traditional, deeply food-friendly.',
+      pairings: ['lamb', 'beef', 'iberian-cured', 'aged-cheese', 'grilled'],
+      price: 27.99, msrp: 31.00,
+      inventory: { stock: 'in', count: 9 },
+      popularity: 0.70,
+      aisle: 'A14 · Shelf 3',
+      badges: ['premium-pick'],
+      tags: ['classic-spanish', 'gift-worthy']
+    },
+    {
+      sku: 'BIO-ROS-750',
+      name: 'Domaine Tempier Bandol Rosé',
+      vintage: '2023',
+      varietal: 'Mourvèdre · Grenache · Cinsault',
+      region: 'Bandol',
+      country: 'France',
+      colorTint: ['#f0b7b7', '#b86d7b'],
+      tasting: { acidity: 4, tannin: 1, sweetness: 0, body: 3, alcohol: 13.5 },
+      notes: 'Wild strawberry, blood orange and sea salt. Structured, savoury rosé that drinks like a feast.',
+      pairings: ['shellfish', 'grilled', 'lamb', 'mediterranean', 'tuna'],
+      price: 49.99, msrp: 55.00,
+      inventory: { stock: 'low', count: 6 },
+      popularity: 0.58,
+      aisle: 'A14 · Shelf 7',
+      badges: ['premium-pick', 'biodynamic'],
+      tags: ['serious-rosé', 'adventurous', 'gift-worthy']
+    },
+    {
+      sku: 'CHA-VEU-750',
+      name: 'Veuve Clicquot Yellow Label Brut',
+      vintage: 'NV',
+      varietal: 'Pinot Noir · Chardonnay · Meunier',
+      region: 'Champagne',
+      country: 'France',
+      colorTint: ['#f6df8c', '#c79a2a'],
+      tasting: { acidity: 4, tannin: 0, sweetness: 1, body: 3, alcohol: 12 },
+      notes: 'Brioche, toasted almond, citrus zest and a creamy mousse. The benchmark celebration Champagne.',
+      pairings: ['shellfish', 'caviar', 'fried-chicken', 'celebration', 'gift'],
+      price: 64.99, msrp: 72.00,
+      inventory: { stock: 'in', count: 11 },
+      popularity: 0.75,
+      aisle: 'A14 · Shelf 1',
+      badges: ['premium-pick', 'gift'],
+      tags: ['sparkling', 'occasion', 'gift-worthy', 'luxe']
+    }
+  ],
+
+  /* Complementary SKUs used by Build My Dinner */
+  pantry: {
+    cheese: [
+      { sku: 'CHE-BRI', name: 'Triple-Crème Brie', aisle: 'Specialty Cheese · 8', price: 8.99 },
+      { sku: 'CHE-MAN', name: 'Manchego, 12 Months', aisle: 'Specialty Cheese · 8', price: 11.49 },
+      { sku: 'CHE-CHV', name: 'Local Chèvre', aisle: 'Specialty Cheese · 8', price: 6.49 },
+      { sku: 'CHE-GRY', name: 'Gruyère Cave Aged', aisle: 'Specialty Cheese · 8', price: 12.99 }
+    ],
+    bread: [
+      { sku: 'BRD-SOU', name: 'Sourdough Boule', aisle: 'Bakery · 12', price: 5.49 },
+      { sku: 'BRD-BAG', name: 'Artisan Baguette', aisle: 'Bakery · 12', price: 3.99 },
+      { sku: 'BRD-CRK', name: 'Olive Oil Crackers', aisle: 'Crackers · 5', price: 4.99 }
+    ],
+    charcuterie: [
+      { sku: 'CHA-PRO', name: 'Prosciutto di Parma', aisle: 'Deli · 7', price: 9.99 },
+      { sku: 'CHA-SAL', name: 'Finocchiona Salami', aisle: 'Deli · 7', price: 7.99 },
+      { sku: 'CHA-JAM', name: 'Jamón Serrano', aisle: 'Deli · 7', price: 11.99 }
+    ],
+    produce: [
+      { sku: 'PRO-GRP', name: 'Red Seedless Grapes', aisle: 'Produce · 1', price: 3.99 },
+      { sku: 'PRO-FIG', name: 'Fresh Black Mission Figs', aisle: 'Produce · 1', price: 5.99 },
+      { sku: 'PRO-ARG', name: 'Wild Baby Arugula', aisle: 'Produce · 1', price: 3.49 },
+      { sku: 'PRO-LMN', name: 'Meyer Lemons', aisle: 'Produce · 1', price: 1.49 }
+    ],
+    dessert: [
+      { sku: 'DES-DCH', name: '70% Dark Chocolate Bar', aisle: 'Confections · 9', price: 4.99 },
+      { sku: 'DES-TIR', name: 'House-made Tiramisu', aisle: 'Bakery · 12', price: 6.49 },
+      { sku: 'DES-BER', name: 'Mixed Berry Tart', aisle: 'Bakery · 12', price: 7.49 }
+    ],
+    sauces: [
+      { sku: 'SAU-FIG', name: 'Fig & Walnut Jam', aisle: 'Specialty · 10', price: 5.99 },
+      { sku: 'SAU-DJI', name: 'Dijon, Whole Grain', aisle: 'Condiments · 4', price: 4.49 },
+      { sku: 'SAU-HRB', name: 'Salsa Verde, House', aisle: 'Specialty · 10', price: 6.99 }
+    ]
+  }
+};
+
+
+/* ───────────────────────────────────────────────────────────────────
+   3. PAIRINGS  — Food taxonomy + scoring rules
+   ─────────────────────────────────────────────────────────────────── */
+const PAIRINGS = {
+  /* Map common dish keywords → canonical pairing tags */
+  dishMap: {
+    'salmon|fish|tuna|halibut|trout':            ['salmon'],
+    'oyster|oysters':                            ['oysters', 'shellfish'],
+    'shrimp|prawn|scallop|crab|lobster|shellfish': ['shellfish'],
+    'sushi|sashimi':                             ['sushi'],
+    'steak|beef|ribeye|sirloin|brisket|burger':  ['beef', 'grilled'],
+    'lamb|rack of lamb':                         ['lamb'],
+    'duck|squab|game bird':                      ['duck'],
+    'pork|ribs|bbq|barbecue|pulled':             ['bbq', 'pork'],
+    'chicken|poultry|turkey|rotisserie':         ['roast-chicken'],
+    'mushroom|risotto|truffle':                  ['mushroom'],
+    'pizza':                                     ['pizza'],
+    'pasta|spaghetti|lasagna|bolognese|marinara': ['rich-pasta'],
+    'mac.*cheese|cream sauce|alfredo':           ['cream-sauce', 'rich-pasta'],
+    'thai|curry|spicy|szechuan|mexican|taco':    ['spicy'],
+    'sushi|tempura|japanese':                    ['sushi'],
+    'salad|greens|veggie|vegetable':             ['salad'],
+    'goat cheese|chèvre|chevre':                 ['goat-cheese'],
+    'cheese|charcuterie|board':                  ['aged-cheese', 'charcuterie'],
+    'dessert|chocolate|cake':                    ['dessert'],
+    'oyster shooter|aperitif|appetizer':         ['aperitif'],
+    'fried chicken':                             ['fried-chicken'],
+    'caviar':                                    ['caviar'],
+    'mediterranean':                             ['mediterranean'],
+    'brunch':                                    ['brunch']
+  },
+
+  /* Map occasion keywords → preference modifiers */
+  occasionMap: {
+    'dinner party|hosting|guests':       { popularity: 0.25, premium: 0.10 },
+    'gift|birthday|anniversary':         { premium: 0.30 },
+    'celebration|toast|anniversary':     { sparkling: 1.0, premium: 0.20 },
+    'weeknight|tuesday|casual|easy':     { budget: 1.0 },
+    'date night|romantic':               { premium: 0.15 },
+    'adventurous|something new|surprise': { adventurous: 1.0 },
+    'safe|crowd|crowd-pleaser|popular':  { popularity: 0.40 }
+  },
+
+  /* Body / sweetness / acidity preference shortcuts */
+  prefMap: {
+    'bold|full body|tannic|big|hearty':   { body: 5, tannin: 4 },
+    'light|easy|smooth|soft':             { body: 2, tannin: 1 },
+    'crisp|zesty|bright|fresh|cold':      { acidity: 5, body: 2 },
+    'sweet':                              { sweetness: 4 },
+    'dry':                                { sweetness: 1 },
+    'buttery|creamy|oaky|rich':           { body: 4, acidity: 3 },
+    'bubbly|sparkling|fizz|fizzy':        { sparkling: 1 }
+  },
+
+  /* Budget tier inference */
+  budget: [
+    { match: /under \$?10|cheap|budget|inexpensive/, max: 12 },
+    { match: /under \$?15/, max: 15 },
+    { match: /under \$?20/, max: 20 },
+    { match: /under \$?30/, max: 30 },
+    { match: /under \$?50/, max: 50 },
+    { match: /premium|fancy|splurge|luxury|special/, min: 25 }
+  ]
+};
+
+
+/* ───────────────────────────────────────────────────────────────────
+   4. SCORER  — Weighted recommendation engine
+   ─────────────────────────────────────────────────────────────────── */
+const Scorer = {
+  /**
+   * Score every wine against a parsed user query.
+   * Returns descending list with .score and .reasons[].
+   */
+  rank(query, catalog = CATALOG.wines) {
+    const w = CONFIG.scoringWeights;
+    const out = catalog.map(wine => {
+      let score = 0;
+      const reasons = [];
+
+      /* PAIRING — overlap between wine.pairings and query.pairings */
+      if (query.pairings?.length) {
+        const overlap = wine.pairings.filter(p => query.pairings.includes(p)).length;
+        if (overlap) {
+          const m = overlap / query.pairings.length;
+          score += w.pairing * m;
+          reasons.push({ tag: 'pairing', strength: m });
+        }
+      }
+
+      /* PREFERENCE — tasting profile alignment (body, sweetness, acidity, tannin) */
+      const t = wine.tasting;
+      const p = query.profile || {};
+      let prefHits = 0, prefTotal = 0;
+      ['body','sweetness','acidity','tannin'].forEach(k => {
+        if (p[k] != null) {
+          prefTotal++;
+          const dist = Math.abs(t[k] - p[k]);
+          if (dist <= 1) prefHits += 1;
+          else if (dist <= 2) prefHits += 0.5;
+        }
+      });
+      if (prefTotal) {
+        const m = prefHits / prefTotal;
+        score += w.preference * m;
+        if (m > 0.4) reasons.push({ tag: 'preference', strength: m });
+      }
+
+      /* SPARKLING / VARIETAL hard filters */
+      if (query.sparkling && !wine.tags.includes('sparkling')) score -= 0.5;
+      if (query.varietal && !wine.varietal.toLowerCase().includes(query.varietal.toLowerCase())) {
+        // gentle penalty, don't exclude
+      }
+
+      /* PRICE FIT */
+      if (query.maxPrice && wine.price <= query.maxPrice) {
+        score += w.price * (1 - (wine.price / query.maxPrice));
+        reasons.push({ tag: 'price-fit', strength: 1 - (wine.price / query.maxPrice) });
+      } else if (query.maxPrice && wine.price > query.maxPrice) {
+        score -= 0.25; // over budget penalty
+      }
+      if (query.minPrice && wine.price >= query.minPrice) score += w.premium * 0.5;
+
+      /* INVENTORY */
+      if (wine.inventory.stock === 'in') score += w.inventory;
+      else if (wine.inventory.stock === 'low') score += w.inventory * 0.5;
+
+      /* POPULARITY */
+      score += w.popularity * wine.popularity * (query.modifiers?.popularity ? 2 : 1);
+
+      /* ADVENTUROUS modifier — favours less popular, more interesting picks */
+      if (query.modifiers?.adventurous) {
+        score += 0.15 * (1 - wine.popularity);
+        if (wine.tags.includes('adventurous')) score += 0.10;
+      }
+
+      /* PREMIUM modifier */
+      if (query.modifiers?.premium) {
+        if (wine.badges.includes('premium-pick')) score += 0.12;
+        if (wine.price >= 25) score += 0.08;
+      }
+
+      /* BUDGET modifier */
+      if (query.modifiers?.budget) {
+        if (wine.badges.includes('best-value')) score += 0.10;
+        if (wine.price <= 15) score += 0.08;
+      }
+
+      return { ...wine, score: Math.max(0, Math.min(1, score)), reasons };
+    });
+
+    return out.sort((a, b) => b.score - a.score);
+  },
+
+  /**
+   * Parse a free-text user query into structured intent.
+   */
+  parse(text) {
+    const lower = (text || '').toLowerCase();
+    const query = { raw: text, pairings: [], profile: {}, modifiers: {} };
+
+    /* Dish keywords */
+    for (const [pattern, tags] of Object.entries(PAIRINGS.dishMap)) {
+      if (new RegExp(pattern, 'i').test(lower)) {
+        tags.forEach(t => { if (!query.pairings.includes(t)) query.pairings.push(t); });
+      }
+    }
+
+    /* Preferences */
+    for (const [pattern, profile] of Object.entries(PAIRINGS.prefMap)) {
+      if (new RegExp(pattern, 'i').test(lower)) {
+        Object.assign(query.profile, profile);
+        if (profile.sparkling) query.sparkling = true;
+      }
+    }
+
+    /* Occasions */
+    for (const [pattern, mods] of Object.entries(PAIRINGS.occasionMap)) {
+      if (new RegExp(pattern, 'i').test(lower)) {
+        Object.entries(mods).forEach(([k, v]) => { query.modifiers[k] = v; });
+      }
+    }
+
+    /* Budget */
+    PAIRINGS.budget.forEach(b => {
+      if (b.match.test(lower)) {
+        if (b.max) query.maxPrice = b.max;
+        if (b.min) { query.minPrice = b.min; query.modifiers.premium = true; }
+      }
+    });
+
+    /* Bare price like "$25" */
+    const priceMatch = lower.match(/\$(\d+)/);
+    if (priceMatch && !query.maxPrice) query.maxPrice = parseInt(priceMatch[1]);
+
+    return query;
+  },
+
+  /**
+   * Recommend the top N wines for a given parsed query.
+   */
+  recommend(text, n = 3) {
+    const query = this.parse(text);
+    const ranked = this.rank(query).slice(0, n);
+    return { query, ranked };
+  }
+};
+
+
+/* ───────────────────────────────────────────────────────────────────
+   5. SESSION  — User state
+   ─────────────────────────────────────────────────────────────────── */
+const Session = {
+  state: {
+    mode: 'discover',
+    history: [],         // conversational turns
+    preferences: {},     // sticky user prefs across turns
+    cart: [],            // building shopping list
+    associate: false,
+    locale: 'en'
+  },
+  set(k, v) { this.state[k] = v; },
+  push(turn) { this.state.history.push(turn); },
+  addToCart(item) {
+    if (!this.state.cart.find(c => c.sku === item.sku)) this.state.cart.push(item);
+  },
+  removeFromCart(sku) {
+    this.state.cart = this.state.cart.filter(c => c.sku !== sku);
+  },
+  clearCart() { this.state.cart = []; },
+  cartTotal() {
+    return this.state.cart.reduce((s, i) => s + (i.price || 0), 0);
+  }
+};
+
+
+/* ───────────────────────────────────────────────────────────────────
+   6. INTEGRATIONS  — Placeholder retail-stack adapters
+   ───────────────────────────────────────────────────────────────────
+   These are mock stubs that match the shape of a real integration so
+   the engine, recommendation logic, and UI can call them today and
+   swap in live endpoints later.
+   ─────────────────────────────────────────────────────────────────── */
+const Integrations = {
+  inventory: {
+    /** Real: GET /api/inventory/:sku  — Mock: read CATALOG */
+    async checkStock(sku) {
+      const w = CATALOG.wines.find(x => x.sku === sku);
+      return w ? w.inventory : { stock: 'unknown', count: 0 };
+    }
+  },
+  pos: {
+    /** Real: POST /api/cart/add — Mock: log + session update */
+    async addToCart(sku, source = 'aria-kiosk') {
+      console.info('[POS:mock] addToCart', sku, source);
+      return { ok: true, sku, ts: Date.now() };
+    }
+  },
+  loyalty: {
+    /** Real: GET /api/loyalty/:memberId — Mock: anonymous */
+    async profile() {
+      return { tier: 'guest', preferences: [] };
+    }
+  },
+  qr: {
+    /** Real: POST /api/handoff — Mock: deep-link payload */
+    async createHandoff(payload) {
+      const id = 'aria-' + Math.random().toString(36).slice(2, 9);
+      return {
+        ok: true, id,
+        url: `https://aria.bel.io/handoff/${id}`,
+        payload
+      };
+    }
+  },
+  voice: {
+    /** Web Speech API stub. Returns false if unavailable. */
+    available: 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window,
+    listen() { /* hook up to a recognizer when shipping */ }
+  },
+  analytics: {
+    /** Real: POST /api/telemetry — Mock: console */
+    track(event, props = {}) {
+      console.info('[analytics:mock]', event, props);
+    }
+  },
+  i18n: {
+    locale: 'EN',
+    catalog: null,            // attached below via T
+    /** Translate a key into the active locale. Falls back to EN then to the key. */
+    t(key) {
+      const cat = this.catalog || {};
+      return (cat[this.locale] && cat[this.locale][key])
+          || (cat.EN && cat.EN[key])
+          || key;
+    },
+    /** Switch locales and re-apply DOM + active mode. */
+    setLocale(loc) {
+      this.locale = loc;
+      applyLocale();
+      const mode = Session.state.mode;
+      if (mode && Modes[mode]) Modes[mode].render();
+    }
+  }
+};
+
+/* ── Translation catalog (EN · ES · FR · JA) ──────────────────── */
+const T = {
+  EN: {
+    'brand.tag': '<strong>Aisle Retail Intelligence Assistant</strong> — conversational AI for the retail floor.',
+    'pill.associate': 'Associate',
+    'pill.live': 'Live',
+    'hero.eyebrow': 'ARIA Online · Wine & Spirits Aisle',
+    'hero.h1': "I'm <span class=\"accent\">ARIA</span>. <br>Tell me what you're shopping for tonight.",
+    'hero.p': "I help shoppers and associates find exactly the right bottle — and everything that goes with it. Ask me anything, scan a label, or let me build your dinner.",
+    'shortcut.dinner': 'Plan a dinner party',
+    'shortcut.weeknight': 'Weeknight under $20',
+    'shortcut.gift': 'A great gift',
+    'shortcut.adventure': 'Surprise me',
+    'tab.discover': 'Discover',
+    'tab.dinner': 'Build My Dinner',
+    'tab.pair': 'Pair',
+    'tab.region': 'Explore',
+    'tab.scan': 'Scan',
+    'ctx.thisStore': 'This Store',
+    'ctx.location': 'Location',
+    'ctx.locationVal': 'Concept Store · SF',
+    'ctx.aisle': 'Aisle',
+    'ctx.aisleVal': 'Wine & Spirits · 14',
+    'ctx.time': 'Time',
+    'ctx.traffic': 'Foot traffic',
+    'ctx.trafficVal': 'High',
+    'ctx.inventory': 'Inventory sync',
+    'ctx.inventoryVal': 'Live',
+    'ctx.picks': "Tonight's Picks",
+    'ctx.featured': 'Featured varietal',
+    'ctx.asked': 'Most asked',
+    'ctx.askedVal': 'Steak pairings',
+    'ctx.promo': 'Promo',
+    'ctx.promoVal': 'Save 15% on cases',
+    'ctx.stack': 'Retail Stack',
+    'int.inventory': 'Inventory',
+    'int.inventorySub': 'Real-time SKU sync',
+    'int.pos': 'POS handoff',
+    'int.posSub': 'Add-to-cart bridge',
+    'int.loyalty': 'Loyalty',
+    'int.loyaltySub': 'Personalization',
+    'int.qr': 'QR handoff',
+    'int.qrSub': 'Save to phone',
+    'int.analytics': 'Analytics',
+    'int.analyticsSub': 'Engagement telemetry',
+    'int.mock': 'Mock',
+    'int.live': 'Live',
+    'footer.copy': 'Powered by <span class="gold">BEL + ARIA</span> · Retail Intelligence by Brand Experience Lab',
+    'footer.legal': 'v1.0 · Concept · Kiosk Build',
+
+    /* dynamic / panel copy used by render functions */
+    'panel.discover.label': 'ARIA Asks',
+    'panel.discover.prompt': "What can I help you find tonight?",
+    'panel.discover.sub': "Tell me what you're cooking, who it's for, or just describe a vibe. I'll suggest in-stock bottles and explain exactly why they fit.",
+    'panel.discover.placeholder': 'e.g. light Pinot for a Tuesday salmon dinner, under $20',
+    'panel.discover.btn': 'Ask ARIA',
+    'panel.discover.greeting': "Hi — I'm <strong>ARIA</strong>. Try one of the suggestions above, or describe what you're in the mood for in your own words.",
+    'panel.dinner.label': 'ARIA Build',
+    'panel.dinner.prompt': "Let's plan your meal — wine and everything that goes with it.",
+    'panel.dinner.sub': "Pick a protein and style. I'll recommend a bottle, then build a complete shopping list from the surrounding aisles.",
+    'panel.dinner.step1': "What's on the menu?",
+    'panel.dinner.step1Desc': 'Choose the centerpiece of your meal.',
+    'panel.dinner.step2': "What's the occasion?",
+    'panel.dinner.step2Desc': 'This shapes the bottle I recommend and the side suggestions.',
+    'panel.dinner.step3': 'Budget for the bottle?',
+    'panel.dinner.step3Desc': "I'll match recommendations to where you want to land.",
+    'panel.dinner.step4': 'Your meal plan',
+    'panel.dinner.step4Empty': "Pick options above and I'll build a complete plan with wine, accompaniments, and a shopping list.",
+    'panel.pair.label': 'ARIA Pair',
+    'panel.pair.prompt': "Tell me what you're cooking — or what you're drinking.",
+    'panel.pair.sub': "I'll suggest the other side of the pairing with reasons grounded in body, acidity and flavour structure.",
+    'panel.pair.foodToWine': 'Food → Wine',
+    'panel.pair.wineToFood': 'Wine → Food',
+    'panel.pair.btn': 'Pair it',
+    'panel.region.label': 'ARIA Explore',
+    'panel.region.prompt': 'Discover by region.',
+    'panel.region.sub': "Pick a region and I'll show you what's on our shelves and what makes it worth tasting.",
+    'panel.scan.label': 'ARIA Scan',
+    'panel.scan.prompt': 'Scan a label or tap a sample.',
+    'panel.scan.sub': "Hold any bottle up to the camera — or tap one of the popular SKUs below — and I'll pull its full profile.",
+    'action.profile': 'Tasting profile',
+    'action.add': 'Add to list',
+    'action.added': 'Added',
+    'action.pair': 'Pair with food',
+    'cart.title': "Tonight's Shopping List",
+    'cart.qrT1': 'Save to your phone',
+    'cart.qrT2': 'Scan to text yourself the list',
+    'cart.export': 'Send to phone',
+    'cart.print': 'Print list',
+    'thinking': 'Thinking'
+  },
+
+  ES: {
+    'brand.tag': '<strong>Asistente de Inteligencia de Pasillo</strong> — IA conversacional para el piso de venta.',
+    'pill.associate': 'Asociado',
+    'pill.live': 'En vivo',
+    'hero.eyebrow': 'ARIA en línea · Pasillo de Vinos y Licores',
+    'hero.h1': 'Soy <span class="accent">ARIA</span>. <br>Cuéntame qué buscas esta noche.',
+    'hero.p': 'Ayudo a compradores y asociados a encontrar exactamente la botella adecuada — y todo lo que la acompaña. Pregúntame lo que sea, escanea una etiqueta o déjame armar tu cena.',
+    'shortcut.dinner': 'Planear una cena',
+    'shortcut.weeknight': 'Entre semana por menos de $20',
+    'shortcut.gift': 'Un buen regalo',
+    'shortcut.adventure': 'Sorpréndeme',
+    'tab.discover': 'Descubrir',
+    'tab.dinner': 'Arma mi cena',
+    'tab.pair': 'Maridar',
+    'tab.region': 'Explorar',
+    'tab.scan': 'Escanear',
+    'ctx.thisStore': 'Esta tienda',
+    'ctx.location': 'Ubicación',
+    'ctx.locationVal': 'Tienda Concepto · SF',
+    'ctx.aisle': 'Pasillo',
+    'ctx.aisleVal': 'Vinos y Licores · 14',
+    'ctx.time': 'Hora',
+    'ctx.traffic': 'Tráfico',
+    'ctx.trafficVal': 'Alto',
+    'ctx.inventory': 'Sync de inventario',
+    'ctx.inventoryVal': 'En vivo',
+    'ctx.picks': 'Sugerencias de hoy',
+    'ctx.featured': 'Variedad destacada',
+    'ctx.asked': 'Más consultado',
+    'ctx.askedVal': 'Maridajes con bistec',
+    'ctx.promo': 'Promoción',
+    'ctx.promoVal': '15% en cajas',
+    'ctx.stack': 'Stack de Retail',
+    'int.inventory': 'Inventario',
+    'int.inventorySub': 'Sincronización SKU en tiempo real',
+    'int.pos': 'Punto de venta',
+    'int.posSub': 'Puente al carrito',
+    'int.loyalty': 'Fidelidad',
+    'int.loyaltySub': 'Personalización',
+    'int.qr': 'Traspaso QR',
+    'int.qrSub': 'Guardar en el teléfono',
+    'int.analytics': 'Analítica',
+    'int.analyticsSub': 'Telemetría de uso',
+    'int.mock': 'Simulado',
+    'int.live': 'En vivo',
+    'footer.copy': 'Desarrollado por <span class="gold">BEL + ARIA</span> · Inteligencia Retail de Brand Experience Lab',
+    'footer.legal': 'v1.0 · Concepto · Kiosco',
+    'panel.discover.label': 'ARIA pregunta',
+    'panel.discover.prompt': '¿En qué puedo ayudarte esta noche?',
+    'panel.discover.sub': 'Dime qué vas a cocinar, para quién, o describe el ambiente. Te sugeriré botellas disponibles y te explicaré por qué encajan.',
+    'panel.discover.placeholder': 'p. ej. Pinot ligero para una cena de salmón un martes, menos de $20',
+    'panel.discover.btn': 'Preguntar a ARIA',
+    'panel.discover.greeting': 'Hola — soy <strong>ARIA</strong>. Prueba una sugerencia o cuéntame con tus palabras qué se te antoja.',
+    'panel.dinner.label': 'ARIA Arma',
+    'panel.dinner.prompt': 'Planeemos tu comida — el vino y todo lo demás.',
+    'panel.dinner.sub': 'Elige proteína y estilo. Recomiendo la botella y armo una lista de compras de los pasillos cercanos.',
+    'panel.dinner.step1': '¿Qué hay en el menú?',
+    'panel.dinner.step1Desc': 'Elige el plato principal.',
+    'panel.dinner.step2': '¿Cuál es la ocasión?',
+    'panel.dinner.step2Desc': 'Esto define la botella y los acompañamientos.',
+    'panel.dinner.step3': 'Presupuesto para la botella',
+    'panel.dinner.step3Desc': 'Ajusto las recomendaciones al rango que prefieras.',
+    'panel.dinner.step4': 'Tu plan de comida',
+    'panel.dinner.step4Empty': 'Elige las opciones de arriba y armaré el plan completo con vino, acompañamientos y lista de compras.',
+    'panel.pair.label': 'ARIA Maridar',
+    'panel.pair.prompt': 'Dime qué cocinas — o qué vas a beber.',
+    'panel.pair.sub': 'Te sugiero el otro lado del maridaje con razones de cuerpo, acidez y estructura de sabor.',
+    'panel.pair.foodToWine': 'Comida → Vino',
+    'panel.pair.wineToFood': 'Vino → Comida',
+    'panel.pair.btn': 'Maridar',
+    'panel.region.label': 'ARIA Explorar',
+    'panel.region.prompt': 'Descubre por región.',
+    'panel.region.sub': 'Elige una región y te muestro qué tenemos en estantería y por qué vale la pena probarla.',
+    'panel.scan.label': 'ARIA Escanear',
+    'panel.scan.prompt': 'Escanea una etiqueta o toca una muestra.',
+    'panel.scan.sub': 'Acerca una botella a la cámara — o toca una SKU popular — y te muestro el perfil completo.',
+    'action.profile': 'Perfil de cata',
+    'action.add': 'Añadir a la lista',
+    'action.added': 'Añadido',
+    'action.pair': 'Maridar con comida',
+    'cart.title': 'Lista de compras de hoy',
+    'cart.qrT1': 'Guarda en tu teléfono',
+    'cart.qrT2': 'Escanea para enviar la lista por SMS',
+    'cart.export': 'Enviar al teléfono',
+    'cart.print': 'Imprimir lista',
+    'thinking': 'Pensando'
+  },
+
+  FR: {
+    'brand.tag': "<strong>Assistant d'Intelligence de Rayon</strong> — IA conversationnelle pour le point de vente.",
+    'pill.associate': 'Associé',
+    'pill.live': 'En direct',
+    'hero.eyebrow': 'ARIA en ligne · Rayon Vins & Spiritueux',
+    'hero.h1': 'Je suis <span class="accent">ARIA</span>. <br>Dites-moi ce que vous cherchez ce soir.',
+    'hero.p': "J'aide les clients et les associés à trouver exactement la bonne bouteille — et tout ce qui l'accompagne. Posez-moi une question, scannez une étiquette ou laissez-moi composer votre dîner.",
+    'shortcut.dinner': 'Planifier un dîner',
+    'shortcut.weeknight': 'En semaine sous 20 $',
+    'shortcut.gift': 'Un beau cadeau',
+    'shortcut.adventure': 'Surprenez-moi',
+    'tab.discover': 'Découvrir',
+    'tab.dinner': 'Composer le dîner',
+    'tab.pair': 'Accorder',
+    'tab.region': 'Explorer',
+    'tab.scan': 'Scanner',
+    'ctx.thisStore': 'Ce magasin',
+    'ctx.location': 'Emplacement',
+    'ctx.locationVal': 'Boutique Concept · SF',
+    'ctx.aisle': 'Rayon',
+    'ctx.aisleVal': 'Vins & Spiritueux · 14',
+    'ctx.time': 'Heure',
+    'ctx.traffic': 'Affluence',
+    'ctx.trafficVal': 'Élevée',
+    'ctx.inventory': 'Sync inventaire',
+    'ctx.inventoryVal': 'En direct',
+    'ctx.picks': 'Choix du soir',
+    'ctx.featured': 'Cépage vedette',
+    'ctx.asked': 'Plus demandé',
+    'ctx.askedVal': 'Accords avec le bœuf',
+    'ctx.promo': 'Promo',
+    'ctx.promoVal': '–15 % sur les caisses',
+    'ctx.stack': 'Stack Retail',
+    'int.inventory': 'Inventaire',
+    'int.inventorySub': 'Sync SKU temps réel',
+    'int.pos': 'Passage en caisse',
+    'int.posSub': 'Pont vers le panier',
+    'int.loyalty': 'Fidélité',
+    'int.loyaltySub': 'Personnalisation',
+    'int.qr': 'Transfert QR',
+    'int.qrSub': 'Sauvegarder sur le téléphone',
+    'int.analytics': 'Analytique',
+    'int.analyticsSub': 'Télémétrie d\'engagement',
+    'int.mock': 'Maquette',
+    'int.live': 'En direct',
+    'footer.copy': 'Conçu par <span class="gold">BEL + ARIA</span> · Retail Intelligence par Brand Experience Lab',
+    'footer.legal': 'v1.0 · Concept · Borne',
+    'panel.discover.label': 'ARIA demande',
+    'panel.discover.prompt': 'Que puis-je vous aider à trouver ce soir ?',
+    'panel.discover.sub': "Dites-moi ce que vous cuisinez, pour qui, ou décrivez simplement l'ambiance. Je vous suggérerai des bouteilles en stock avec leurs raisons.",
+    'panel.discover.placeholder': 'p. ex. Pinot léger pour un saumon du mardi, sous 20 $',
+    'panel.discover.btn': 'Demander à ARIA',
+    'panel.discover.greeting': "Bonjour — je suis <strong>ARIA</strong>. Essayez une suggestion ou décrivez ce qui vous tente avec vos propres mots.",
+    'panel.dinner.label': 'ARIA Compose',
+    'panel.dinner.prompt': 'Planifions votre repas — le vin et tout le reste.',
+    'panel.dinner.sub': "Choisissez une protéine et un style. Je recommande la bouteille et compose une liste de courses dans les rayons voisins.",
+    'panel.dinner.step1': "Qu'y a-t-il au menu ?",
+    'panel.dinner.step1Desc': 'Choisissez la pièce centrale de votre repas.',
+    'panel.dinner.step2': "Quelle est l'occasion ?",
+    'panel.dinner.step2Desc': "Cela oriente la bouteille et les accompagnements.",
+    'panel.dinner.step3': 'Budget pour la bouteille ?',
+    'panel.dinner.step3Desc': 'Je calibre mes recommandations sur votre fourchette.',
+    'panel.dinner.step4': 'Votre plan repas',
+    'panel.dinner.step4Empty': 'Choisissez ci-dessus et je composerai un plan complet avec vin, accompagnements et liste de courses.',
+    'panel.pair.label': 'ARIA Accord',
+    'panel.pair.prompt': 'Dites-moi ce que vous cuisinez — ou ce que vous buvez.',
+    'panel.pair.sub': 'Je propose le pendant idéal, avec des raisons fondées sur le corps, l\'acidité et la structure.',
+    'panel.pair.foodToWine': 'Plat → Vin',
+    'panel.pair.wineToFood': 'Vin → Plat',
+    'panel.pair.btn': 'Accorder',
+    'panel.region.label': 'ARIA Explore',
+    'panel.region.prompt': 'Découvrez par région.',
+    'panel.region.sub': "Choisissez une région et je vous montre ce qu'il y a en rayon, et pourquoi cela vaut le détour.",
+    'panel.scan.label': 'ARIA Scan',
+    'panel.scan.prompt': 'Scannez une étiquette ou touchez un exemple.',
+    'panel.scan.sub': 'Présentez une bouteille à la caméra — ou touchez une SKU populaire — et je sors le profil complet.',
+    'action.profile': 'Profil de dégustation',
+    'action.add': 'Ajouter à la liste',
+    'action.added': 'Ajouté',
+    'action.pair': 'Accorder avec un plat',
+    'cart.title': 'Liste de courses du soir',
+    'cart.qrT1': 'Enregistrer sur votre téléphone',
+    'cart.qrT2': 'Scannez pour recevoir la liste par SMS',
+    'cart.export': 'Envoyer au téléphone',
+    'cart.print': 'Imprimer la liste',
+    'thinking': 'Réflexion'
+  },
+
+  JA: {
+    'brand.tag': '<strong>売場リテール・インテリジェンス・アシスタント</strong> — 店頭のための会話型AI。',
+    'pill.associate': 'スタッフ',
+    'pill.live': 'ライブ',
+    'hero.eyebrow': 'ARIA 稼働中 · ワイン＆スピリッツ売場',
+    'hero.h1': '私は<span class="accent">ARIA</span>です。<br>今夜お探しのものを教えてください。',
+    'hero.p': 'お客様とスタッフの方が、ぴったりの一本と、それに合うすべてを見つけるお手伝いをします。何でも聞いてください。ラベルをスキャンしたり、ディナーを組み立てたりもできます。',
+    'shortcut.dinner': 'ディナーパーティーを計画',
+    'shortcut.weeknight': '平日に $20 以下',
+    'shortcut.gift': '素敵な贈り物',
+    'shortcut.adventure': 'おまかせで',
+    'tab.discover': '探す',
+    'tab.dinner': 'ディナーを組む',
+    'tab.pair': 'ペアリング',
+    'tab.region': '産地で見る',
+    'tab.scan': 'スキャン',
+    'ctx.thisStore': 'この店舗',
+    'ctx.location': '場所',
+    'ctx.locationVal': 'コンセプトストア · SF',
+    'ctx.aisle': '通路',
+    'ctx.aisleVal': 'ワイン＆スピリッツ · 14',
+    'ctx.time': '時刻',
+    'ctx.traffic': '来店客数',
+    'ctx.trafficVal': '多い',
+    'ctx.inventory': '在庫同期',
+    'ctx.inventoryVal': 'ライブ',
+    'ctx.picks': '本日のおすすめ',
+    'ctx.featured': '注目の品種',
+    'ctx.asked': 'よくある質問',
+    'ctx.askedVal': 'ステーキとの相性',
+    'ctx.promo': 'プロモーション',
+    'ctx.promoVal': 'ケース購入で15%オフ',
+    'ctx.stack': 'リテール・スタック',
+    'int.inventory': '在庫',
+    'int.inventorySub': 'リアルタイムSKU同期',
+    'int.pos': 'POS連携',
+    'int.posSub': 'カートへの橋渡し',
+    'int.loyalty': 'ロイヤリティ',
+    'int.loyaltySub': 'パーソナライズ',
+    'int.qr': 'QR受け渡し',
+    'int.qrSub': '携帯に保存',
+    'int.analytics': 'アナリティクス',
+    'int.analyticsSub': 'エンゲージメントの記録',
+    'int.mock': 'モック',
+    'int.live': 'ライブ',
+    'footer.copy': '<span class="gold">BEL + ARIA</span> 提供 · Brand Experience Lab によるリテール・インテリジェンス',
+    'footer.legal': 'v1.0 · コンセプト · キオスク',
+    'panel.discover.label': 'ARIA からの質問',
+    'panel.discover.prompt': '今夜のお探し物は何ですか？',
+    'panel.discover.sub': 'これから作るお料理、誰と過ごすか、雰囲気でも構いません。在庫から最適な一本をご提案し、理由もお伝えします。',
+    'panel.discover.placeholder': '例：火曜の鮭料理に合う軽めのピノ、$20 以下',
+    'panel.discover.btn': 'ARIA に聞く',
+    'panel.discover.greeting': 'こんにちは — <strong>ARIA</strong>です。上のヒントから選ぶか、ご希望をご自由にお伝えください。',
+    'panel.dinner.label': 'ARIA が組み立て',
+    'panel.dinner.prompt': '今夜の食卓を、ワインから付け合わせまで一緒に組み立てましょう。',
+    'panel.dinner.sub': 'メインとスタイルを選んでください。一本をご提案し、近くの通路から買い物リストを作ります。',
+    'panel.dinner.step1': '今夜の主役は？',
+    'panel.dinner.step1Desc': '食卓の中心となる料理を選んでください。',
+    'panel.dinner.step2': 'シーンは？',
+    'panel.dinner.step2Desc': '提案する一本と付け合わせがこれで決まります。',
+    'panel.dinner.step3': 'ご予算は？',
+    'panel.dinner.step3Desc': 'ご希望の価格帯に合わせて調整します。',
+    'panel.dinner.step4': 'あなたの献立プラン',
+    'panel.dinner.step4Empty': '上の選択をすると、ワイン・付け合わせ・買い物リストの完全プランをご用意します。',
+    'panel.pair.label': 'ARIA ペアリング',
+    'panel.pair.prompt': '料理をお決めなら、お飲み物をお決めなら、どちらでも。',
+    'panel.pair.sub': 'ボディ、酸味、味わいの構造をもとに、もう一方をご提案します。',
+    'panel.pair.foodToWine': '料理 → ワイン',
+    'panel.pair.wineToFood': 'ワイン → 料理',
+    'panel.pair.btn': 'ペアリング',
+    'panel.region.label': 'ARIA 産地',
+    'panel.region.prompt': '産地から見つける。',
+    'panel.region.sub': '産地を選ぶと、棚にある銘柄と、その魅力をご紹介します。',
+    'panel.scan.label': 'ARIA スキャン',
+    'panel.scan.prompt': 'ラベルをスキャン、またはサンプルをタップ。',
+    'panel.scan.sub': 'カメラにボトルをかざすか、人気の SKU をタップすると、詳細なプロフィールが表示されます。',
+    'action.profile': '味わいプロフィール',
+    'action.add': 'リストに追加',
+    'action.added': '追加済み',
+    'action.pair': '料理と合わせる',
+    'cart.title': '今夜の買い物リスト',
+    'cart.qrT1': 'スマホに保存',
+    'cart.qrT2': 'スキャンしてSMSで受け取る',
+    'cart.export': '携帯に送る',
+    'cart.print': 'リストを印刷',
+    'thinking': '考え中'
+  }
+};
+Integrations.i18n.catalog = T;
+
+/* Apply current locale to every [data-i18n] element in the DOM */
+function applyLocale() {
+  const t = (k) => Integrations.i18n.t(k);
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (el.dataset.i18nHtml === 'true') el.innerHTML = t(key);
+    else                                el.textContent = t(key);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    el.placeholder = Integrations.i18n.t(el.dataset.i18nPlaceholder);
+  });
+  document.documentElement.setAttribute('lang', Integrations.i18n.locale.toLowerCase());
+}
+
+/* Shorthand used inside render templates */
+const t = (k) => Integrations.i18n.t(k);
+
+
+/* ───────────────────────────────────────────────────────────────────
+   7. RENDER  — Per-mode UI controllers
+   ─────────────────────────────────────────────────────────────────── */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+const panel = () => $('#panel');
+
+/* ── Shared atoms ── */
+function bottleArt(tint) {
+  const [c1, c2] = tint || ['#5a1f2b', '#2d0e14'];
+  return `
+    <div class="bottle-art">
+      <svg viewBox="0 0 56 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="g-${c1.slice(1)}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${c1}"/>
+            <stop offset="100%" stop-color="${c2}"/>
+          </linearGradient>
+        </defs>
+        <rect x="22" y="2" width="12" height="22" rx="2" fill="#0a0a0d"/>
+        <rect x="20" y="22" width="16" height="6" fill="#1a1a1f"/>
+        <path d="M18 28 L18 86 Q18 96 28 96 Q38 96 38 86 L38 28 Z" fill="url(#g-${c1.slice(1)})" stroke="#000" stroke-width="0.5"/>
+        <rect x="20" y="48" width="16" height="28" fill="rgba(245,240,225,0.92)"/>
+        <rect x="22" y="52" width="12" height="1" fill="${c2}"/>
+        <rect x="22" y="68" width="9" height="1" fill="${c2}"/>
+      </svg>
+      <div class="shine"></div>
+    </div>
+  `;
+}
+
+function badgeHtml(badges = []) {
+  const map = {
+    'bestseller':    { cls: 'badge-gold', label: '★ Bestseller' },
+    'staff-pick':    { cls: 'badge-gold', label: '✦ Staff Pick' },
+    'top-rated':     { cls: 'badge-gold', label: '★ Top Rated' },
+    'best-value':    { cls: 'badge-wine', label: '◇ Best Value' },
+    'premium-pick':  { cls: 'badge-gold', label: '◆ Premium Pick' },
+    'featured':      { cls: 'badge-info', label: '➤ Featured' },
+    'organic':       { cls: 'badge-sage', label: '✿ Organic' },
+    'biodynamic':    { cls: 'badge-sage', label: '✿ Biodynamic' },
+    'gift':          { cls: 'badge-wine', label: '🎁 Gift-Worthy' }
+  };
+  return badges.map(b => map[b]
+    ? `<span class="badge ${map[b].cls}">${map[b].label}</span>`
+    : ''
+  ).join('');
+}
+
+function stockHtml(inv) {
+  if (inv.stock === 'in')  return `<span class="stock-dot in"><span class="dot"></span>In stock</span>`;
+  if (inv.stock === 'low') return `<span class="stock-dot low"><span class="dot"></span>Only ${inv.count} left</span>`;
+  return `<span class="stock-dot out"><span class="dot"></span>Out of stock</span>`;
+}
+
+function profileBar(label, value, max = 5) {
+  const pct = Math.round((value / max) * 100);
+  return `
+    <div class="profile-bar">
+      <div class="lbl"><span>${label}</span><b>${value}/${max}</b></div>
+      <div class="track"><div class="fill" style="width:${pct}%"></div></div>
+    </div>
+  `;
+}
+
+function wineCard(w, opts = {}) {
+  const reasons = (w.reasons || []).length
+    ? w.reasons.map(r => r.tag).slice(0,2).join(' · ')
+    : '';
+  const why = opts.why || (reasons ? `Matched on ${reasons}` : '');
+  return `
+    <article class="wine-card" data-sku="${w.sku}">
+      ${bottleArt(w.colorTint)}
+      <div class="wine-body">
+        <div class="wine-region">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-8 8-13a8 8 0 10-16 0c0 5 8 13 8 13z"/><circle cx="12" cy="9" r="3"/></svg>
+          ${w.region} · ${w.country}
+        </div>
+        <div class="wine-head">
+          <span class="wine-name">${w.name}</span>
+          <span class="wine-vintage">${w.vintage} · ${w.varietal}</span>
+        </div>
+        <div class="wine-notes">${w.notes}</div>
+        ${why ? `<div class="wine-why">${why}</div>` : ''}
+        <div class="wine-meta">
+          <span class="price-tag">$${w.price.toFixed(2)}</span>
+          ${badgeHtml(w.badges)}
+          ${stockHtml(w.inventory)}
+          <span class="aisle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+            ${w.aisle}
+          </span>
+        </div>
+        <div class="wine-actions">
+          <button class="action-btn" data-act="profile" data-sku="${w.sku}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+            Tasting profile
+          </button>
+          <button class="action-btn" data-act="add" data-sku="${w.sku}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            Add to list
+          </button>
+          <button class="action-btn" data-act="pair" data-sku="${w.sku}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11h18M5 11V7a2 2 0 012-2h10a2 2 0 012 2v4M5 11v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>
+            Pair with food
+          </button>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function ariaBubble(text, role = 'ARIA · Retail Intelligence') {
+  return `
+    <div class="bubble">
+      <div class="bubble-avatar">A</div>
+      <div class="bubble-content">
+        <div class="bubble-meta"><span class="who">ARIA</span><span class="role">${role}</span></div>
+        <div class="bubble-text">${text}</div>
+      </div>
+    </div>
+  `;
+}
+
+function thinkingBubble() {
+  return `
+    <div class="bubble">
+      <div class="bubble-avatar">A</div>
+      <div class="bubble-content">
+        <div class="bubble-meta"><span class="who">ARIA</span><span class="role">Thinking</span></div>
+        <div class="thinking"><span class="d"></span><span class="d"></span><span class="d"></span></div>
+      </div>
+    </div>
+  `;
+}
+
+/* ── DISCOVER MODE  — conversational find-a-wine ── */
+const Discover = {
+  prompts: [
+    'A crisp white under $20',
+    'Bold red for steak night',
+    'Something bubbly to celebrate',
+    'Adventurous Rhône blend',
+    'Smooth red blend, crowd-pleaser',
+    'Pinot Noir for salmon'
+  ],
+  render() {
+    panel().innerHTML = `
+      <div class="panel-prompt"><span class="label">ARIA Asks</span>What can I help you find tonight?</div>
+      <div class="panel-sub">Tell me what you're cooking, who it's for, or just describe a vibe. I'll suggest in-stock bottles and explain exactly why they fit.</div>
+      <div class="chips" id="discover-chips">
+        ${this.prompts.map(p => `<span class="chip" data-q="${p}">${p}</span>`).join('')}
+      </div>
+      <div class="input-block">
+        <div class="input-field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+          <input id="discover-input" placeholder="e.g. light Pinot for a Tuesday salmon dinner, under $20" autocomplete="off"/>
+        </div>
+        <button class="btn-primary" id="discover-ask">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          Ask ARIA
+        </button>
+      </div>
+      <div class="aria-thread" id="discover-thread">
+        ${ariaBubble("Hi — I'm <strong>ARIA</strong>. Try one of the suggestions above, or describe what you're in the mood for in your own words.", 'Greeting')}
+      </div>
+    `;
+
+    $$('#discover-chips .chip').forEach(c => c.addEventListener('click', () => {
+      $('#discover-input').value = c.dataset.q;
+      Discover.ask();
+    }));
+    $('#discover-ask').addEventListener('click', () => Discover.ask());
+    $('#discover-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') Discover.ask();
+    });
+  },
+  ask() {
+    const input = $('#discover-input').value.trim();
+    if (!input) return;
+    const thread = $('#discover-thread');
+    thread.insertAdjacentHTML('beforeend', `
+      <div class="bubble">
+        <div class="bubble-avatar" style="background:linear-gradient(135deg,#3a3744,#26242f);color:#f6f4ef;">You</div>
+        <div class="bubble-content">
+          <div class="bubble-meta"><span class="who">You</span></div>
+          <div class="bubble-text">${input}</div>
+        </div>
+      </div>
+    `);
+    thread.insertAdjacentHTML('beforeend', thinkingBubble());
+    const thinking = thread.lastElementChild;
+    Integrations.analytics.track('discover.ask', { q: input });
+
+    setTimeout(() => {
+      const { query, ranked } = Scorer.recommend(input, 3);
+      thinking.remove();
+      const intro = Aria.compose(input, query, ranked);
+      thread.insertAdjacentHTML('beforeend', ariaBubble(intro, 'Recommendation'));
+      const wines = `<div class="wine-list">` + ranked.map(w => wineCard(w, {
+        why: Aria.reason(w, query)
+      })).join('') + `</div>`;
+      thread.insertAdjacentHTML('beforeend', `
+        <div class="bubble">
+          <div class="bubble-avatar">A</div>
+          <div class="bubble-content" style="margin-top:-4px;">${wines}</div>
+        </div>
+      `);
+      thread.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }, 600);
+  }
+};
+
+/* ── BUILD MY DINNER MODE ── */
+const Dinner = {
+  state: { protein: null, style: null, guests: 4, budget: null, wines: [] },
+  proteins: [
+    { id: 'beef',    ico: '🥩', name: 'Steak / Beef',  pairings: ['beef','grilled'] },
+    { id: 'salmon',  ico: '🐟', name: 'Salmon',        pairings: ['salmon'] },
+    { id: 'shellfish', ico: '🦐', name: 'Shrimp / Shellfish', pairings: ['shellfish'] },
+    { id: 'chicken', ico: '🍗', name: 'Roast Chicken', pairings: ['roast-chicken'] },
+    { id: 'pasta',   ico: '🍝', name: 'Pasta',         pairings: ['rich-pasta'] },
+    { id: 'lamb',    ico: '🌿', name: 'Lamb',          pairings: ['lamb'] },
+    { id: 'pizza',   ico: '🍕', name: 'Pizza Night',   pairings: ['pizza'] },
+    { id: 'cheese',  ico: '🧀', name: 'Cheese Board',  pairings: ['aged-cheese','charcuterie'] }
+  ],
+  styles: [
+    { id: 'casual',     ico: '🪑', name: 'Casual',        sub: 'Weeknight, low-key' },
+    { id: 'date',       ico: '🌹', name: 'Date Night',    sub: 'Romantic for two' },
+    { id: 'dinner-party', ico: '🍽', name: 'Dinner Party', sub: '4–8 guests' },
+    { id: 'celebration', ico: '🥂', name: 'Celebration',  sub: 'Toast-worthy' }
+  ],
+  budgets: [
+    { id: 'value',   ico: '💵', name: '$',    sub: 'Under $15' },
+    { id: 'mid',     ico: '💵', name: '$$',   sub: '$15–$25' },
+    { id: 'premium', ico: '💵', name: '$$$',  sub: '$25–$50' },
+    { id: 'luxe',    ico: '💎', name: '$$$$', sub: '$50+' }
+  ],
+  render() {
+    panel().innerHTML = `
+      <div class="panel-prompt"><span class="label">ARIA Build</span>Let's plan your meal — wine and everything that goes with it.</div>
+      <div class="panel-sub">Pick a protein and style. I'll recommend a bottle, then build a complete shopping list from the surrounding aisles.</div>
+
+      <div class="bmd-step">
+        <div class="bmd-num">1</div>
+        <div class="bmd-content">
+          <div class="bmd-title">What's on the menu?</div>
+          <div class="bmd-desc">Choose the centerpiece of your meal.</div>
+          <div class="option-grid" id="bmd-proteins">
+            ${this.proteins.map(p => `
+              <div class="option-card" data-protein="${p.id}">
+                <div class="ico">${p.ico}</div>
+                <div class="lbl">${p.name}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="bmd-step">
+        <div class="bmd-num">2</div>
+        <div class="bmd-content">
+          <div class="bmd-title">What's the occasion?</div>
+          <div class="bmd-desc">This shapes the bottle I recommend and the side suggestions.</div>
+          <div class="option-grid" id="bmd-styles">
+            ${this.styles.map(s => `
+              <div class="option-card" data-style="${s.id}">
+                <div class="ico">${s.ico}</div>
+                <div class="lbl">${s.name}</div>
+                <div class="sub">${s.sub}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="bmd-step">
+        <div class="bmd-num">3</div>
+        <div class="bmd-content">
+          <div class="bmd-title">Budget for the bottle?</div>
+          <div class="bmd-desc">I'll match recommendations to where you want to land.</div>
+          <div class="option-grid" id="bmd-budget">
+            ${this.budgets.map(b => `
+              <div class="option-card" data-budget="${b.id}">
+                <div class="ico">${b.ico}</div>
+                <div class="lbl">${b.name}</div>
+                <div class="sub">${b.sub}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="bmd-step">
+        <div class="bmd-num">4</div>
+        <div class="bmd-content" id="bmd-output">
+          <div class="bmd-title">Your meal plan</div>
+          <div class="bmd-desc muted">Pick options above and I'll build a complete plan with wine, accompaniments, and a shopping list.</div>
+        </div>
+      </div>
+    `;
+
+    /* selection bindings */
+    $$('#bmd-proteins .option-card').forEach(c => c.addEventListener('click', () => {
+      $$('#bmd-proteins .option-card').forEach(x => x.classList.remove('selected'));
+      c.classList.add('selected');
+      Dinner.state.protein = Dinner.proteins.find(p => p.id === c.dataset.protein);
+      Dinner.maybeBuild();
+    }));
+    $$('#bmd-styles .option-card').forEach(c => c.addEventListener('click', () => {
+      $$('#bmd-styles .option-card').forEach(x => x.classList.remove('selected'));
+      c.classList.add('selected');
+      Dinner.state.style = Dinner.styles.find(p => p.id === c.dataset.style);
+      Dinner.maybeBuild();
+    }));
+    $$('#bmd-budget .option-card').forEach(c => c.addEventListener('click', () => {
+      $$('#bmd-budget .option-card').forEach(x => x.classList.remove('selected'));
+      c.classList.add('selected');
+      Dinner.state.budget = Dinner.budgets.find(p => p.id === c.dataset.budget);
+      Dinner.maybeBuild();
+    }));
+  },
+  maybeBuild() {
+    const { protein, style, budget } = Dinner.state;
+    if (!protein || !style || !budget) return;
+    Dinner.build();
+  },
+  build() {
+    const { protein, style, budget } = Dinner.state;
+    Integrations.analytics.track('dinner.build', { protein: protein.id, style: style.id, budget: budget.id });
+
+    /* compose pseudo-query */
+    const budgetMap = { value: 15, mid: 25, premium: 50, luxe: 200 };
+    const modifierMap = {
+      'date': { premium: 0.15 },
+      'dinner-party': { popularity: 0.20, premium: 0.10 },
+      'celebration': { sparkling: 1 },
+      'casual': { budget: 1 }
+    };
+    const query = {
+      pairings: protein.pairings,
+      profile: {},
+      maxPrice: budgetMap[budget.id],
+      modifiers: { ...(modifierMap[style.id] || {}) }
+    };
+    if (budget.id === 'luxe' || budget.id === 'premium') query.modifiers.premium = true;
+    if (style.id === 'celebration') query.sparkling = true;
+
+    const ranked = Scorer.rank(query);
+    const wine = ranked[0];
+    const alt  = ranked[1];
+    const upgrade = ranked.find(w => w.price > wine.price && w.score > 0.4) || ranked[2];
+
+    /* shopping list assembly */
+    const cart = Dinner.buildCart(protein, style, wine);
+    Session.state.cart = cart;
+
+    const total = cart.reduce((s, i) => s + i.price, 0);
+
+    $('#bmd-output').innerHTML = `
+      <div class="bmd-title">Your meal plan</div>
+      <div class="bmd-desc">For <strong style="color:var(--ink)">${protein.name.toLowerCase()}</strong>, ${style.sub.toLowerCase()}, with a ${budget.name} bottle.</div>
+
+      <div class="aria-thread" style="margin-bottom:16px;">
+        ${ariaBubble(Aria.dinnerIntro(protein, style, wine), 'Sommelier')}
+      </div>
+
+      <div class="wine-list">
+        ${wineCard(wine, { why: `Top match · pairs with ${protein.name.toLowerCase()} and fits your budget` })}
+        ${alt && alt.sku !== wine.sku ? `<div style="font-size:0.74rem;color:var(--ink-mute);letter-spacing:1px;text-transform:uppercase;margin:6px 0;font-weight:600;">Alternative</div>${wineCard(alt, { why: 'A safe second pick — different mood, same fit' })}` : ''}
+        ${upgrade && upgrade.sku !== wine.sku && upgrade.sku !== alt?.sku ? `<div style="font-size:0.74rem;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin:6px 0;font-weight:600;">◆ Premium upgrade</div>${wineCard(upgrade, { why: 'If you want to make tonight feel special' })}` : ''}
+      </div>
+
+      <div class="cart">
+        <div class="cart-head">
+          <div class="title">Tonight's Shopping List</div>
+          <div class="total">$${total.toFixed(2)}</div>
+        </div>
+        ${cart.map(item => `
+          <div class="cart-row">
+            <div class="item">
+              ${item.name}
+              <div class="sub">${item.category}</div>
+            </div>
+            <div class="item-aisle">${item.aisle}</div>
+            <div class="item-price">$${item.price.toFixed(2)}</div>
+          </div>
+        `).join('')}
+
+        <div class="cart-foot">
+          <div class="qr-box">
+            <div class="qr">
+              <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+                <rect x="2"  y="2"  width="10" height="10" fill="#0a0a0d"/>
+                <rect x="22" y="2"  width="10" height="10" fill="#0a0a0d"/>
+                <rect x="2"  y="22" width="10" height="10" fill="#0a0a0d"/>
+                <rect x="14" y="14" width="6"  height="6"  fill="#0a0a0d"/>
+                <rect x="22" y="22" width="4"  height="4"  fill="#0a0a0d"/>
+                <rect x="28" y="22" width="4"  height="4"  fill="#0a0a0d"/>
+                <rect x="22" y="28" width="4"  height="4"  fill="#0a0a0d"/>
+                <rect x="28" y="28" width="4"  height="4"  fill="#0a0a0d"/>
+                <rect x="14" y="2"  width="4"  height="4"  fill="#0a0a0d"/>
+                <rect x="14" y="8"  width="4"  height="4"  fill="#0a0a0d"/>
+              </svg>
+            </div>
+            <div class="copy">
+              <div class="t1">Save to your phone</div>
+              <div class="t2">Scan to text yourself the list</div>
+            </div>
+          </div>
+          <div class="flex-row">
+            <button class="btn-secondary" id="cart-export">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 8l5-5 5 5M5 21h14"/></svg>
+              Send to phone
+            </button>
+            <button class="btn-secondary" id="cart-print">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V3h12v6M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg>
+              Print list
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    $('#cart-export').addEventListener('click', async () => {
+      const handoff = await Integrations.qr.createHandoff({ cart: Session.state.cart });
+      Integrations.analytics.track('cart.handoff', { id: handoff.id });
+      alert('Handoff link created: ' + handoff.url);
+    });
+    $('#cart-print').addEventListener('click', () => window.print());
+  },
+  buildCart(protein, style, wine) {
+    const cart = [];
+    /* Always include the wine */
+    cart.push({ sku: wine.sku, name: wine.name, category: `Wine · ${wine.varietal}`, aisle: wine.aisle, price: wine.price });
+
+    /* Protein-driven side suggestions */
+    const sides = {
+      beef:    ['produce', 'sauces'],
+      salmon:  ['produce', 'bread'],
+      shellfish: ['bread', 'produce', 'sauces'],
+      chicken: ['produce', 'bread'],
+      pasta:   ['cheese', 'bread'],
+      lamb:    ['produce', 'sauces'],
+      pizza:   ['cheese', 'charcuterie'],
+      cheese:  ['cheese', 'bread', 'charcuterie', 'produce', 'sauces']
+    };
+
+    (sides[protein.id] || ['cheese','bread']).forEach(cat => {
+      const item = CATALOG.pantry[cat] && CATALOG.pantry[cat][0];
+      if (item) cart.push({ ...item, category: cat[0].toUpperCase() + cat.slice(1) });
+    });
+
+    /* Style upgrades */
+    if (style.id === 'dinner-party' || style.id === 'celebration') {
+      cart.push({ ...CATALOG.pantry.charcuterie[0], category: 'Charcuterie' });
+      cart.push({ ...CATALOG.pantry.cheese[1],      category: 'Cheese' });
+    }
+    if (style.id === 'date' || style.id === 'celebration') {
+      cart.push({ ...CATALOG.pantry.dessert[0], category: 'Dessert' });
+    }
+    return cart;
+  }
+};
+
+/* ── PAIR MODE  — food → wine, wine → food ── */
+const Pair = {
+  direction: 'food', // or 'wine'
+  render() {
+    panel().innerHTML = `
+      <div class="panel-prompt"><span class="label">ARIA Pair</span>Tell me what you're cooking — or what you're drinking.</div>
+      <div class="panel-sub">I'll suggest the other side of the pairing with reasons grounded in body, acidity and flavour structure.</div>
+
+      <div class="chips" id="pair-direction">
+        <span class="chip ${this.direction==='food'?'gold':''}" data-dir="food">Food → Wine</span>
+        <span class="chip ${this.direction==='wine'?'gold':''}" data-dir="wine">Wine → Food</span>
+      </div>
+
+      <div class="chips" id="pair-chips"></div>
+
+      <div class="input-block">
+        <div class="input-field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+          <input id="pair-input" placeholder="" autocomplete="off"/>
+        </div>
+        <button class="btn-primary" id="pair-ask">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          Pair it
+        </button>
+      </div>
+
+      <div class="aria-thread" id="pair-thread"></div>
+    `;
+
+    $$('#pair-direction .chip').forEach(c => c.addEventListener('click', () => {
+      this.direction = c.dataset.dir;
+      this.render();
+    }));
+
+    const foodChips = ['Grilled steak', 'Salmon dinner', 'Cheese board', 'Pizza night', 'Spicy thai', 'Mushroom risotto'];
+    const wineChips = ['Cabernet Sauvignon', 'Pinot Noir', 'Sauvignon Blanc', 'Prosecco', 'Provence Rosé', 'Chardonnay'];
+    const chips = this.direction === 'food' ? foodChips : wineChips;
+    $('#pair-chips').innerHTML = chips.map(c => `<span class="chip" data-q="${c}">${c}</span>`).join('');
+    $('#pair-input').placeholder = this.direction === 'food'
+      ? 'e.g. herb-roasted salmon with lemon caper'
+      : 'e.g. Pinot Noir, Sauvignon Blanc, Prosecco';
+
+    $$('#pair-chips .chip').forEach(c => c.addEventListener('click', () => {
+      $('#pair-input').value = c.dataset.q;
+      Pair.ask();
+    }));
+    $('#pair-ask').addEventListener('click', () => Pair.ask());
+    $('#pair-input').addEventListener('keydown', e => { if (e.key === 'Enter') Pair.ask(); });
+  },
+  ask() {
+    const input = $('#pair-input').value.trim();
+    if (!input) return;
+    const thread = $('#pair-thread');
+    thread.innerHTML = thinkingBubble();
+    Integrations.analytics.track('pair.ask', { q: input, dir: this.direction });
+
+    setTimeout(() => {
+      if (this.direction === 'food') {
+        const { query, ranked } = Scorer.recommend(input, 3);
+        thread.innerHTML = ariaBubble(Aria.pairFood(input, query, ranked), 'Pairing');
+        thread.insertAdjacentHTML('beforeend', `<div class="wine-list" style="margin-top:8px;">${ranked.map(w => wineCard(w, { why: Aria.reason(w, query) })).join('')}</div>`);
+      } else {
+        const dishes = Aria.dishesForWine(input);
+        thread.innerHTML = ariaBubble(Aria.pairWine(input, dishes), 'Pairing');
+        thread.insertAdjacentHTML('beforeend', `
+          <div class="bubble" style="margin-top:10px;">
+            <div class="bubble-avatar">A</div>
+            <div class="bubble-content">
+              ${dishes.map(d => `
+                <div class="wine-card" style="grid-template-columns:1fr;">
+                  <div class="wine-body">
+                    <div class="wine-region">${d.cuisine}</div>
+                    <div class="wine-head"><span class="wine-name">${d.title}</span></div>
+                    <div class="wine-notes">${d.ingredients}</div>
+                    <div class="wine-why">${d.why}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `);
+      }
+    }, 600);
+  }
+};
+
+/* ── REGION MODE ── */
+const Region = {
+  regions: [
+    { id: 'sonoma',     flag: '🌲', name: 'Sonoma · Napa',     desc: 'California heavyweights — Cabs, Pinots, lush Chardonnays.', filter: w => w.country === 'USA' },
+    { id: 'champagne',  flag: '🥂', name: 'Champagne',         desc: 'The benchmark sparkling region, from brut to luxe cuvées.', filter: w => w.region.toLowerCase().includes('champagne') || w.region.toLowerCase().includes('treviso') },
+    { id: 'rioja',      flag: '🇪🇸', name: 'Rioja',             desc: 'Tempranillo-led Spanish classics — leather, cherry, dried herb.', filter: w => w.region.toLowerCase().includes('rioja') },
+    { id: 'provence',   flag: '🌸', name: 'Provence',           desc: 'The reference for dry, pale rosé — strawberry, peach, salt.', filter: w => w.region.toLowerCase().includes('provence') || w.region.toLowerCase().includes('bandol') },
+    { id: 'burgundy',   flag: '🍇', name: 'Burgundy · Chablis', desc: 'Mineral whites, supple Pinot — a region of place above all.', filter: w => w.region.toLowerCase().includes('chablis') || w.region.toLowerCase().includes('burgundy') },
+    { id: 'marlborough', flag: '🏞', name: 'Marlborough',       desc: 'New Zealand\'s electric Sauvignon Blanc and crisp aromatic whites.', filter: w => w.region.toLowerCase().includes('marlborough') },
+    { id: 'tuscany',    flag: '🌿', name: 'Italy',              desc: 'From Prosecco bubbles to alpine Pinot Grigio — Italy has range.', filter: w => w.country === 'Italy' },
+    { id: 'rhone',      flag: '🌞', name: 'Rhône · Paso Robles', desc: 'GSM blends — Grenache, Syrah, Mourvèdre — sun, savour, spice.', filter: w => w.tags?.includes('rhone-blend') }
+  ],
+  render() {
+    panel().innerHTML = `
+      <div class="panel-prompt"><span class="label">ARIA Explore</span>Discover by region.</div>
+      <div class="panel-sub">Pick a region and I'll show you what's on our shelves and what makes it worth tasting.</div>
+      <div class="region-grid">
+        ${this.regions.map(r => `
+          <div class="region-card" data-region="${r.id}">
+            <div class="flag">${r.flag}</div>
+            <div class="name">${r.name}</div>
+            <div class="desc">${r.desc}</div>
+            <div class="stat">View →</div>
+          </div>
+        `).join('')}
+      </div>
+      <div id="region-results" style="margin-top:22px;"></div>
+    `;
+    $$('.region-card').forEach(c => c.addEventListener('click', () => {
+      Region.show(c.dataset.region);
+    }));
+  },
+  show(id) {
+    const r = this.regions.find(x => x.id === id);
+    if (!r) return;
+    Integrations.analytics.track('region.show', { id });
+    const matches = CATALOG.wines.filter(r.filter);
+    $('#region-results').innerHTML = `
+      <div class="aria-thread">
+        ${ariaBubble(`<strong>${r.name}.</strong> ${r.desc} Here's what's in stock right now.`, 'Region')}
+      </div>
+      <div class="wine-list" style="margin-top:14px;">
+        ${matches.length ? matches.map(w => wineCard(w, { why: '' })).join('') : '<div class="muted">No bottles from this region currently on the floor — ask an associate.</div>'}
+      </div>
+    `;
+  }
+};
+
+/* ── SCAN MODE ── */
+const Scan = {
+  render() {
+    panel().innerHTML = `
+      <div class="panel-prompt"><span class="label">ARIA Scan</span>Scan a label or tap a sample.</div>
+      <div class="panel-sub">Hold any bottle up to the camera — or tap one of the popular SKUs below — and I'll pull its full profile.</div>
+      <div class="scan-grid">
+        ${CATALOG.wines.slice(0, 8).map(w => `
+          <div class="scan-card" data-sku="${w.sku}">
+            <div class="ico">🍷</div>
+            <div class="name">${w.name.split(' ').slice(0,2).join(' ')}</div>
+            <div class="sub">${w.varietal.split(' ')[0]}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div id="scan-result" style="margin-top:22px;"></div>
+    `;
+    $$('.scan-card').forEach(c => c.addEventListener('click', () => Scan.show(c.dataset.sku)));
+  },
+  show(sku) {
+    const w = CATALOG.wines.find(x => x.sku === sku);
+    if (!w) return;
+    Integrations.analytics.track('scan.show', { sku });
+    $('#scan-result').innerHTML = `
+      <div class="aria-thread">
+        ${ariaBubble(`Got it — that's the <strong>${w.name}</strong>. Here's everything you need to know.`, 'Bottle Scan')}
+      </div>
+      <div class="wine-list" style="margin-top:14px;">
+        ${wineCard(w)}
+      </div>
+      <div class="profile-grid">
+        ${profileBar('Body',      w.tasting.body)}
+        ${profileBar('Tannin',    w.tasting.tannin)}
+        ${profileBar('Acidity',   w.tasting.acidity)}
+        ${profileBar('Sweetness', w.tasting.sweetness)}
+      </div>
+    `;
+  }
+};
+
+
+/* ───────────────────────────────────────────────────────────────────
+   8. ARIA  — Conversational micro-agent
+   ─────────────────────────────────────────────────────────────────── */
+const Aria = {
+  /* Compose a natural-language intro for a recommendation */
+  compose(input, query, ranked) {
+    const top = ranked[0];
+    const phrases = [];
+    if (query.pairings?.length) {
+      const friendly = query.pairings[0].replace('-', ' ');
+      phrases.push(`for <strong>${friendly}</strong>`);
+    }
+    if (query.maxPrice) phrases.push(`under <strong>$${query.maxPrice}</strong>`);
+    if (query.modifiers?.adventurous) phrases.push('something <strong>a little less expected</strong>');
+    if (query.modifiers?.premium) phrases.push('on the <strong>premium</strong> side');
+    if (query.modifiers?.budget) phrases.push('with <strong>great value</strong>');
+    if (query.sparkling) phrases.push('with <strong>bubbles</strong>');
+
+    const fragment = phrases.length ? ' — ' + phrases.join(', ') : '';
+    return `Here are <strong>${ranked.length} bottles</strong> I'd reach for${fragment}. My top pick is the <strong>${top.name}</strong> from ${top.region} — ${this.shortNote(top)}.`;
+  },
+
+  /* Short reason a wine scored well */
+  reason(wine, query) {
+    const parts = [];
+    if (query.pairings?.some(p => wine.pairings.includes(p))) {
+      parts.push(`classic match for ${query.pairings[0].replace('-', ' ')}`);
+    }
+    if (query.maxPrice && wine.price <= query.maxPrice) {
+      parts.push(`fits at $${wine.price.toFixed(2)}`);
+    }
+    if (wine.badges.includes('best-value')) parts.push('strong value');
+    if (wine.badges.includes('premium-pick')) parts.push('premium-tier choice');
+    if (wine.badges.includes('top-rated') || wine.badges.includes('bestseller')) parts.push('a proven crowd-pleaser');
+    return parts.join(' · ');
+  },
+
+  shortNote(wine) {
+    return wine.notes.split(/[.·]/)[0].toLowerCase();
+  },
+
+  dinnerIntro(protein, style, wine) {
+    const a = {
+      beef:      `Steak calls for tannin and structure. The <strong>${wine.name}</strong> has the dark fruit and grip to handle a well-marbled cut.`,
+      salmon:    `Salmon loves a wine with brightness or a silky red. The <strong>${wine.name}</strong> threads that needle beautifully.`,
+      shellfish: `Shellfish wants freshness — citrus, mineral, sometimes bubbles. The <strong>${wine.name}</strong> fits the mood.`,
+      chicken:   `Roast chicken is the great equalizer. The <strong>${wine.name}</strong> has the versatility to lift it without overpowering.`,
+      pasta:     `Pasta is forgiving and food-friendly. The <strong>${wine.name}</strong> brings warmth, fruit and a long finish.`,
+      lamb:      `Lamb's gamey richness calls for structure with savoury depth. The <strong>${wine.name}</strong> answers on both fronts.`,
+      pizza:     `Pizza wants something easy and a little bold. The <strong>${wine.name}</strong> hits the comfort note without trying too hard.`,
+      cheese:    `A cheese board rewards a versatile bottle. The <strong>${wine.name}</strong> will move from triple-crème to aged hard cheese without missing a beat.`
+    };
+    return (a[protein.id] || `The <strong>${wine.name}</strong> is a beautiful match for tonight.`)
+      + ` I've also pulled together everything you'll need around it — see your list below.`;
+  },
+
+  pairFood(input, query, ranked) {
+    const top = ranked[0];
+    return `For <strong>${input}</strong>, I'd reach for the <strong>${top.name}</strong> first — ${this.shortNote(top)}. Below are three options across price tiers.`;
+  },
+
+  /* Wine → dish suggestions */
+  dishesForWine(input) {
+    const lower = input.toLowerCase();
+    const recipes = {
+      cabernet: [
+        { title: 'Herb-Crusted Ribeye with Garlic Butter', cuisine: 'Steakhouse · Classic', ingredients: 'Ribeye, rosemary, thyme, garlic, sea salt.', why: 'Cabernet\'s tannins cut the marbling; the herb crust echoes its savoury edge.' },
+        { title: 'Slow-Braised Short Ribs', cuisine: 'French · Bistro', ingredients: 'Short ribs, beef stock, tomato paste, mirepoix, fresh thyme.', why: 'Braising in the same wine you\'re drinking creates a harmonious, show-stopping plate.' }
+      ],
+      pinot: [
+        { title: 'Pan-Seared Duck Breast, Cherry Reduction', cuisine: 'French · Modern', ingredients: 'Duck breast, dried cherries, shallot, balsamic.', why: 'The wine\'s red-fruit and earthy notes mirror the dish exactly.' },
+        { title: 'Wild Mushroom Risotto', cuisine: 'Italian · Comfort', ingredients: 'Arborio rice, mixed mushrooms, parmesan, shallot, white wine.', why: 'Earth meets earth — a textbook Pinot pairing.' }
+      ],
+      chardonnay: [
+        { title: 'Lemon Butter Chicken Piccata', cuisine: 'Italian-American', ingredients: 'Chicken breast, capers, lemon, butter, parsley.', why: 'Chardonnay\'s richness flatters butter; its citrus echoes the lemon.' },
+        { title: 'Lobster Bisque', cuisine: 'Coastal · Indulgent', ingredients: 'Lobster, cream, shallot, brandy, tarragon.', why: 'Cream against creaminess, with enough acid to keep things lively.' }
+      ],
+      'sauvignon blanc': [
+        { title: 'Herb-Roasted Salmon, Caper Salsa', cuisine: 'Coastal · Bright', ingredients: 'Atlantic salmon, capers, dill, lemon, cherry tomato.', why: 'Citrus, herb, brine — Sauv Blanc\'s natural language.' },
+        { title: 'Goat Cheese & Arugula Flatbread', cuisine: 'Bistro · Light', ingredients: 'Flatbread, fresh chèvre, baby arugula, walnut, honey, balsamic.', why: 'Acid against creamy chèvre; herbal notes lift the peppery greens.' }
+      ],
+      prosecco: [
+        { title: 'Prosciutto-Wrapped Melon with Mint', cuisine: 'Italian · Aperitivo', ingredients: 'Cantaloupe, prosciutto, mint, EVOO, cracked pepper.', why: 'Salt, sweet, fresh, and effervescence — a perfect circle.' },
+        { title: 'Smoked Salmon Crostini, Crème Fraîche', cuisine: 'European · Brunch', ingredients: 'Baguette, smoked salmon, crème fraîche, capers, dill.', why: 'Bubbles cut the richness; the citrus zest lifts every bite.' }
+      ],
+      rosé: [
+        { title: 'Grilled Shrimp Tacos, Mango Salsa', cuisine: 'Coastal · Bright', ingredients: 'Shrimp, mango, cabbage, lime, cilantro, cotija.', why: 'Berry-meets-stone-fruit echoes the salsa; the wine\'s freshness handles spice.' },
+        { title: 'Niçoise Salad with Seared Tuna', cuisine: 'Provençal · Classic', ingredients: 'Ahi tuna, haricot vert, olives, egg, tomato, Dijon.', why: 'The wine of Provence next to the salad of Provence — exactly as intended.' }
+      ],
+      'pinot grigio': [
+        { title: 'Linguine alle Vongole', cuisine: 'Italian · Coastal', ingredients: 'Linguine, clams, white wine, garlic, parsley, chili flake.', why: 'Mineral wine meets brine — clean and pure.' },
+        { title: 'Antipasto Board', cuisine: 'Italian · Aperitivo', ingredients: 'Mortadella, prosciutto, marinated artichokes, olives, focaccia.', why: 'Light, lemony, food-friendly — built for the antipasto course.' }
+      ]
+    };
+    for (const [k, v] of Object.entries(recipes)) {
+      if (lower.includes(k)) return v;
+    }
+    return [
+      { title: 'Charcuterie & Cheese Board', cuisine: 'Aperitivo · Universal', ingredients: 'Brie, aged cheddar, prosciutto, salami, crackers, almonds, fig jam, grapes.', why: 'A well-curated board flatters nearly any bottle while letting it lead.' },
+      { title: 'Herb-Roasted Chicken Thighs', cuisine: 'Roast · Comfort', ingredients: 'Bone-in chicken, rosemary, thyme, garlic, lemon, potatoes.', why: 'Roast chicken is the ultimate wine-friendly meal — it works with reds, whites and rosés alike.' }
+    ];
+  },
+
+  pairWine(wine, dishes) {
+    return `For <strong>${wine}</strong>, I'd cook one of these. Both use ingredients you'll find in the surrounding aisles.`;
+  }
+};
+
+
+/* ───────────────────────────────────────────────────────────────────
+   9. BOOT
+   ─────────────────────────────────────────────────────────────────── */
+const Modes = { discover: Discover, dinner: Dinner, pair: Pair, region: Region, scan: Scan };
+
+function setMode(mode) {
+  Session.set('mode', mode);
+  $$('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
+  Modes[mode].render();
+  Integrations.analytics.track('mode.switch', { mode });
+}
+
+function tickClock() {
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    weekday: 'short', hour: 'numeric', minute: '2-digit'
+  });
+  $('#ctx-time').textContent = fmt.format(new Date());
+}
+
+function bindQuickShortcuts() {
+  $$('.hero-shortcut').forEach(s => s.addEventListener('click', () => {
+    const map = {
+      'dinner-party': { mode: 'dinner' },
+      'weeknight':    { mode: 'discover', q: 'Smooth red blend under $20 for a weeknight' },
+      'gift':         { mode: 'discover', q: 'A gift-worthy premium bottle for a host' },
+      'adventurous':  { mode: 'discover', q: 'Surprise me — something adventurous I haven\'t tried' }
+    };
+    const target = map[s.dataset.quick];
+    if (!target) return;
+    setMode(target.mode);
+    if (target.q) {
+      setTimeout(() => {
+        const inp = $('#discover-input');
+        if (inp) { inp.value = target.q; Discover.ask(); }
+      }, 80);
+    }
+  }));
+}
+
+function bindGlobalActions() {
+  /* Add-to-list buttons inside wine cards (delegated) */
+  document.body.addEventListener('click', e => {
+    const btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    const sku = btn.dataset.sku;
+    const wine = CATALOG.wines.find(w => w.sku === sku);
+    if (!wine) return;
+
+    if (btn.dataset.act === 'add') {
+      Integrations.pos.addToCart(sku);
+      Session.addToCart({ sku: wine.sku, name: wine.name, category: 'Wine', aisle: wine.aisle, price: wine.price });
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Added';
+      btn.style.color = 'var(--ok)';
+    }
+    if (btn.dataset.act === 'profile') {
+      const card = btn.closest('.wine-card');
+      if (card.querySelector('.profile-grid')) {
+        card.querySelector('.profile-grid').remove();
+        return;
+      }
+      const html = `
+        <div class="profile-grid" style="grid-column: 1 / -1;">
+          ${profileBar('Body',      wine.tasting.body)}
+          ${profileBar('Tannin',    wine.tasting.tannin)}
+          ${profileBar('Acidity',   wine.tasting.acidity)}
+          ${profileBar('Sweetness', wine.tasting.sweetness)}
+        </div>`;
+      card.insertAdjacentHTML('beforeend', html);
+    }
+    if (btn.dataset.act === 'pair') {
+      setMode('pair');
+      Pair.direction = 'wine';
+      Pair.render();
+      $('#pair-input').value = wine.varietal.split(' ')[0];
+      Pair.ask();
+    }
+  });
+
+  /* Mode tabs */
+  $$('.mode-tab').forEach(t => t.addEventListener('click', () => setMode(t.dataset.mode)));
+
+  /* Associate toggle — reveals/hides the right-side context cards */
+  $('#associate-btn').addEventListener('click', () => {
+    Session.state.associate = !Session.state.associate;
+    const on = Session.state.associate;
+    document.querySelector('.shell').classList.toggle('associate-on', on);
+    $('#associate-btn').style.borderColor = on ? 'var(--gold)' : '';
+    $('#associate-btn').style.color       = on ? 'var(--gold)' : '';
+    $('#associate-btn').style.background  = on ? 'var(--gold-soft)' : '';
+    Integrations.analytics.track('mode.associate', { on });
+  });
+
+  /* Locale cycler — actually swaps every [data-i18n] string in the DOM */
+  const locales = ['EN', 'ES', 'FR', 'JA'];
+  $('#locale-btn').addEventListener('click', () => {
+    const cur = Integrations.i18n.locale;
+    const next = locales[(locales.indexOf(cur) + 1) % locales.length];
+    $('#locale-btn').querySelector('span:not(.dot)').textContent = next;
+    Integrations.i18n.setLocale(next);
+    Integrations.analytics.track('mode.locale', { locale: next });
+  });
+}
+
+function boot() {
+  bindGlobalActions();
+  bindQuickShortcuts();
+  tickClock();
+  setInterval(tickClock, 30_000);
+  setMode('discover');
+  applyLocale();
+  Integrations.analytics.track('boot');
+}
+
+document.addEventListener('DOMContentLoaded', boot);
+</script>
+</body>
+</html>
