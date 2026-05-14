@@ -1236,6 +1236,207 @@ footer .legal {
   .btn-primary { width: 100%; justify-content: center; }
 }
 
+/* ───── Today's Deals — alert bar + sale rail ───── */
+.alert-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  margin-bottom: 18px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(135deg, var(--wine-soft) 0%, rgba(138,47,63,0.06) 100%);
+  border: 1px solid rgba(217,159,169,0.30);
+  animation: alertSlide 0.5s var(--ease);
+}
+@keyframes alertSlide {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.alert-bar .alert-ico {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--wine);
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  flex-shrink: 0;
+  position: relative;
+}
+.alert-bar .alert-ico::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid var(--wine);
+  animation: pulse 2.5s ease-in-out infinite;
+  opacity: 0.5;
+}
+.alert-bar .alert-ico svg { width: 16px; height: 16px; }
+.alert-bar .alert-text { flex: 1; font-size: 0.88rem; color: var(--ink-soft); }
+.alert-bar .alert-text b { color: var(--blush); font-weight: 700; margin-right: 8px; letter-spacing: 0.2px; }
+.alert-bar .alert-cta {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--blush);
+  background: transparent;
+  border: 1px solid rgba(217,159,169,0.40);
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  white-space: nowrap;
+}
+.alert-bar .alert-cta:hover { background: var(--wine-soft); color: var(--ink); border-color: var(--blush); }
+
+.sale-rail-wrap { margin-bottom: 22px; }
+.sale-rail-wrap.flash { animation: flashHL 1.2s var(--ease); }
+@keyframes flashHL {
+  0%, 100% { box-shadow: none; }
+  50% { box-shadow: 0 0 0 4px rgba(217,159,169,0.20); border-radius: var(--r-lg); }
+}
+.sale-rail-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+.sale-rail-head .title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+.sale-rail-head .sub {
+  font-size: 0.72rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.sale-rail {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 4px 4px 12px;
+  scrollbar-width: thin;
+}
+.sale-rail::-webkit-scrollbar { height: 6px; }
+.sale-rail::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 999px; }
+
+.sale-tile {
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+  padding: 14px;
+  background: linear-gradient(160deg, rgba(38,36,47,0.85) 0%, rgba(20,19,27,0.85) 100%);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-lg);
+  cursor: pointer;
+  transition: all 0.22s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+.sale-tile:hover {
+  border-color: rgba(217,159,169,0.40);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+.sale-tile .tile-discount {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: var(--wine);
+  color: var(--ink);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(138,47,63,0.40);
+}
+.sale-tile .bottle-art {
+  width: 56px;
+  height: 84px;
+  margin: 0 auto 10px;
+}
+.sale-tile .bottle-art svg { width: 32px; height: 60px; }
+.sale-tile .tile-name {
+  font-family: var(--font-serif);
+  font-size: 0.92rem;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.4em;
+}
+.sale-tile .tile-meta {
+  font-size: 0.68rem;
+  color: var(--ink-mute);
+  margin-bottom: 10px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.sale-tile .tile-prices { display: flex; align-items: baseline; gap: 8px; }
+.sale-tile .tile-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: -0.2px;
+}
+.sale-tile .tile-msrp {
+  font-size: 0.78rem;
+  color: var(--ink-mute);
+  text-decoration: line-through;
+  text-decoration-color: rgba(246,244,239,0.30);
+}
+.sale-tile .tile-promo {
+  margin-top: 8px;
+  font-size: 0.7rem;
+  color: var(--blush);
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-top: 1px solid rgba(217,159,169,0.15);
+  padding-top: 8px;
+}
+.sale-tile .tile-promo::before { content: '✦'; color: var(--blush); }
+
+/* Sale badge + strikethrough MSRP + promo line inside main wine cards */
+.badge-sale {
+  background: var(--wine);
+  color: var(--ink);
+  border: 1px solid var(--wine);
+  font-weight: 700;
+}
+.price-tag .msrp {
+  margin-left: 8px;
+  font-size: 0.74rem;
+  color: var(--ink-mute);
+  text-decoration: line-through;
+  text-decoration-color: rgba(246,244,239,0.30);
+  font-weight: 400;
+}
+.wine-promo {
+  margin-top: 8px;
+  padding: 7px 11px;
+  font-size: 0.78rem;
+  color: var(--blush);
+  background: var(--wine-soft);
+  border: 1px solid rgba(217,159,169,0.22);
+  border-radius: var(--r-md);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+.wine-promo::before { content: '✦'; color: var(--blush); }
+
 /* ───── Subtle utilities ───── */
 .hidden { display: none !important; }
 .spacer-8 { height: 8px; }
@@ -1336,6 +1537,24 @@ footer .legal {
         </button>
       </div>
     </section>
+
+    <!-- TODAY'S DEALS ALERT -->
+    <div class="alert-bar" id="alert-bar">
+      <div class="alert-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12V4H12L2 14v6h6l8-8 4-4z"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/></svg>
+      </div>
+      <div class="alert-text" data-i18n="alert.deals" data-i18n-html="true"><b>Today's Deals</b>Save up to 28% on featured bottles — limited stock while supplies last.</div>
+      <button class="alert-cta" id="alert-cta" data-i18n="alert.cta">View deals</button>
+    </div>
+
+    <!-- ON-SALE RAIL -->
+    <div class="sale-rail-wrap" id="sale-rail-wrap">
+      <div class="sale-rail-head">
+        <div class="title" data-i18n="rail.title">On Sale Now</div>
+        <div class="sub" data-i18n="rail.sub">Curated by ARIA · Refreshed daily</div>
+      </div>
+      <div class="sale-rail" id="sale-rail"></div>
+    </div>
 
     <!-- MODE TABS -->
     <div class="mode-tabs" role="tablist">
@@ -1483,7 +1702,8 @@ const CATALOG = {
       tasting: { acidity: 3, tannin: 4, sweetness: 1, body: 4, alcohol: 13.5 },
       notes: 'Dark cherry, cassis, mocha and toasted cedar with supple tannins and a long, velvety finish.',
       pairings: ['beef', 'lamb', 'aged-cheese', 'grilled', 'rich-pasta'],
-      price: 15.99, msrp: 16.99,
+      price: 13.99, msrp: 19.99,
+      promotion: 'Buy 2, save an extra $4',
       inventory: { stock: 'in', count: 32 },
       popularity: 0.94,
       aisle: 'A14 · Shelf 3',
@@ -1501,7 +1721,7 @@ const CATALOG = {
       tasting: { acidity: 4, tannin: 2, sweetness: 1, body: 3, alcohol: 13.5 },
       notes: 'Strawberry, boysenberry and dark cherry layered with vanilla and a whisper of mocha. Silky, lush, lingering.',
       pairings: ['salmon', 'duck', 'mushroom', 'roast-chicken', 'charcuterie'],
-      price: 18.49, msrp: 19.99,
+      price: 15.99, msrp: 22.99,
       inventory: { stock: 'in', count: 48 },
       popularity: 0.97,
       aisle: 'A14 · Shelf 4',
@@ -1573,7 +1793,8 @@ const CATALOG = {
       tasting: { acidity: 4, tannin: 1, sweetness: 1, body: 2, alcohol: 13 },
       notes: 'Pale salmon. Fresh strawberry, white peach and rose petal over a long, refined, dry finish.',
       pairings: ['shellfish', 'salad', 'tuna', 'charcuterie', 'cheese', 'fruit'],
-      price: 24.99, msrp: 26.99,
+      price: 19.99, msrp: 26.99,
+      promotion: 'Through Sunday only',
       inventory: { stock: 'in', count: 24 },
       popularity: 0.85,
       aisle: 'A14 · Shelf 7',
@@ -1609,7 +1830,8 @@ const CATALOG = {
       tasting: { acidity: 3, tannin: 3, sweetness: 2, body: 4, alcohol: 13.5 },
       notes: 'Blackberry, dark chocolate-covered espresso and vanilla — a lush, smooth, just-off-dry crowd-pleaser.',
       pairings: ['bbq', 'pizza', 'burger', 'pork', 'rich-pasta'],
-      price: 11.99, msrp: 12.99,
+      price: 9.99, msrp: 13.99,
+      promotion: 'Buy 6, save an extra 10%',
       inventory: { stock: 'in', count: 56 },
       popularity: 0.92,
       aisle: 'A14 · Shelf 2',
@@ -1753,7 +1975,8 @@ const CATALOG = {
       tasting: { acidity: 4, tannin: 0, sweetness: 1, body: 3, alcohol: 12 },
       notes: 'Brioche, toasted almond, citrus zest and a creamy mousse. The benchmark celebration Champagne.',
       pairings: ['shellfish', 'caviar', 'fried-chicken', 'celebration', 'gift'],
-      price: 64.99, msrp: 72.00,
+      price: 54.99, msrp: 72.00,
+      promotion: 'Holiday gift offer · case discount available',
       inventory: { stock: 'in', count: 11 },
       popularity: 0.75,
       aisle: 'A14 · Shelf 1',
@@ -2112,6 +2335,10 @@ const T = {
     'brand.tag': '<strong>Aisle Retail Intelligence Assistant</strong> — conversational AI for the retail floor.',
     'pill.associate': 'Associate',
     'pill.live': 'Live',
+    'alert.deals': "<b>Today's Deals</b>Save up to 28% on featured bottles — limited stock while supplies last.",
+    'alert.cta': 'View deals',
+    'rail.title': 'On Sale Now',
+    'rail.sub': 'Curated by ARIA · Refreshed daily',
     'hero.eyebrow': 'ARIA Online · Wine & Spirits Aisle',
     'hero.h1': "I'm <span class=\"accent\">ARIA</span>. <br>Tell me what you're shopping for tonight.",
     'hero.p': "I help shoppers and associates find exactly the right bottle — and everything that goes with it. Ask me anything, scan a label, or let me build your dinner.",
@@ -2552,6 +2779,8 @@ function wineCard(w, opts = {}) {
     ? w.reasons.map(r => r.tag).slice(0,2).join(' · ')
     : '';
   const why = opts.why || (reasons ? `Matched on ${reasons}` : '');
+  const discount = (w.msrp && w.msrp > w.price) ? Math.round((1 - w.price / w.msrp) * 100) : 0;
+  const onSale = discount >= 10;
   return `
     <article class="wine-card" data-sku="${w.sku}">
       ${bottleArt(w.colorTint)}
@@ -2567,7 +2796,11 @@ function wineCard(w, opts = {}) {
         <div class="wine-notes">${w.notes}</div>
         ${why ? `<div class="wine-why">${why}</div>` : ''}
         <div class="wine-meta">
-          <span class="price-tag">$${w.price.toFixed(2)}</span>
+          <span class="price-tag">
+            $${w.price.toFixed(2)}
+            ${onSale ? `<span class="msrp">$${w.msrp.toFixed(2)}</span>` : ''}
+          </span>
+          ${onSale ? `<span class="badge badge-sale">▼ Save ${discount}%</span>` : ''}
           ${badgeHtml(w.badges)}
           ${stockHtml(w.inventory)}
           <span class="aisle">
@@ -2575,6 +2808,7 @@ function wineCard(w, opts = {}) {
             ${w.aisle}
           </span>
         </div>
+        ${w.promotion ? `<div class="wine-promo">${w.promotion}</div>` : ''}
         <div class="wine-actions">
           <button class="action-btn" data-act="profile" data-sku="${w.sku}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
@@ -3334,13 +3568,64 @@ function bindGlobalActions() {
   });
 }
 
+/* ── SALE RAIL — horizontal scrollable strip of on-sale bottles ── */
+const SaleRail = {
+  /** Build a list of wines whose price < msrp by 10%+ */
+  items() {
+    return CATALOG.wines
+      .map(w => ({ ...w, discount: (w.msrp && w.msrp > w.price) ? (1 - w.price / w.msrp) * 100 : 0 }))
+      .filter(w => w.discount >= 10)
+      .sort((a, b) => b.discount - a.discount);
+  },
+  render() {
+    const rail = $('#sale-rail');
+    if (!rail) return;
+    const items = this.items();
+    if (!items.length) {
+      $('#sale-rail-wrap').style.display = 'none';
+      $('#alert-bar').style.display = 'none';
+      return;
+    }
+    rail.innerHTML = items.map(w => `
+      <article class="sale-tile" data-sku="${w.sku}">
+        <div class="tile-discount">−${Math.round(w.discount)}%</div>
+        ${bottleArt(w.colorTint)}
+        <div class="tile-name">${w.name}</div>
+        <div class="tile-meta">${w.varietal.split(' ').slice(0,2).join(' ')} · ${w.country}</div>
+        <div class="tile-prices">
+          <span class="tile-price">$${w.price.toFixed(2)}</span>
+          <span class="tile-msrp">$${w.msrp.toFixed(2)}</span>
+        </div>
+        ${w.promotion ? `<div class="tile-promo">${w.promotion}</div>` : ''}
+      </article>
+    `).join('');
+    rail.querySelectorAll('.sale-tile').forEach(el => {
+      el.addEventListener('click', () => {
+        Integrations.analytics.track('sale.tile.click', { sku: el.dataset.sku });
+        setMode('scan');
+        setTimeout(() => Scan.show(el.dataset.sku), 50);
+      });
+    });
+  }
+};
+
 function boot() {
   bindGlobalActions();
   bindQuickShortcuts();
   tickClock();
   setInterval(tickClock, 30_000);
   setMode('discover');
+  SaleRail.render();
   applyLocale();
+
+  /* Alert CTA — scroll the rail into view and flash it */
+  $('#alert-cta')?.addEventListener('click', () => {
+    const wrap = $('#sale-rail-wrap');
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    wrap.classList.remove('flash'); void wrap.offsetWidth; wrap.classList.add('flash');
+    Integrations.analytics.track('alert.cta.click');
+  });
+
   Integrations.analytics.track('boot');
 }
 
