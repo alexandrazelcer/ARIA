@@ -94,6 +94,7 @@ body {
   background-attachment: fixed;
   display: flex;
   flex-direction: column;
+  overflow-x: clip;          /* no horizontal scroll, full stop */
 }
 
 /* Selection */
@@ -120,9 +121,9 @@ body {
 }
 
 .topbar-inner {
-  max-width: 1280px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 16px 28px;
+  padding: 14px 24px;
   display: flex;
   align-items: center;
   gap: 24px;
@@ -187,10 +188,11 @@ body {
 }
 
 .brand-tag {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: var(--ink-mute);
   letter-spacing: 0.2px;
-  max-width: 340px;
+  max-width: 420px;
+  line-height: 1.35;
 }
 .brand-tag strong { color: var(--ink-soft); font-weight: 500; }
 
@@ -237,20 +239,21 @@ body {
 .shell {
   flex: 1;
   width: 100%;
-  max-width: 1280px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 32px 28px 56px;
+  padding: 22px 24px 48px;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 28px;
+  grid-template-columns: minmax(0, 1fr);  /* prevents flex content blowing out the track */
+  gap: 20px;
   align-items: start;
   transition: grid-template-columns 0.35s var(--ease);
 }
+.main-col { min-width: 0; }     /* belt-and-suspenders for nested flex/grids */
 
-.context-panel { display: none; }
+.context-panel { display: none; min-width: 0; }
 
 .shell.associate-on {
-  grid-template-columns: minmax(0, 1fr) 320px;
+  grid-template-columns: minmax(0, 1fr) 300px;
 }
 
 .shell.associate-on .context-panel {
@@ -272,7 +275,7 @@ body {
    HERO  — ARIA greeting block
    ─────────────────────────────────────────────── */
 .hero {
-  padding: 36px 36px 32px;
+  padding: 26px 30px 24px;
   border-radius: var(--r-xl);
   background:
     radial-gradient(circle at 90% 10%, rgba(201,168,97,0.10), transparent 50%),
@@ -281,23 +284,23 @@ body {
   border: 1px solid var(--line-strong);
   position: relative;
   overflow: hidden;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
 }
 
 .hero-eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 12px;
+  padding: 5px 11px;
   border: 1px solid var(--gold-line);
   border-radius: var(--r-pill);
-  font-size: 0.7rem;
+  font-size: 0.66rem;
   letter-spacing: 1.4px;
   text-transform: uppercase;
   color: var(--gold);
   font-weight: 600;
   background: var(--gold-soft);
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 .hero-eyebrow .pulse {
   width: 6px; height: 6px; border-radius: 50%;
@@ -312,37 +315,38 @@ body {
 .hero h1 {
   font-family: var(--font-serif);
   font-weight: 400;
-  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
   line-height: 1.15;
   color: var(--ink);
   letter-spacing: -0.5px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 .hero h1 .accent { color: var(--gold); font-style: italic; }
+.hero h1 br { display: none; }   /* let title flow on one line when room allows */
 
 .hero p {
   color: var(--ink-soft);
-  font-size: 1rem;
-  max-width: 620px;
-  line-height: 1.6;
+  font-size: 0.94rem;
+  max-width: 580px;
+  line-height: 1.55;
 }
 
 .hero-shortcuts {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
-  margin-top: 22px;
+  margin-top: 16px;
 }
 .hero-shortcut {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 9px 16px;
+  gap: 7px;
+  padding: 7px 13px;
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--line-strong);
   border-radius: var(--r-pill);
   color: var(--ink-soft);
-  font-size: 0.83rem;
+  font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s var(--ease);
@@ -361,11 +365,11 @@ body {
 .mode-tabs {
   display: flex;
   gap: 4px;
-  padding: 6px;
+  padding: 5px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-pill);
-  margin-bottom: 22px;
+  margin-bottom: 16px;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -378,8 +382,8 @@ body {
   flex: 1;
   white-space: nowrap;
   justify-content: center;
-  height: 42px;
-  padding: 0 18px;
+  height: 38px;
+  padding: 0 16px;
   background: transparent;
   border: none;
   border-radius: var(--r-pill);
@@ -410,9 +414,10 @@ body {
   background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
   border: 1px solid var(--line);
   border-radius: var(--r-xl);
-  padding: 28px;
+  padding: 22px 24px;
   box-shadow: var(--shadow-md);
-  min-height: 280px;
+  min-height: 240px;
+  min-width: 0;
 }
 
 .panel-prompt {
@@ -1093,9 +1098,11 @@ body {
 
 /* ───────────────────────────────────────────────
    CONTEXT PANEL  — store / integrations sidebar
+   Hidden by default; revealed only when Associate mode is on.
+   The layout properties below take effect when `.shell.associate-on`
+   sets `display: flex` on this element.
    ─────────────────────────────────────────────── */
 .context-panel {
-  display: flex;
   flex-direction: column;
   gap: 16px;
 }
@@ -1197,7 +1204,7 @@ footer {
   text-align: center;
 }
 .footer-inner {
-  max-width: 1280px;
+  max-width: 1240px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -1361,9 +1368,9 @@ footer .legal {
 .alert-bar {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 12px 18px;
-  margin-bottom: 18px;
+  gap: 12px;
+  padding: 9px 14px 9px 9px;
+  margin-bottom: 14px;
   border-radius: var(--r-pill);
   background: linear-gradient(135deg, var(--wine-soft) 0%, rgba(138,47,63,0.06) 100%);
   border: 1px solid rgba(217,159,169,0.30);
@@ -1409,7 +1416,7 @@ footer .legal {
 }
 .alert-bar .alert-cta:hover { background: var(--wine-soft); color: var(--ink); border-color: var(--blush); }
 
-.sale-rail-wrap { margin-bottom: 22px; }
+.sale-rail-wrap { margin-bottom: 16px; min-width: 0; }
 .sale-rail-wrap.flash { animation: flashHL 1.2s var(--ease); }
 @keyframes flashHL {
   0%, 100% { box-shadow: none; }
@@ -1447,9 +1454,9 @@ footer .legal {
 .sale-rail::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 999px; }
 
 .sale-tile {
-  flex: 0 0 220px;
+  flex: 0 0 190px;
   scroll-snap-align: start;
-  padding: 14px;
+  padding: 12px;
   background: linear-gradient(160deg, rgba(38,36,47,0.85) 0%, rgba(20,19,27,0.85) 100%);
   border: 1px solid var(--line-strong);
   border-radius: var(--r-lg);
