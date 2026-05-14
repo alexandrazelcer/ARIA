@@ -77,11 +77,13 @@ html, body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans);
-  font-size: 16px;
+  /* Fluid base font: 15px on tiny screens, scaling up to 17px on kiosks */
+  font-size: clamp(15px, 0.92vw + 13px, 17px);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  min-height: 100vh;
+  min-height: 100vh;          /* fallback */
+  min-height: 100dvh;         /* mobile address-bar aware */
 }
 
 body {
@@ -1216,24 +1218,143 @@ footer .legal {
   text-transform: uppercase;
 }
 
-/* ───── Responsive ───── */
-@media (max-width: 760px) {
-  .topbar-inner { padding: 14px 18px; gap: 14px; }
-  .brand-tag { display: none; }
-  .shell { padding: 22px 18px 40px; }
-  .hero { padding: 26px 22px 24px; }
-  .panel { padding: 22px 18px; }
-  .wine-card { grid-template-columns: 64px 1fr; padding: 14px; gap: 14px; }
-  .bottle-art { width: 64px; height: 96px; }
-  .bottle-art svg { width: 36px; height: 64px; }
-  .profile-grid { grid-template-columns: 1fr; }
+/* ═══════════════════════════════════════════════════════════════════
+   RESPONSIVE  —  breakpoint system
+   ───────────────────────────────────────────────────────────────────
+   xs  ≤ 360px   tiny phone
+   sm  ≤ 480px   small phone
+   md  ≤ 768px   phone landscape / tablet portrait
+   lg  ≤ 1024px  tablet landscape / small laptop  (handled near .shell)
+   xl  ≥ 1600px  wide laptop / horizontal kiosk
+   2xl ≥ 2200px  4K kiosk / ultra-wide display
+   plus orientation, hover, and reduced-motion queries
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Wide screens · expand max-width and grow type ── */
+@media (min-width: 1600px) {
+  .topbar-inner, .shell, .footer-inner { max-width: 1480px; }
 }
+@media (min-width: 2200px) {
+  .topbar-inner, .shell, .footer-inner { max-width: 1720px; }
+  .shell { padding: 44px 36px 72px; gap: 36px; }
+  .hero { padding: 56px 56px 48px; }
+  .panel { padding: 40px; }
+}
+
+/* ── md · phone landscape / tablet portrait (≤ 768px) ── */
+@media (max-width: 768px) {
+  .topbar-inner { padding: 12px 16px; gap: 12px; }
+  .brand-tag { display: none; }
+  .divider-v { display: none; }
+  .brand-mark { width: 40px; height: 40px; }
+  .brand-text .product { font-size: 1.2rem; }
+  .shell { padding: 20px 16px 40px; gap: 18px; }
+  .hero { padding: 26px 22px 24px; border-radius: 22px; }
+  .hero h1 { font-size: clamp(1.4rem, 5vw, 1.9rem); }
+  .hero p { font-size: 0.92rem; }
+  .panel { padding: 22px 18px; border-radius: 22px; }
+  .mode-tab { padding: 0 14px; font-size: 0.82rem; }
+  .wine-card { grid-template-columns: 72px 1fr; padding: 14px; gap: 12px; }
+  .bottle-art { width: 72px; height: 108px; }
+  .bottle-art svg { width: 42px; height: 76px; }
+  .profile-grid { grid-template-columns: 1fr 1fr; }
+  .sale-tile { flex-basis: 200px; }
+  .alert-bar { flex-wrap: wrap; padding: 10px 14px; }
+  .alert-bar .alert-text { flex: 1 1 calc(100% - 60px); font-size: 0.84rem; }
+  .alert-bar .alert-cta { flex: 1 1 100%; text-align: center; margin-top: 4px; }
+  .footer-inner { flex-direction: column; gap: 6px; text-align: center; }
+  .region-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  .scan-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  .option-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+}
+
+/* ── sm · small phone (≤ 480px) ── */
 @media (max-width: 480px) {
   .topbar-actions .pill-btn span:not(.dot) { display: none; }
-  .pill-btn { width: 36px; padding: 0; justify-content: center; }
-  .hero h1 { font-size: 1.5rem; }
+  .pill-btn { width: 38px; padding: 0; justify-content: center; }
+  .hero h1 { font-size: clamp(1.2rem, 6vw, 1.6rem); line-height: 1.2; }
+  .hero p { font-size: 0.88rem; }
+  .hero-shortcuts { gap: 8px; }
+  .hero-shortcut { font-size: 0.78rem; padding: 8px 12px; }
+  .mode-tab .icon { display: none; }
+  .mode-tab { font-size: 0.78rem; padding: 0 10px; }
   .input-block { flex-direction: column; }
   .btn-primary { width: 100%; justify-content: center; }
+  .wine-card { grid-template-columns: 56px 1fr; padding: 12px; gap: 10px; }
+  .bottle-art { width: 56px; height: 84px; }
+  .bottle-art svg { width: 32px; height: 56px; }
+  .wine-name { font-size: 1rem; }
+  .wine-vintage { font-size: 0.72rem; display: block; margin-top: 2px; }
+  .ratings-row .rating-chip { display: none; }   /* keep just the avg pill */
+  .wine-meta { gap: 6px; }
+  .wine-actions { gap: 6px; }
+  .wine-actions .action-btn { padding: 6px 10px; font-size: 0.74rem; }
+  .profile-grid { grid-template-columns: 1fr; padding: 12px 14px; }
+  .sale-tile { flex-basis: 170px; padding: 12px; }
+  .sale-tile .tile-name { font-size: 0.86rem; }
+  .ratings-detail { grid-template-columns: 1fr; gap: 12px; padding: 14px; }
+  .ratings-detail .big-score { border-right: none; border-bottom: 1px solid var(--line-strong); padding: 0 0 12px; flex-direction: row; gap: 10px; }
+  .ratings-detail .big-score .n { font-size: 1.8rem; }
+  .option-grid { grid-template-columns: repeat(2, 1fr); }
+  .region-grid { grid-template-columns: 1fr; }
+  .scan-grid { grid-template-columns: repeat(2, 1fr); }
+  .bmd-step { flex-direction: row; align-items: flex-start; }
+  .cart-row { grid-template-columns: 1fr auto; gap: 8px; }
+  .cart-row .item-aisle { display: none; }
+  .qr-box { width: 100%; }
+}
+
+/* ── xs · very small phone (≤ 360px) ── */
+@media (max-width: 360px) {
+  .topbar-inner { gap: 8px; padding: 10px 12px; }
+  .brand-mark { width: 36px; height: 36px; }
+  .brand-text .product { font-size: 1.05rem; }
+  .brand-text .by { font-size: 0.6rem; }
+  .pill-btn { width: 34px; }
+  .shell { padding: 14px 10px 30px; gap: 14px; }
+  .hero { padding: 20px 16px 18px; }
+  .panel { padding: 16px 12px; }
+  .sale-tile { flex-basis: 150px; }
+  .option-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── Touch devices · larger hit targets, no hover-only flourishes ── */
+@media (hover: none) and (pointer: coarse) {
+  .chip, .action-btn, .mode-tab, .pill-btn { min-height: 44px; }
+  .hero-shortcut { min-height: 44px; }
+  .option-card { min-height: 84px; }
+  /* drop hover transforms that look broken when tapped */
+  .wine-card:hover,
+  .region-card:hover,
+  .sale-tile:hover { transform: none; }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .pulse, .alert-bar .alert-ico::after { animation: none !important; }
+}
+
+/* ── Portrait kiosk (e.g. 1080 × 1920) · roomier, larger type ── */
+@media (orientation: portrait) and (min-width: 1024px) {
+  .shell { padding: 40px 40px 64px; gap: 32px; }
+  .hero { padding: 48px 44px 40px; }
+  .hero h1 { font-size: clamp(2.2rem, 4vw, 3rem); }
+  .hero p { font-size: 1.05rem; max-width: 720px; }
+  .panel { padding: 36px; }
+  .mode-tab { height: 50px; font-size: 0.95rem; }
+  .wine-name { font-size: 1.2rem; }
+  .sale-tile { flex-basis: 250px; }
+}
+
+/* ── Landscape kiosk (e.g. 1920 × 1080) · keep two-column comfortable ── */
+@media (orientation: landscape) and (min-width: 1280px) {
+  .shell.associate-on { grid-template-columns: minmax(0, 1fr) 360px; }
 }
 
 /* ───── Today's Deals — alert bar + sale rail ───── */
@@ -1436,6 +1557,136 @@ footer .legal {
   font-weight: 500;
 }
 .wine-promo::before { content: '✦'; color: var(--blush); }
+
+/* ───── Critic ratings ───── */
+.ratings-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 8px 0 4px;
+}
+.rating-score {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 4px 11px;
+  background: linear-gradient(135deg, var(--gold-soft) 0%, rgba(201,168,97,0.04) 100%);
+  border: 1px solid var(--gold-line);
+  border-radius: var(--r-pill);
+}
+.rating-score .num {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: -0.3px;
+  line-height: 1;
+}
+.rating-score .pts {
+  font-size: 0.6rem;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.85;
+  font-weight: 700;
+}
+.rating-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 3px 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  font-size: 0.73rem;
+  color: var(--ink-soft);
+  cursor: default;
+}
+.rating-chip .src {
+  font-size: 0.62rem;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 700;
+}
+.rating-chip .val { font-weight: 600; color: var(--ink); }
+
+.ratings-detail {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 18px;
+  background: rgba(0,0,0,0.30);
+  border: 1px solid var(--gold-line);
+  border-radius: var(--r-md);
+  margin-top: 14px;
+}
+.ratings-detail .big-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 14px;
+  border-right: 1px solid var(--line-strong);
+}
+.ratings-detail .big-score .n {
+  font-family: var(--font-serif);
+  font-size: 2.4rem;
+  font-weight: 500;
+  color: var(--gold);
+  line-height: 1;
+}
+.ratings-detail .big-score .l {
+  font-size: 0.62rem;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-top: 4px;
+  font-weight: 700;
+}
+.ratings-detail .rd-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ratings-detail .rd-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 0.85rem;
+}
+.ratings-detail .rd-row .rd-src {
+  font-size: 0.72rem;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+  min-width: 130px;
+}
+.ratings-detail .rd-row .rd-val {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: -0.2px;
+}
+
+/* Sale tile score badge */
+.sale-tile .tile-score {
+  position: absolute;
+  top: 10px; left: 10px;
+  background: rgba(0,0,0,0.6);
+  color: var(--gold);
+  border: 1px solid var(--gold-line);
+  font-family: var(--font-serif);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  z-index: 2;
+}
 
 /* ───── Subtle utilities ───── */
 .hidden { display: none !important; }
@@ -2021,6 +2272,52 @@ const CATALOG = {
     ]
   }
 };
+
+/* ── Critic ratings (100-point scale) ─────────────────────────────
+   Keyed by SKU. Sources: WS Wine Spectator · V Vinous · D Decanter
+   · WE Wine Enthusiast · JS James Suckling · WA Wine Advocate.
+   ─────────────────────────────────────────────────────────────── */
+const RATING_SOURCES = {
+  WS: 'Wine Spectator',
+  V:  'Vinous',
+  D:  'Decanter',
+  WE: 'Wine Enthusiast',
+  JS: 'James Suckling',
+  WA: 'Wine Advocate'
+};
+
+const RATINGS = {
+  'JC-CAB-750': [ { source: 'WS', score: 88 }, { source: 'WE', score: 87 } ],
+  'MM-PIN-750': [ { source: 'WS', score: 90 }, { source: 'V',  score: 89 }, { source: 'WE', score: 90 } ],
+  'KC-SVB-750': [ { source: 'WS', score: 89 }, { source: 'WE', score: 89 } ],
+  'LM-PRS-750': [ { source: 'JS', score: 90 }, { source: 'WS', score: 88 } ],
+  'KJ-CHD-750': [ { source: 'WS', score: 89 }, { source: 'WE', score: 88 } ],
+  'WA-ROS-750': [ { source: 'WS', score: 91 }, { source: 'V',  score: 90 }, { source: 'D',  score: 91 } ],
+  'SM-PGR-750': [ { source: 'WS', score: 88 }, { source: 'WE', score: 87 } ],
+  'APO-RED-750':[ { source: 'WE', score: 86 } ],
+  'BAR-MOS-750':[ { source: 'WE', score: 84 } ],
+  'MW-PIN-750': [ { source: 'WS', score: 87 }, { source: 'WE', score: 86 } ],
+  'BOG-RED-750':[ { source: 'WE', score: 87 }, { source: 'WS', score: 86 } ],
+  'TAI-RBL-750':[ { source: 'V',  score: 92 }, { source: 'WA', score: 91 }, { source: 'WS', score: 91 } ],
+  'OYS-CHA-750':[ { source: 'V',  score: 91 }, { source: 'D',  score: 90 }, { source: 'WS', score: 90 } ],
+  'RIO-TEM-750':[ { source: 'WS', score: 93 }, { source: 'JS', score: 94 }, { source: 'WA', score: 92 } ],
+  'BIO-ROS-750':[ { source: 'V',  score: 95 }, { source: 'D',  score: 94 }, { source: 'WA', score: 93 } ],
+  'CHA-VEU-750':[ { source: 'WS', score: 92 }, { source: 'V',  score: 93 }, { source: 'D',  score: 91 } ]
+};
+
+/* Merge ratings into the catalog */
+CATALOG.wines.forEach(w => { w.ratings = RATINGS[w.sku] || []; });
+
+/* Average score (rounded) — returns null if no ratings present */
+function avgScore(ratings) {
+  if (!ratings || !ratings.length) return null;
+  return Math.round(ratings.reduce((s, r) => s + r.score, 0) / ratings.length);
+}
+/* Top critic score */
+function topScore(ratings) {
+  if (!ratings || !ratings.length) return null;
+  return ratings.reduce((m, r) => r.score > m.score ? r : m, ratings[0]);
+}
 
 
 /* ───────────────────────────────────────────────────────────────────
@@ -2774,6 +3071,49 @@ function profileBar(label, value, max = 5) {
   `;
 }
 
+/* Compact ratings row: average score badge + per-source chips */
+function ratingsRow(ratings) {
+  if (!ratings || !ratings.length) return '';
+  const avg = avgScore(ratings);
+  return `
+    <div class="ratings-row">
+      <div class="rating-score" title="Average critic score">
+        <span class="num">${avg}</span>
+        <span class="pts">pts</span>
+      </div>
+      ${ratings.map(r => `
+        <span class="rating-chip" title="${RATING_SOURCES[r.source] || r.source}">
+          <span class="src">${r.source}</span>
+          <span class="val">${r.score}</span>
+        </span>
+      `).join('')}
+    </div>
+  `;
+}
+
+/* Detailed ratings block for Scan mode */
+function ratingsDetail(ratings) {
+  if (!ratings || !ratings.length) return '';
+  const avg = avgScore(ratings);
+  return `
+    <div class="ratings-detail">
+      <div class="big-score">
+        <div class="n">${avg}</div>
+        <div class="l">Avg · ${ratings.length} ${ratings.length === 1 ? 'Source' : 'Sources'}</div>
+      </div>
+      <div class="rd-list">
+        ${ratings.map(r => `
+          <div class="rd-row">
+            <span class="rd-src">${RATING_SOURCES[r.source] || r.source}</span>
+            <span class="rd-val">${r.score}</span>
+            <span style="font-size:0.7rem;color:var(--ink-mute);letter-spacing:1px;">/ 100</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
 function wineCard(w, opts = {}) {
   const reasons = (w.reasons || []).length
     ? w.reasons.map(r => r.tag).slice(0,2).join(' · ')
@@ -2793,6 +3133,7 @@ function wineCard(w, opts = {}) {
           <span class="wine-name">${w.name}</span>
           <span class="wine-vintage">${w.vintage} · ${w.varietal}</span>
         </div>
+        ${ratingsRow(w.ratings)}
         <div class="wine-notes">${w.notes}</div>
         ${why ? `<div class="wine-why">${why}</div>` : ''}
         <div class="wine-meta">
@@ -3345,6 +3686,7 @@ const Scan = {
       <div class="wine-list" style="margin-top:14px;">
         ${wineCard(w)}
       </div>
+      ${ratingsDetail(w.ratings)}
       <div class="profile-grid">
         ${profileBar('Body',      w.tasting.body)}
         ${profileBar('Tannin',    w.tasting.tannin)}
@@ -3586,8 +3928,11 @@ const SaleRail = {
       $('#alert-bar').style.display = 'none';
       return;
     }
-    rail.innerHTML = items.map(w => `
+    rail.innerHTML = items.map(w => {
+      const top = topScore(w.ratings);
+      return `
       <article class="sale-tile" data-sku="${w.sku}">
+        ${top ? `<div class="tile-score" title="${RATING_SOURCES[top.source]} · ${top.score}/100">${top.score} pts</div>` : ''}
         <div class="tile-discount">−${Math.round(w.discount)}%</div>
         ${bottleArt(w.colorTint)}
         <div class="tile-name">${w.name}</div>
@@ -3598,7 +3943,7 @@ const SaleRail = {
         </div>
         ${w.promotion ? `<div class="tile-promo">${w.promotion}</div>` : ''}
       </article>
-    `).join('');
+    `;}).join('');
     rail.querySelectorAll('.sale-tile').forEach(el => {
       el.addEventListener('click', () => {
         Integrations.analytics.track('sale.tile.click', { sku: el.dataset.sku });
