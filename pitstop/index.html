@@ -334,6 +334,94 @@ body {
 .hero-shortcut svg { width: 14px; height: 14px; opacity: 0.8; }
 
 /* ───────────────────────────────────────────────
+   FEATURED · ALL ROADS LEAD TO HERSHEY
+   ─────────────────────────────────────────────── */
+.feature-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+  padding: 20px 26px;
+  margin-bottom: 14px;
+  border-radius: var(--r-xl);
+  background:
+    radial-gradient(circle at 95% 50%, rgba(212,162,74,0.20), transparent 50%),
+    linear-gradient(135deg, var(--hershey-accent) 0%, #4a1812 100%);
+  color: var(--surface-warm);
+  border: 1px solid rgba(212,162,74,0.30);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s var(--ease);
+  box-shadow: var(--shadow-md);
+}
+.feature-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent 0 18px,
+      rgba(255,255,255,0.04) 18px 36px
+    );
+  pointer-events: none;
+  opacity: 0.5;
+}
+.feature-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+.feature-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.66rem;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--honey);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.feature-eyebrow svg { width: 12px; height: 12px; }
+
+.feature-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  margin-bottom: 6px;
+  color: var(--surface);
+}
+.feature-title em { font-style: italic; color: var(--honey); }
+.feature-desc {
+  font-size: 0.86rem;
+  color: rgba(255,255,255,0.78);
+  max-width: 520px;
+  line-height: 1.5;
+}
+
+.feature-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--honey);
+  color: var(--hershey-accent);
+  border: none;
+  border-radius: var(--r-pill);
+  font-family: var(--font-sans);
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
+}
+.feature-cta:hover { background: var(--surface-warm); transform: translateX(2px); }
+.feature-cta svg { width: 14px; height: 14px; }
+
+/* ───────────────────────────────────────────────
    MODE TABS
    ─────────────────────────────────────────────── */
 .mode-tabs {
@@ -1445,6 +1533,7 @@ footer .legal {
 .toast .toast-text { font-size: 0.86rem; font-weight: 600; }
 
 /* Responsive */
+@media (max-width: 1024px) { .feature-card { grid-template-columns: 1fr; } .feature-cta { justify-self: start; } }
 @media (max-width: 768px) {
   .topbar-inner { padding: 12px 16px; gap: 12px; }
   .brand-tag { display: none; }
@@ -1462,6 +1551,8 @@ footer .legal {
   .pill-btn { padding: 0 10px; }
   .pill-btn.passport { padding: 0 10px; }
   .hero h1 { font-size: 1.4rem; }
+  .feature-card { padding: 18px 20px; }
+  .feature-title { font-size: 1.1rem; }
   .input-block { flex-direction: column; }
   .btn-primary { width: 100%; justify-content: center; }
   .mode-tab .icon { display: none; }
@@ -1820,6 +1911,22 @@ footer .legal {
           Surprise me
         </button>
       </div>
+    </section>
+
+    <!-- FEATURED · ALL ROADS LEAD TO HERSHEY -->
+    <section class="feature-card" id="feature-card">
+      <div class="feature-body">
+        <div class="feature-eyebrow">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .587l3.668 7.568L24 9.428l-6 5.851 1.416 8.265L12 19.771l-7.416 3.773L6 15.279 0 9.428l8.332-1.273z"/></svg>
+          The Featured Route
+        </div>
+        <div class="feature-title">All Roads Lead to <em>Hershey</em>.</div>
+        <div class="feature-desc">Plan your getaway to the sweetest little town in Pennsylvania — Hersheypark, Chocolatetown, and Hotel Hershey, with every great pit stop along the way mapped for you.</div>
+      </div>
+      <button class="feature-cta" id="feature-cta">
+        Plan the trip
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
     </section>
 
     <!-- ALERT -->
@@ -2817,10 +2924,25 @@ const Location = {
     this.updatePill();
     this.updateBanner();
     this.updateHero();
+    this.updateFeatureCard();
     renderRail();
     // If we're on a mode that uses location, re-render it
     if (Session.state.mode === 'plot') Plot.render();
     if (Session.state.mode === 'routes') Routes.render();
+  },
+
+  /** Update the All-Roads-to-Hershey card with the user's start location distance */
+  updateFeatureCard() {
+    const loc = Session.state.startLocation;
+    const hershey = CATALOG.destinations.find(d => d.sku === 'PA-HSY-001');
+    const desc = document.querySelector('.feature-card .feature-desc');
+    if (!desc) return;
+    if (loc && hershey) {
+      const mi = distance(loc, hershey);
+      desc.innerHTML = `Plan your getaway from <strong style="color:var(--surface);">${loc.name}</strong> — <strong style="color:var(--honey);">${mi} miles</strong>, about ${driveTime(mi)} of driving, with every great pit stop along the way mapped for you.`;
+    } else {
+      desc.textContent = 'Plan your getaway to the sweetest little town in Pennsylvania — Hersheypark, Chocolatetown, and Hotel Hershey, with every great pit stop along the way mapped for you.';
+    }
   },
 
   updatePill() {
@@ -3423,8 +3545,10 @@ const Plot = {
     $$('#rchips .chip').forEach(c => c.addEventListener('click', () => { $('#r-from').value = c.dataset.from; $('#r-to').value = c.dataset.to; Plot.plot(); }));
     $('#r-plot').addEventListener('click', () => Plot.plot());
   },
-  preset({ to }) {
+  preset({ to, isHershey }) {
     if (to) $('#r-to').value = to;
+    if (isHershey && Session.state.startLocation) $('#r-from').value = Session.state.startLocation.name;
+    else if (isHershey) $('#r-from').value = 'New York, NY';
     Plot.plot();
   },
   plot() {
@@ -3434,7 +3558,7 @@ const Plot = {
     const stops = Plot.routeFor(from, to, isHershey);
     $('#r-result').innerHTML = `
       <div class="route-map">
-        <div class="map-title">${from} → ${to}</div>
+        <div class="map-title">${from} → ${to}${isHershey ? ' · <span style="color:var(--hershey-accent);font-style:italic;">All Roads Lead to Hershey</span>' : ''}</div>
         <div class="map-sub">${stops.length - 2} curated stops · ${stops.filter(s => s.passport).length} passport-eligible · est. ${stops.length * 0.7 + 2}-hour drive total</div>
         <div class="stops">
           ${stops.map((s, i) => `
@@ -3693,6 +3817,12 @@ function bindGlobal() {
     const span = $('#locale-btn').querySelector('span:not(.dot):not(.count)');
     const cur = span.textContent;
     span.textContent = locs[(locs.indexOf(cur) + 1) % locs.length];
+  });
+
+  // Feature card → Plot My Route with Hershey preset
+  $('#feature-cta').addEventListener('click', () => {
+    setMode('plot');
+    setTimeout(() => Plot.preset({ to: 'Hershey, PA', isHershey: true }), 80);
   });
 
   // Alert CTA
