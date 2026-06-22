@@ -1,0 +1,3738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIT STOP — The Road Trip Planner that Knows the Way · by BEL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+/* ═════════════════════════════════════════════════════════
+   PIT STOP · DESIGN SYSTEM
+   The Road Trip Planner that Knows the Way · by BEL
+   ═════════════════════════════════════════════════════════ */
+:root {
+  /* Surfaces — warm cream road-map */
+  --bg:              #faf4e8;
+  --bg-2:            #f4ecd8;
+  --surface:         #ffffff;
+  --surface-warm:    #fbf6e9;
+  --surface-deep:    #efe3c8;
+  --line:            rgba(42,29,20,0.10);
+  --line-strong:     rgba(42,29,20,0.18);
+
+  /* Ink */
+  --ink:             #2a1d14;
+  --ink-soft:        rgba(42,29,20,0.74);
+  --ink-mute:        rgba(42,29,20,0.54);
+  --ink-faint:       rgba(42,29,20,0.34);
+
+  /* Accents */
+  --terra:           #c25a3a;            /* sunset terracotta — primary */
+  --terra-deep:      #9a3f25;
+  --terra-soft:      rgba(194,90,58,0.14);
+  --terra-line:      rgba(194,90,58,0.40);
+
+  --honey:           #d4a24a;            /* honey amber */
+  --honey-deep:      #a87a2c;
+  --honey-soft:      rgba(212,162,74,0.18);
+  --honey-line:      rgba(212,162,74,0.50);
+
+  --sign:            #a52f2a;            /* vintage road sign red */
+  --sign-soft:       rgba(165,47,42,0.10);
+
+  --ocean:           #1f3b52;            /* deep navy — trust */
+  --ocean-soft:      rgba(31,59,82,0.10);
+
+  --sky:             #a3c0d4;
+  --pine:            #4a6a4a;
+  --pine-soft:       rgba(74,106,74,0.14);
+
+  --hershey-accent:  #6e2820;            /* deep cocoa — used only for the "All Roads" feature */
+
+  /* Status */
+  --ok:              #4a8a4f;
+  --warn:            #d4842a;
+  --info:            #1f3b52;
+
+  /* Type */
+  --font-sans:       'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro', system-ui, sans-serif;
+  --font-serif:      'Fraunces', 'Cormorant Garamond', Georgia, serif;
+
+  /* Radii */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  /* Shadow — warm */
+  --shadow-sm: 0 2px 6px rgba(42,29,20,0.06);
+  --shadow-md: 0 8px 24px rgba(42,29,20,0.10);
+  --shadow-lg: 0 24px 56px rgba(42,29,20,0.14);
+  --glow-terra: 0 0 0 4px var(--terra-soft);
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 0.92vw + 13px, 17px);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+body {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(212,162,74,0.18), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 95% 100%, rgba(194,90,58,0.12), transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  overflow-x: clip;
+}
+
+::selection { background: var(--terra-soft); color: var(--terra-deep); }
+
+::-webkit-scrollbar { width: 10px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface-deep); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--honey); }
+
+/* ───────────────────────────────────────────────
+   TOP BAR
+   ─────────────────────────────────────────────── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  background: rgba(250,244,232,0.85);
+  backdrop-filter: blur(20px) saturate(120%);
+  -webkit-backdrop-filter: blur(20px) saturate(120%);
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--terra) 0%, var(--terra-deep) 100%);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(194,90,58,0.30);
+  position: relative;
+}
+.brand-mark svg { width: 24px; height: 24px; color: var(--bg); }
+
+.brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-text .product {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  color: var(--ink);
+}
+.brand-text .by {
+  font-size: 0.66rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 3px;
+  font-weight: 600;
+}
+.brand-text .by .bel { color: var(--terra); font-weight: 700; }
+
+.divider-v {
+  width: 1px; height: 26px;
+  background: var(--line-strong);
+}
+
+.brand-tag {
+  font-size: 0.78rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.1px;
+  max-width: 360px;
+  line-height: 1.35;
+}
+.brand-tag strong { color: var(--ink); font-weight: 600; }
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 13px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+.pill-btn:hover { border-color: var(--terra); color: var(--terra); background: var(--terra-soft); }
+.pill-btn svg { width: 14px; height: 14px; }
+.pill-btn .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--ok); box-shadow: 0 0 8px rgba(74,138,79,0.6);
+  display: inline-block;
+}
+
+.pill-btn.passport {
+  background: linear-gradient(135deg, var(--honey-soft) 0%, var(--terra-soft) 100%);
+  border-color: var(--honey-line);
+  color: var(--terra-deep);
+  font-weight: 700;
+}
+.pill-btn.passport:hover { background: var(--honey-soft); border-color: var(--terra); }
+.pill-btn.passport .count {
+  background: var(--terra);
+  color: var(--surface);
+  font-size: 0.66rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 999px;
+  letter-spacing: 0.2px;
+}
+
+/* ───────────────────────────────────────────────
+   LAYOUT
+   ─────────────────────────────────────────────── */
+.shell {
+  flex: 1;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 22px 24px 48px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.main-col { min-width: 0; }
+
+/* ───────────────────────────────────────────────
+   HERO
+   ─────────────────────────────────────────────── */
+.hero {
+  padding: 26px 30px 24px;
+  border-radius: var(--r-xl);
+  background:
+    radial-gradient(circle at 90% 10%, rgba(212,162,74,0.18), transparent 50%),
+    radial-gradient(circle at 5% 95%, rgba(194,90,58,0.10), transparent 55%),
+    linear-gradient(135deg, var(--surface) 0%, var(--surface-warm) 100%);
+  border: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 11px;
+  border: 1px solid var(--honey-line);
+  border-radius: var(--r-pill);
+  font-size: 0.66rem;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--honey-deep);
+  font-weight: 700;
+  background: var(--honey-soft);
+  margin-bottom: 12px;
+}
+.hero-eyebrow .pulse {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--honey-deep);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.4); } }
+
+.hero h1 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  line-height: 1.15;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+.hero h1 .accent { color: var(--terra); font-style: italic; }
+
+.hero p {
+  color: var(--ink-soft);
+  font-size: 0.94rem;
+  max-width: 580px;
+  line-height: 1.55;
+}
+
+.hero-shortcuts {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.hero-shortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 13px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+.hero-shortcut:hover {
+  background: var(--terra-soft);
+  border-color: var(--terra);
+  color: var(--terra-deep);
+  transform: translateY(-1px);
+}
+.hero-shortcut svg { width: 14px; height: 14px; opacity: 0.8; }
+
+/* ───────────────────────────────────────────────
+   MODE TABS
+   ─────────────────────────────────────────────── */
+.mode-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 5px;
+  background: var(--surface-warm);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  margin-bottom: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.mode-tabs::-webkit-scrollbar { display: none; }
+
+.mode-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  white-space: nowrap;
+  justify-content: center;
+  height: 40px;
+  padding: 0 16px;
+  background: transparent;
+  border: none;
+  border-radius: var(--r-pill);
+  color: var(--ink-mute);
+  font-family: var(--font-sans);
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+}
+.mode-tab:hover { color: var(--ink); }
+.mode-tab.active {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--terra-line);
+}
+.mode-tab .icon { width: 16px; height: 16px; opacity: 0.7; }
+.mode-tab.active .icon { color: var(--terra); opacity: 1; }
+
+/* ───────────────────────────────────────────────
+   PANEL · main interaction surface
+   ─────────────────────────────────────────────── */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: 24px 26px;
+  box-shadow: var(--shadow-md);
+  min-height: 240px;
+  min-width: 0;
+}
+
+.panel-prompt {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 14px;
+  letter-spacing: -0.2px;
+}
+.panel-prompt .label {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.66rem;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--terra);
+  font-weight: 700;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.panel-sub {
+  font-size: 0.88rem;
+  color: var(--ink-mute);
+  margin-bottom: 22px;
+  max-width: 560px;
+  line-height: 1.55;
+}
+
+/* Chips */
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 0.83rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+}
+.chip:hover {
+  border-color: var(--terra);
+  color: var(--terra-deep);
+  background: var(--terra-soft);
+}
+.chip.terra {
+  border-color: var(--terra-line);
+  color: var(--terra-deep);
+  background: var(--terra-soft);
+}
+
+/* Input */
+.input-block {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  margin-top: 8px;
+}
+.input-field {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 54px;
+  padding: 0 20px;
+  background: var(--surface-warm);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  transition: all 0.2s var(--ease);
+}
+.input-field:focus-within {
+  border-color: var(--terra);
+  background: var(--surface);
+  box-shadow: var(--glow-terra);
+}
+.input-field svg { width: 18px; height: 18px; color: var(--ink-mute); flex-shrink: 0; }
+.input-field input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+}
+.input-field input::placeholder { color: var(--ink-faint); }
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 54px;
+  padding: 0 24px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--terra);
+  color: var(--surface);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  box-shadow: 0 4px 14px rgba(194,90,58,0.25);
+}
+.btn-primary:hover { background: var(--terra-deep); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(194,90,58,0.35); }
+.btn-primary:active { transform: scale(0.97); }
+.btn-primary svg { width: 16px; height: 16px; }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+}
+.btn-secondary:hover { border-color: var(--terra); color: var(--terra-deep); background: var(--terra-soft); }
+.btn-secondary svg { width: 14px; height: 14px; }
+
+/* PIT STOP conversation bubble */
+.thread { display: flex; flex-direction: column; gap: 16px; }
+
+.bubble {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  animation: fadeUp 0.4s var(--ease);
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.bubble-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--terra) 0%, var(--terra-deep) 100%);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: var(--surface);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.6px;
+  box-shadow: 0 4px 10px rgba(194,90,58,0.25);
+}
+
+.bubble-content { flex: 1; min-width: 0; }
+.bubble-meta { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.bubble-meta .who { font-size: 0.78rem; font-weight: 700; color: var(--ink); }
+.bubble-meta .role { font-size: 0.64rem; letter-spacing: 1.4px; text-transform: uppercase; color: var(--terra); font-weight: 700; }
+.bubble-text { font-size: 0.96rem; color: var(--ink-soft); line-height: 1.65; }
+.bubble-text strong { color: var(--ink); font-weight: 600; }
+
+.thinking { display: inline-flex; align-items: center; gap: 4px; padding: 8px 0; }
+.thinking .d { width: 7px; height: 7px; border-radius: 50%; background: var(--terra); animation: bounce 1.1s infinite ease-in-out; opacity: 0.5; }
+.thinking .d:nth-child(2) { animation-delay: 0.15s; }
+.thinking .d:nth-child(3) { animation-delay: 0.30s; }
+@keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.5; } 30% { transform: translateY(-6px); opacity: 1; } }
+
+/* ─── Destination cards (landscape art) ─── */
+.dest-list { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 14px; }
+
+.dest-card {
+  display: grid;
+  grid-template-columns: 124px 1fr;
+  gap: 18px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  transition: all 0.25s var(--ease);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.dest-card:hover {
+  border-color: var(--terra-line);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.scene {
+  width: 124px;
+  height: 100px;
+  border-radius: var(--r-md);
+  background: linear-gradient(180deg, var(--sky) 0%, var(--surface-deep) 100%);
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--line);
+}
+.scene svg { width: 100%; height: 100%; display: block; }
+
+.dest-body { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+
+.dest-region {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.7rem;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  color: var(--terra);
+  font-weight: 700;
+}
+.dest-region svg { width: 11px; height: 11px; }
+
+.dest-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin-bottom: 2px; }
+.dest-name {
+  font-family: var(--font-serif);
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.2px;
+}
+.dest-cat {
+  font-size: 0.74rem;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+
+.dest-notes { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.5; }
+.dest-why {
+  font-size: 0.82rem;
+  color: var(--terra-deep);
+  font-style: italic;
+  line-height: 1.5;
+  padding: 7px 11px;
+  border-left: 2px solid var(--terra);
+  background: var(--terra-soft);
+  border-radius: 0 8px 8px 0;
+  margin-top: 6px;
+}
+
+.dest-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.cost-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--surface-warm);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.cost-tag .strike { color: var(--ink-mute); text-decoration: line-through; font-weight: 500; margin-left: 6px; font-size: 0.74rem; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+.badge-honey   { background: var(--honey-soft); color: var(--honey-deep); border: 1px solid var(--honey-line); }
+.badge-terra   { background: var(--terra-soft); color: var(--terra-deep); border: 1px solid var(--terra-line); }
+.badge-pine    { background: var(--pine-soft); color: var(--pine); border: 1px solid rgba(74,106,74,0.30); }
+.badge-ocean   { background: var(--ocean-soft); color: var(--ocean); border: 1px solid rgba(31,59,82,0.30); }
+.badge-sign    { background: var(--sign-soft); color: var(--sign); border: 1px solid rgba(165,47,42,0.30); }
+
+.season-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.74rem;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+.season-stamp svg { width: 12px; height: 12px; }
+.season-stamp .dot { width: 7px; height: 7px; border-radius: 50%; }
+.season-stamp.peak .dot  { background: var(--ok); box-shadow: 0 0 6px rgba(74,138,79,0.5); }
+.season-stamp.good .dot  { background: var(--honey); }
+.season-stamp.off  .dot  { background: var(--ink-faint); }
+
+.passport-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(135deg, var(--honey-soft) 0%, var(--terra-soft) 100%);
+  border: 1px dashed var(--honey-line);
+  color: var(--terra-deep);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+.passport-tag svg { width: 11px; height: 11px; }
+
+.dest-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+}
+.action-btn:hover { border-color: var(--terra); color: var(--terra-deep); background: var(--terra-soft); }
+.action-btn svg { width: 13px; height: 13px; }
+
+/* Ratings — same mechanic as ARIA but warm tinted */
+.ratings-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 6px 0 4px; }
+.rating-score {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 4px 11px;
+  background: linear-gradient(135deg, var(--honey-soft) 0%, rgba(212,162,74,0.05) 100%);
+  border: 1px solid var(--honey-line);
+  border-radius: var(--r-pill);
+}
+.rating-score .num {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--honey-deep);
+  letter-spacing: -0.3px;
+  line-height: 1;
+}
+.rating-score .pts {
+  font-size: 0.6rem;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--honey-deep);
+  opacity: 0.85;
+  font-weight: 700;
+}
+.rating-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 3px 8px;
+  background: var(--surface-warm);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  font-size: 0.73rem;
+  color: var(--ink);
+}
+.rating-chip .src {
+  font-size: 0.62rem;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 700;
+}
+.rating-chip .val { font-weight: 700; color: var(--ink); }
+
+/* Today's Pick alert */
+.alert-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 14px 9px 9px;
+  margin-bottom: 14px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(135deg, var(--honey-soft) 0%, var(--terra-soft) 100%);
+  border: 1px solid var(--honey-line);
+  animation: alertSlide 0.5s var(--ease);
+}
+@keyframes alertSlide { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+.alert-bar .alert-ico {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--honey);
+  display: grid;
+  place-items: center;
+  color: var(--surface);
+  flex-shrink: 0;
+}
+.alert-bar .alert-ico svg { width: 16px; height: 16px; }
+.alert-bar .alert-text { flex: 1; font-size: 0.86rem; color: var(--ink); }
+.alert-bar .alert-text b { color: var(--honey-deep); font-weight: 700; margin-right: 8px; letter-spacing: 0.2px; }
+.alert-bar .alert-cta {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--honey-deep);
+  background: var(--surface);
+  border: 1px solid var(--honey-line);
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  white-space: nowrap;
+}
+.alert-bar .alert-cta:hover { background: var(--honey); color: var(--surface); }
+
+/* Featured rail */
+.rail-wrap { margin-bottom: 18px; min-width: 0; }
+.rail-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 0 4px;
+}
+.rail-head .title { font-family: var(--font-serif); font-size: 1.1rem; font-weight: 600; color: var(--ink); }
+.rail-head .sub { font-size: 0.72rem; color: var(--ink-mute); letter-spacing: 0.6px; text-transform: uppercase; font-weight: 700; }
+
+.rail {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 4px 4px 12px;
+  scrollbar-width: thin;
+}
+.rail::-webkit-scrollbar { height: 6px; }
+.rail::-webkit-scrollbar-thumb { background: var(--surface-deep); border-radius: 999px; }
+
+.rail-tile {
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  cursor: pointer;
+  transition: all 0.22s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+.rail-tile:hover { border-color: var(--terra-line); transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.rail-tile .tile-scene { width: 100%; height: 110px; }
+.rail-tile .tile-scene svg { width: 100%; height: 100%; display: block; }
+.rail-tile .tile-body { padding: 12px 14px 14px; }
+.rail-tile .tile-score {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: var(--surface);
+  color: var(--honey-deep);
+  border: 1px solid var(--honey-line);
+  font-family: var(--font-serif);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+}
+.rail-tile .tile-savings {
+  position: absolute;
+  top: 10px; left: 10px;
+  background: var(--sign);
+  color: var(--surface);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+}
+.rail-tile .tile-name { font-family: var(--font-serif); font-size: 0.95rem; font-weight: 600; color: var(--ink); margin-bottom: 4px; line-height: 1.25; }
+.rail-tile .tile-meta { font-size: 0.7rem; color: var(--ink-mute); letter-spacing: 0.4px; text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
+.rail-tile .tile-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+.rail-tile .tile-foot .price { font-weight: 700; color: var(--terra-deep); }
+.rail-tile .tile-foot .days { color: var(--ink-mute); }
+
+/* ─── Build My Trip flow ─── */
+.bmt-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 22px;
+}
+.bmt-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+.bmt-num {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--terra-soft);
+  border: 1px solid var(--terra-line);
+  color: var(--terra-deep);
+  display: grid; place-items: center;
+  font-weight: 700;
+  font-size: 0.86rem;
+  flex-shrink: 0;
+  font-family: var(--font-serif);
+}
+.bmt-content { flex: 1; min-width: 0; }
+.bmt-title { font-family: var(--font-serif); font-size: 1.05rem; color: var(--ink); margin-bottom: 4px; font-weight: 600; }
+.bmt-desc { font-size: 0.85rem; color: var(--ink-mute); margin-bottom: 12px; }
+
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+.option-card {
+  padding: 14px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  text-align: center;
+}
+.option-card:hover { border-color: var(--terra); background: var(--terra-soft); transform: translateY(-1px); }
+.option-card.selected { border-color: var(--terra); background: var(--terra-soft); box-shadow: 0 0 0 3px var(--terra-soft); }
+.option-card .ico { font-size: 1.6rem; line-height: 1; margin-bottom: 6px; }
+.option-card .lbl { font-size: 0.82rem; color: var(--ink); font-weight: 600; }
+.option-card .sub { font-size: 0.7rem; color: var(--ink-mute); margin-top: 2px; }
+
+/* Itinerary */
+.itin {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+.itin-day {
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface-warm);
+}
+.itin-day .day-label {
+  display: inline-block;
+  font-size: 0.66rem;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--terra);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.itin-day .day-title { font-family: var(--font-serif); font-size: 1rem; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.itin-day .day-body { font-size: 0.86rem; color: var(--ink-soft); line-height: 1.6; }
+
+/* Snack pack */
+.snack {
+  border: 1px solid var(--honey-line);
+  border-radius: var(--r-lg);
+  padding: 18px 20px;
+  background: linear-gradient(135deg, var(--honey-soft) 0%, var(--surface-warm) 100%);
+  margin-top: 18px;
+}
+.snack-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--honey-line);
+}
+.snack-head .title { font-family: var(--font-serif); font-size: 1.1rem; font-weight: 600; color: var(--ink); }
+.snack-head .sub { font-size: 0.72rem; color: var(--honey-deep); letter-spacing: 0.6px; text-transform: uppercase; font-weight: 700; }
+
+.snack-categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+.snack-cat {
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+}
+.snack-cat .cat-ico { font-size: 1.3rem; margin-bottom: 4px; }
+.snack-cat .cat-name {
+  font-family: var(--font-serif);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.snack-cat .cat-list {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.snack-cat .cat-aisle {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.66rem;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 700;
+}
+
+.snack-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--honey-line);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.snack-foot .total {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.snack-foot .total .num { color: var(--terra-deep); }
+
+/* QR handoff */
+.qr-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px dashed var(--terra-line);
+  border-radius: var(--r-md);
+  background: var(--terra-soft);
+}
+.qr-box .qr {
+  width: 48px; height: 48px;
+  background: var(--ink);
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+}
+.qr-box .copy .t1 { font-size: 0.82rem; color: var(--ink); font-weight: 700; }
+.qr-box .copy .t2 { font-size: 0.72rem; color: var(--ink-mute); }
+
+/* Playlist */
+.playlist {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: var(--ocean-soft);
+  border: 1px solid rgba(31,59,82,0.20);
+  border-radius: var(--r-md);
+}
+.playlist .pl-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.playlist .pl-head .pl-ico {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--ocean);
+  display: grid; place-items: center;
+  color: var(--surface);
+}
+.playlist .pl-head .pl-ico svg { width: 14px; height: 14px; }
+.playlist .pl-head .pl-title { font-family: var(--font-serif); font-size: 0.95rem; font-weight: 600; color: var(--ink); }
+.playlist .pl-tracks { display: flex; flex-direction: column; gap: 4px; }
+.playlist .pl-tracks .tr {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+.playlist .pl-tracks .tr .title { color: var(--ink); font-weight: 500; }
+
+/* Routes */
+.routes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+.route-card {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+.route-card:hover { border-color: var(--terra-line); transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.route-card .route-scene { width: 100%; height: 100px; border-radius: var(--r-md); overflow: hidden; margin-bottom: 10px; }
+.route-card .route-scene svg { width: 100%; height: 100%; display: block; }
+.route-card .name {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--ink);
+  margin-bottom: 3px;
+  font-weight: 600;
+}
+.route-card .desc { font-size: 0.76rem; color: var(--ink-mute); line-height: 1.5; }
+.route-card .miles { display: inline-block; margin-top: 8px; font-size: 0.7rem; color: var(--terra); letter-spacing: 0.8px; text-transform: uppercase; font-weight: 700; }
+
+/* Plot My Route */
+.route-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.route-form .input-field { height: 50px; }
+.route-form .input-field svg { color: var(--terra); }
+
+.route-map {
+  background: var(--surface-warm);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 18px;
+}
+.route-map .map-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.route-map .map-sub {
+  font-size: 0.8rem;
+  color: var(--ink-mute);
+  margin-bottom: 14px;
+}
+
+.stops {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.stops::before {
+  content: '';
+  position: absolute;
+  left: 16px;
+  top: 28px;
+  bottom: 28px;
+  width: 2px;
+  background: repeating-linear-gradient(180deg, var(--terra) 0 6px, transparent 6px 12px);
+}
+.stop {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 16px;
+  padding: 10px 0;
+  position: relative;
+}
+.stop .stop-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--terra);
+  display: grid;
+  place-items: center;
+  color: var(--terra-deep);
+  font-weight: 700;
+  font-size: 0.8rem;
+  font-family: var(--font-serif);
+  z-index: 1;
+  flex-shrink: 0;
+}
+.stop.endpoint .stop-dot { background: var(--terra); color: var(--surface); }
+.stop.pitstop .stop-dot { width: 32px; height: 32px; font-size: 0.74rem; background: var(--surface-warm); border-style: dashed; }
+.stop.attraction .stop-dot { background: var(--honey-soft); border-color: var(--honey); color: var(--honey-deep); }
+.stop.hershey .stop-dot { background: var(--hershey-accent); border-color: var(--hershey-accent); color: var(--honey); }
+
+.stop-body { padding-top: 4px; }
+.stop-head { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.stop-name { font-family: var(--font-serif); font-size: 1rem; font-weight: 600; color: var(--ink); }
+.stop-kind {
+  font-size: 0.66rem;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 700;
+}
+.stop-meta { font-size: 0.8rem; color: var(--ink-soft); margin-top: 4px; line-height: 1.5; }
+.stop-detail {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+/* ─── Passport view ─── */
+.passport-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(42,29,20,0.50);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+.passport-modal.open { display: flex; animation: fadeIn 0.25s var(--ease); }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.passport-sheet {
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--line);
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.4s var(--ease);
+}
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.passport-head {
+  padding: 22px 26px 18px;
+  background: linear-gradient(135deg, var(--terra) 0%, var(--terra-deep) 100%);
+  color: var(--surface);
+  position: relative;
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+}
+.passport-head::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(45deg, transparent 0 18px, rgba(255,255,255,0.05) 18px 36px);
+  pointer-events: none;
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+}
+.passport-head .label {
+  font-size: 0.66rem;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--honey-soft);
+  font-weight: 700;
+  margin-bottom: 4px;
+  position: relative;
+  z-index: 1;
+}
+.passport-head h2 {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  position: relative;
+  z-index: 1;
+}
+.passport-head .progress {
+  margin-top: 14px;
+  position: relative;
+  z-index: 1;
+}
+.passport-head .progress-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.20);
+  overflow: hidden;
+  margin-top: 8px;
+}
+.passport-head .progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--honey) 0%, var(--surface) 100%);
+  border-radius: 999px;
+  transition: width 0.5s var(--ease);
+}
+.passport-head .progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.close-btn {
+  position: absolute;
+  top: 18px; right: 18px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.20);
+  border: none;
+  color: var(--surface);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+}
+.close-btn:hover { background: rgba(255,255,255,0.30); }
+.close-btn svg { width: 14px; height: 14px; }
+
+.passport-body { padding: 22px 26px 26px; }
+
+.stamp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.stamp {
+  aspect-ratio: 1;
+  border: 2px dashed var(--line-strong);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 6px;
+  background: var(--surface-warm);
+  position: relative;
+  transition: all 0.2s var(--ease);
+}
+.stamp.earned {
+  border-style: solid;
+  border-color: var(--terra);
+  background: var(--terra-soft);
+  transform: rotate(-3deg);
+}
+.stamp.earned:nth-child(odd) { transform: rotate(2deg); }
+.stamp.earned:nth-child(3n) { transform: rotate(-1deg); }
+.stamp-emoji { font-size: 1.4rem; line-height: 1; margin-bottom: 2px; }
+.stamp-label { font-size: 0.62rem; color: var(--ink); font-weight: 700; letter-spacing: 0.3px; line-height: 1.1; }
+.stamp.earned .stamp-label { color: var(--terra-deep); }
+.stamp.locked .stamp-emoji { opacity: 0.30; }
+.stamp.locked .stamp-label { opacity: 0.40; }
+
+.tier-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.tier {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: var(--surface-warm);
+}
+.tier.unlocked { border-color: var(--ok); background: rgba(74,138,79,0.06); }
+.tier.next     { border-color: var(--terra); background: var(--terra-soft); }
+.tier .tier-num {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--line-strong);
+  display: grid; place-items: center;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  color: var(--ink-mute);
+  font-size: 1.05rem;
+}
+.tier.unlocked .tier-num { background: var(--ok); border-color: var(--ok); color: var(--surface); }
+.tier.next .tier-num { background: var(--terra); border-color: var(--terra); color: var(--surface); }
+.tier .tier-name { font-family: var(--font-serif); font-size: 0.95rem; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+.tier .tier-desc { font-size: 0.78rem; color: var(--ink-mute); line-height: 1.4; }
+.tier .tier-status {
+  font-size: 0.7rem;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.tier.unlocked .tier-status { color: var(--ok); }
+.tier.next .tier-status { color: var(--terra-deep); }
+.tier.locked .tier-status { color: var(--ink-faint); }
+
+.demo-scan {
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--ocean-soft);
+  border: 1px dashed var(--ocean);
+  border-radius: var(--r-md);
+  align-items: center;
+}
+.demo-scan .copy { flex: 1; }
+.demo-scan .copy .t1 { font-size: 0.86rem; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.demo-scan .copy .t2 { font-size: 0.74rem; color: var(--ink-mute); line-height: 1.5; }
+.demo-scan .btn-primary { height: 40px; padding: 0 16px; font-size: 0.8rem; }
+
+/* Footer */
+footer {
+  width: 100%;
+  border-top: 1px solid var(--line);
+  background: var(--surface-warm);
+  padding: 18px 24px;
+  text-align: center;
+}
+.footer-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+footer .copy { font-size: 0.74rem; color: var(--ink-mute); letter-spacing: 0.2px; }
+footer .copy .terra { color: var(--terra); font-weight: 700; }
+footer .legal {
+  font-size: 0.68rem;
+  color: var(--ink-faint);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* Stamp earned toast */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  padding: 14px 20px;
+  background: var(--ink);
+  color: var(--surface-warm);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 200;
+  opacity: 0;
+  transition: all 0.4s var(--ease);
+  pointer-events: none;
+  max-width: 90%;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast .toast-ico {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--terra);
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
+}
+.toast .toast-text { font-size: 0.86rem; font-weight: 600; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .topbar-inner { padding: 12px 16px; gap: 12px; }
+  .brand-tag { display: none; }
+  .divider-v { display: none; }
+  .shell { padding: 18px 16px 32px; gap: 14px; }
+  .hero { padding: 22px 20px 20px; border-radius: 22px; }
+  .panel { padding: 20px 18px; border-radius: 22px; }
+  .dest-card { grid-template-columns: 90px 1fr; padding: 12px; gap: 12px; }
+  .scene { width: 90px; height: 75px; }
+  .route-form { grid-template-columns: 1fr; }
+  .footer-inner { flex-direction: column; gap: 6px; text-align: center; }
+}
+@media (max-width: 480px) {
+  .topbar-actions .pill-btn span:not(.dot):not(.count) { display: none; }
+  .pill-btn { padding: 0 10px; }
+  .pill-btn.passport { padding: 0 10px; }
+  .hero h1 { font-size: 1.4rem; }
+  .input-block { flex-direction: column; }
+  .btn-primary { width: 100%; justify-content: center; }
+  .mode-tab .icon { display: none; }
+  .mode-tab { font-size: 0.78rem; padding: 0 10px; }
+  .stamp-grid { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); }
+  .option-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (hover: none) and (pointer: coarse) {
+  .chip, .action-btn, .mode-tab, .pill-btn { min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ───── Activities grid ───── */
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.activity-card {
+  padding: 18px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.22s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+.activity-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 50%, var(--terra-soft) 100%);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+  pointer-events: none;
+}
+.activity-card:hover {
+  border-color: var(--terra-line);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.activity-card:hover::before { opacity: 1; }
+.activity-card.selected {
+  border-color: var(--terra);
+  background: var(--terra-soft);
+  box-shadow: 0 0 0 3px var(--terra-soft);
+}
+.activity-card.selected::before { opacity: 1; }
+.activity-ico {
+  font-size: 1.8rem;
+  line-height: 1;
+  margin-bottom: 10px;
+  display: block;
+}
+.activity-name {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+  position: relative;
+  z-index: 1;
+}
+.activity-card.selected .activity-name { color: var(--terra-deep); }
+.activity-desc {
+  font-size: 0.78rem;
+  color: var(--ink-mute);
+  line-height: 1.5;
+  position: relative;
+  z-index: 1;
+}
+
+/* ───── Location pill + banner + modal ───── */
+.pill-btn.location {
+  background: var(--terra-soft);
+  border-color: var(--terra-line);
+  color: var(--terra-deep);
+  font-weight: 700;
+}
+.pill-btn.location:hover { background: var(--terra); color: var(--surface); border-color: var(--terra); }
+.pill-btn.location.unset {
+  background: var(--terra);
+  color: var(--surface);
+  border-color: var(--terra);
+  animation: nudge 2.6s ease-in-out infinite;
+}
+@keyframes nudge {
+  0%, 100% { transform: translateY(0); box-shadow: 0 0 0 0 var(--terra-soft); }
+  50% { transform: translateY(-1px); box-shadow: 0 0 0 6px var(--terra-soft); }
+}
+.pill-btn.location svg.pin { width: 14px; height: 14px; }
+.pill-btn.location svg.chev { width: 10px; height: 10px; opacity: 0.7; }
+
+.loc-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  margin-bottom: 14px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(135deg, var(--terra-soft) 0%, var(--honey-soft) 100%);
+  border: 1px dashed var(--terra-line);
+  animation: alertSlide 0.5s var(--ease);
+}
+.loc-banner .ico {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--terra);
+  display: grid; place-items: center;
+  color: var(--surface);
+  flex-shrink: 0;
+}
+.loc-banner .ico svg { width: 16px; height: 16px; }
+.loc-banner .text { flex: 1; font-size: 0.86rem; color: var(--ink); }
+.loc-banner .text b { color: var(--terra-deep); font-weight: 700; margin-right: 6px; }
+.loc-banner .cta {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--surface);
+  background: var(--terra);
+  border: none;
+  padding: 8px 14px;
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+  white-space: nowrap;
+}
+.loc-banner .cta:hover { background: var(--terra-deep); }
+
+.hero-loc {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  margin-bottom: 12px;
+  border-radius: var(--r-pill);
+  background: var(--terra-soft);
+  border: 1px solid var(--terra-line);
+  color: var(--terra-deep);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: all 0.18s var(--ease);
+}
+.hero-loc:hover { background: var(--terra); color: var(--surface); }
+.hero-loc svg { width: 12px; height: 12px; }
+.hero-loc .change { opacity: 0.6; font-weight: 500; margin-left: 4px; }
+
+.dist-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.74rem;
+  color: var(--ocean);
+  font-weight: 700;
+  padding: 3px 8px;
+  background: var(--ocean-soft);
+  border: 1px solid rgba(31,59,82,0.20);
+  border-radius: var(--r-pill);
+}
+.dist-stamp svg { width: 11px; height: 11px; }
+
+.location-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(42,29,20,0.50);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+.location-modal.open { display: flex; animation: fadeIn 0.25s var(--ease); }
+
+.location-sheet {
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--line);
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.4s var(--ease);
+}
+.location-head {
+  padding: 22px 26px 18px;
+  background: linear-gradient(135deg, var(--terra) 0%, var(--terra-deep) 100%);
+  color: var(--surface);
+  position: relative;
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+}
+.location-head .label {
+  font-size: 0.66rem;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--honey-soft);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.location-head h2 {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
+}
+.location-head p { font-size: 0.86rem; color: rgba(255,255,255,0.78); line-height: 1.5; }
+
+.location-body { padding: 22px 26px 24px; }
+
+.region-group { margin-bottom: 16px; }
+.region-group .region-label {
+  font-size: 0.66rem;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.city-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+.city-chip {
+  padding: 9px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s var(--ease);
+  text-align: center;
+}
+.city-chip:hover {
+  border-color: var(--terra);
+  background: var(--terra-soft);
+  color: var(--terra-deep);
+}
+.city-chip.selected {
+  border-color: var(--terra);
+  background: var(--terra);
+  color: var(--surface);
+}
+
+.location-input-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.location-input-row .input-field { height: 46px; flex: 1; }
+.location-input-row .btn-primary { height: 46px; padding: 0 18px; font-size: 0.84rem; }
+
+/* ───── Subtle utilities ───── */
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     TOP BAR · PIT STOP + BEL
+     ═══════════════════════════════════════════════════════ -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-8 8-13a8 8 0 10-16 0c0 5 8 13 8 13z"/>
+          <circle cx="12" cy="9" r="2.5" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="product">PIT STOP</span>
+        <span class="by">by <span class="bel">BEL</span> · Brand Experience Lab</span>
+      </div>
+      <div class="divider-v"></div>
+      <div class="brand-tag"><strong>The Road Trip Planner</strong> that knows the way — and every great stop along it.</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="pill-btn location unset" id="location-btn" title="Set your start location">
+        <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-8 8-13a8 8 0 10-16 0c0 5 8 13 8 13z"/><circle cx="12" cy="9" r="2.5" fill="currentColor"/></svg>
+        <span id="location-label">Set start</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <button class="pill-btn passport" id="passport-btn" title="Your Pit Stop Passport">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21V3a2 2 0 00-2-2H7a2 2 0 00-2 2v18l7-3 7 3z"/></svg>
+        <span>Passport</span>
+        <span class="count" id="passport-count">3</span>
+      </button>
+      <button class="pill-btn" id="locale-btn" title="Language">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>
+        <span>EN</span>
+      </button>
+      <button class="pill-btn" title="Live status">
+        <span class="dot"></span>
+        <span>Live</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SHELL
+     ═══════════════════════════════════════════════════════ -->
+<div class="shell">
+  <div class="main-col">
+
+    <!-- LOCATION BANNER (only shown when no location set) -->
+    <div class="loc-banner" id="loc-banner">
+      <div class="ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-8 8-13a8 8 0 10-16 0c0 5 8 13 8 13z"/><circle cx="12" cy="9" r="2.5" fill="currentColor"/></svg>
+      </div>
+      <div class="text"><b>Where are you starting from?</b>Set your start location and I'll personalize every trip, distance, and pit stop on the page.</div>
+      <button class="cta" id="loc-banner-cta">Set location</button>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow">
+        <span class="pulse"></span>
+        Pit Stop online · Plan your getaway
+      </div>
+      <h1>I'm <span class="accent">PIT STOP</span>.<br>Tell me where the road's taking you tonight.</h1>
+      <p>I plan road trips, mark every great stop along the way, and pack the cooler. Tell me where you're going, scan a roadside sign, or just say "surprise me."</p>
+
+      <div class="hero-shortcuts">
+        <button class="hero-shortcut" data-quick="weekend">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4zm0 5l9 4 9-4M3 17l9 4 9-4"/></svg>
+          Weekend escape
+        </button>
+        <button class="hero-shortcut" data-quick="family">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="7" r="3"/><path d="M3 21v-1a4 4 0 014-4h4a4 4 0 014 4v1M14 21v-1a4 4 0 014-4h3"/></svg>
+          Family road trip
+        </button>
+        <button class="hero-shortcut" data-quick="fall">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          Fall foliage
+        </button>
+        <button class="hero-shortcut" data-quick="surprise">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>
+          Surprise me
+        </button>
+      </div>
+    </section>
+
+    <!-- ALERT -->
+    <div class="alert-bar" id="alert-bar">
+      <div class="alert-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12V4H12L2 14v6h6l8-8 4-4z"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/></svg>
+      </div>
+      <div class="alert-text"><b>This Weekend's Pick</b>Last cabins for fall foliage on the Blue Ridge — book a 3-day getaway and we'll pack the snacks.</div>
+      <button class="alert-cta" id="alert-cta">View pick</button>
+    </div>
+
+    <!-- TODAY'S FEATURED ADVENTURES RAIL -->
+    <div class="rail-wrap">
+      <div class="rail-head">
+        <div class="title">Today's Featured Adventures</div>
+        <div class="sub">Curated by Pit Stop · refreshed daily</div>
+      </div>
+      <div class="rail" id="rail"></div>
+    </div>
+
+    <!-- MODE TABS -->
+    <div class="mode-tabs" role="tablist">
+      <button class="mode-tab active" data-mode="discover">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        <span>Discover</span>
+      </button>
+      <button class="mode-tab" data-mode="trip">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        <span>Build My Trip</span>
+      </button>
+      <button class="mode-tab" data-mode="activities">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l8-8 10 10-8 8z"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/></svg>
+        <span>Activities</span>
+      </button>
+      <button class="mode-tab" data-mode="routes">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>
+        <span>Routes</span>
+      </button>
+      <button class="mode-tab" data-mode="plot">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8 7l8 9"/></svg>
+        <span>Plot My Route</span>
+      </button>
+    </div>
+
+    <!-- PANEL HOST -->
+    <section class="panel" id="panel"></section>
+  </div>
+</div>
+
+<!-- LOCATION MODAL -->
+<div class="location-modal" id="location-modal" role="dialog" aria-modal="true">
+  <div class="location-sheet" id="location-sheet"></div>
+</div>
+
+<!-- PASSPORT MODAL -->
+<div class="passport-modal" id="passport-modal" role="dialog" aria-modal="true">
+  <div class="passport-sheet" id="passport-sheet"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-ico">✨</div>
+  <div class="toast-text" id="toast-text">Stamp added!</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="copy">Powered by <span class="terra">BEL + PIT STOP</span> · Experiential Intelligence by Brand Experience Lab</div>
+    <div class="legal">v1.0 · Concept · Mock</div>
+  </div>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   PIT STOP · ENGINE
+   ───────────────────────────────────────────────────────────────────
+   Modules:
+     1. CONFIG       — brand, scoring weights
+     2. CATALOG      — destinations + snack pack categories
+     3. SCENES       — landscape SVG generator
+     4. PAIRINGS     — vibe + season + duration recognition
+     5. SCORER       — recommendation engine
+     6. PASSPORT     — stamp book + reward tiers
+     7. SESSION      — user state
+     8. RENDER       — per-mode UI controllers
+     9. PIT STOP     — conversational copy
+     10. BOOT        — wires everything up
+   ═══════════════════════════════════════════════════════════════════ */
+
+const CONFIG = {
+  brand: { product: 'PIT STOP', parent: 'BEL', tagline: 'The Road Trip Planner that Knows the Way' },
+  scoringWeights: {
+    vibe:       0.35,
+    duration:   0.20,
+    budget:     0.15,
+    season:     0.10,
+    family:     0.10,
+    popularity: 0.10
+  }
+};
+
+/* ───────────────────────────────────────────────────────────────────
+   2. CATALOG  — Destinations + Snack Pack categories
+   ─────────────────────────────────────────────────────────────────── */
+const CATALOG = {
+  destinations: [
+    {
+      sku: 'PA-HSY-001',
+      name: 'Hershey, Pennsylvania',
+      region: 'Lancaster County',
+      state: 'PA',
+      category: 'Family destination · Theme park',
+      scene: 'plains',
+      colorTint: ['#6e2820', '#a87a2c', '#f4ecd8'],
+      vibe: { scenic: 3, family: 5, adventure: 4, cultural: 4, romantic: 2, relaxed: 3 },
+      tags: ['family', 'theme-park', 'iconic', 'all-roads-lead-here'],
+      bestTime: 'Spring – Fall',
+      availability: { state: 'peak', label: 'Open · peak season' },
+      duration: 3,
+      cost: 220,
+      popularity: 0.96,
+      ratings: [ { source: 'AAA', score: 92 }, { source: 'T+L', score: 89 } ],
+      badges: ['family-favorite', 'must-visit'],
+      pairings: ['family', 'theme-park', 'amusement', 'sweet'],
+      notes: 'Roller coasters, Chocolatetown, and a hotel that smells faintly of cocoa. The sweetest town in Pennsylvania, and the one road trip every kid remembers.',
+      featured: true
+    },
+    {
+      sku: 'ME-ACA-001',
+      name: 'Acadia National Park',
+      region: 'Bar Harbor · Mount Desert Island',
+      state: 'ME',
+      category: 'National Park · Coast',
+      scene: 'coast-pine',
+      colorTint: ['#3a5d3a', '#7a4a30', '#a3c0d4'],
+      vibe: { scenic: 5, family: 4, adventure: 4, cultural: 3, romantic: 4, relaxed: 4 },
+      tags: ['national-park', 'foliage', 'hiking', 'lobster'],
+      bestTime: 'Late Sep – Mid Oct',
+      availability: { state: 'peak', label: 'Peak foliage now' },
+      duration: 4,
+      cost: 195,
+      popularity: 0.91,
+      ratings: [ { source: 'NatGeo', score: 95 }, { source: 'AAA', score: 91 }, { source: 'T+L', score: 92 } ],
+      badges: ['national-park', 'fall-foliage'],
+      pairings: ['hiking', 'sunset', 'fall', 'coastal'],
+      notes: 'Cadillac Mountain at sunrise, lobster rolls at lunch, miles of carriage roads in between. Maine in one perfect peninsula.',
+      promotion: 'Last fall cabins available'
+    },
+    {
+      sku: 'NC-BRP-001',
+      name: 'Blue Ridge Parkway',
+      region: 'Asheville to Boone',
+      state: 'NC / VA',
+      category: 'Scenic Byway · Mountains',
+      scene: 'mountains-fall',
+      colorTint: ['#a85a30', '#d4842a', '#7a4a3a'],
+      vibe: { scenic: 5, family: 4, adventure: 3, cultural: 3, romantic: 5, relaxed: 5 },
+      tags: ['byway', 'foliage', 'mountains', 'overlooks'],
+      bestTime: 'Mid Oct – Early Nov',
+      availability: { state: 'peak', label: 'Peak foliage window' },
+      duration: 3,
+      cost: 140,
+      popularity: 0.94,
+      ratings: [ { source: 'NatGeo', score: 96 }, { source: 'T+L', score: 93 }, { source: 'AAA', score: 92 } ],
+      badges: ['scenic-byway', 'fall-foliage'],
+      pairings: ['fall', 'driving', 'overlook', 'cabin'],
+      notes: '469 miles of overlooks and milepost markers. The drive itself is the destination — slow, scenic, and unforgettable in October.',
+      promotion: '15% off cabin stays through Sunday'
+    },
+    {
+      sku: 'RI-NPT-001',
+      name: 'Newport',
+      region: 'Aquidneck Island',
+      state: 'RI',
+      category: 'Coastal · Mansions',
+      scene: 'coast',
+      colorTint: ['#7a4a30', '#1f3b52', '#f4ecd8'],
+      vibe: { scenic: 5, family: 3, adventure: 2, cultural: 5, romantic: 5, relaxed: 4 },
+      tags: ['historic', 'coastal', 'walkable', 'iconic', 'cultural'],
+      bestTime: 'May – Oct',
+      availability: { state: 'peak', label: 'Open · peak season' },
+      duration: 3,
+      cost: 295,
+      popularity: 0.86,
+      ratings: [ { source: 'T+L', score: 93 }, { source: 'CNT', score: 94 } ],
+      badges: ['iconic', 'must-visit'],
+      pairings: ['coastal', 'historic', 'romantic', 'walkable'],
+      notes: 'Gilded Age mansions on the Cliff Walk, a harbor full of tall ships, and a regatta every weekend. America\'s most photogenic small city.'
+    },
+    {
+      sku: 'PA-LAN-001',
+      name: 'Lancaster County',
+      region: 'Pennsylvania Dutch Country',
+      state: 'PA',
+      category: 'Pastoral · Cultural',
+      scene: 'plains',
+      colorTint: ['#7a5a30', '#a85a30', '#cce0d4'],
+      vibe: { scenic: 4, family: 5, adventure: 2, cultural: 5, romantic: 3, relaxed: 5 },
+      tags: ['family', 'cultural', 'small-town', 'historic', 'foodie'],
+      bestTime: 'Apr – Oct',
+      availability: { state: 'good', label: 'Open · pleasant weather' },
+      duration: 2,
+      cost: 140,
+      popularity: 0.80,
+      ratings: [ { source: 'T+L', score: 89 }, { source: 'AAA', score: 88 } ],
+      badges: ['family-favorite', 'hidden-gem'],
+      pairings: ['family', 'small-town', 'historic', 'foodie'],
+      notes: 'Buggy traffic, hex signs, and the best shoofly pie in America. The road-trip Pennsylvania Dutch Country deserves — twenty minutes from Hershey.'
+    },
+    {
+      sku: 'NY-FL-001',
+      name: 'Finger Lakes',
+      region: 'Wine Country',
+      state: 'NY',
+      category: 'Wine Country · Lakes',
+      scene: 'plains',
+      colorTint: ['#7a5a30', '#8a9655', '#a3c0d4'],
+      vibe: { scenic: 5, family: 3, adventure: 3, cultural: 4, romantic: 5, relaxed: 5 },
+      tags: ['wine', 'foodie', 'lake', 'small-town', 'hidden'],
+      bestTime: 'Jun – Oct',
+      availability: { state: 'peak', label: 'Open · harvest season' },
+      duration: 3,
+      cost: 195,
+      popularity: 0.78,
+      ratings: [ { source: 'T+L', score: 92 }, { source: 'CNT', score: 91 } ],
+      badges: ['foodie', 'hidden-gem'],
+      pairings: ['wine', 'foodie', 'lake', 'romantic'],
+      notes: 'Eleven slender lakes, 100+ wineries, and a waterfall between every tasting. New York\'s best-kept secret.'
+    },
+    {
+      sku: 'NY-ADK-001',
+      name: 'Adirondacks · Lake Placid',
+      region: 'High Peaks',
+      state: 'NY',
+      category: 'Mountains · Lakes',
+      scene: 'mountains',
+      colorTint: ['#2a5d6a', '#4a6a4a', '#a3c0d4'],
+      vibe: { scenic: 5, family: 4, adventure: 5, cultural: 3, romantic: 4, relaxed: 4 },
+      tags: ['hiking', 'mountains', 'lake', 'family', 'adventure'],
+      bestTime: 'Jul – Sep',
+      availability: { state: 'peak', label: 'Open · summer peak' },
+      duration: 4,
+      cost: 185,
+      popularity: 0.79,
+      ratings: [ { source: 'AAA', score: 92 }, { source: 'T+L', score: 91 }, { source: 'NatGeo', score: 93 } ],
+      badges: ['family-favorite', 'scenic-byway'],
+      pairings: ['hiking', 'mountain', 'lake', 'adventure'],
+      notes: 'Six million acres of mountains, lakes, and trails — the largest wilderness east of the Mississippi. Olympic history thrown in.'
+    },
+    {
+      sku: 'SC-CHS-001',
+      name: 'Charleston',
+      region: 'South Carolina Lowcountry',
+      state: 'SC',
+      category: 'Historic City · Coastal',
+      scene: 'plains',
+      colorTint: ['#a85a30', '#3a5d3a', '#f4ecd8'],
+      vibe: { scenic: 4, family: 3, adventure: 2, cultural: 5, romantic: 5, relaxed: 4 },
+      tags: ['historic', 'culinary', 'walkable', 'southern'],
+      bestTime: 'Mar – May · Oct',
+      availability: { state: 'good', label: 'Open · pleasant weather' },
+      duration: 3,
+      cost: 245,
+      popularity: 0.89,
+      ratings: [ { source: 'T+L', score: 96 }, { source: 'CNT', score: 95 } ],
+      badges: ['must-visit', 'foodie'],
+      pairings: ['foodie', 'walkable', 'southern', 'historic'],
+      notes: 'Cobblestones, oysters, and the kind of front porches that make you stop the car. Voted "Best City in America" more often than anywhere else.'
+    },
+    {
+      sku: 'NC-OBX-001',
+      name: 'Outer Banks',
+      region: 'Nags Head to Ocracoke',
+      state: 'NC',
+      category: 'Barrier Islands · Beach',
+      scene: 'coast',
+      colorTint: ['#a3c0d4', '#d4a24a', '#3a5d3a'],
+      vibe: { scenic: 4, family: 5, adventure: 4, cultural: 3, romantic: 4, relaxed: 5 },
+      tags: ['beach', 'family', 'lighthouses', 'wild-horses'],
+      bestTime: 'May – Sep',
+      availability: { state: 'peak', label: 'Beach season' },
+      duration: 4,
+      cost: 175,
+      popularity: 0.85,
+      ratings: [ { source: 'AAA', score: 91 }, { source: 'T+L', score: 90 } ],
+      badges: ['family-favorite', 'beach'],
+      pairings: ['beach', 'family', 'lighthouse', 'driving'],
+      notes: '200 miles of barrier islands, four lighthouses, wild horses on Corolla, and the Wright Brothers\' first hop. A classic American beach drive.'
+    },
+    {
+      sku: 'VT-STW-001',
+      name: 'Vermont · Stowe',
+      region: 'Green Mountains',
+      state: 'VT',
+      category: 'Mountains · Foliage',
+      scene: 'mountains-fall',
+      colorTint: ['#a85a30', '#d4842a', '#cce0d4'],
+      vibe: { scenic: 5, family: 4, adventure: 4, cultural: 4, romantic: 5, relaxed: 5 },
+      tags: ['foliage', 'mountains', 'romantic', 'small-town', 'foodie'],
+      bestTime: 'Sep – Oct',
+      availability: { state: 'peak', label: 'Peak foliage window' },
+      duration: 3,
+      cost: 235,
+      popularity: 0.87,
+      ratings: [ { source: 'T+L', score: 94 }, { source: 'CNT', score: 93 }, { source: 'AAA', score: 91 } ],
+      badges: ['fall-foliage', 'iconic'],
+      pairings: ['fall', 'mountain', 'romantic', 'foodie'],
+      notes: 'Covered bridges, a cider press at every farm stand, and Mount Mansfield as your breakfast view. Quintessential New England.',
+      promotion: '15% off lodge stays through Sunday'
+    },
+    {
+      sku: 'NH-WHT-001',
+      name: 'White Mountains',
+      region: 'Lincoln · Franconia Notch',
+      state: 'NH',
+      category: 'Mountains · Family',
+      scene: 'mountains-fall',
+      colorTint: ['#7a4a30', '#a85a30', '#a3c0d4'],
+      vibe: { scenic: 5, family: 5, adventure: 4, cultural: 3, romantic: 4, relaxed: 4 },
+      tags: ['mountains', 'foliage', 'family', 'hiking', 'scenic'],
+      bestTime: 'Jul – Oct',
+      availability: { state: 'peak', label: 'Open · foliage starting' },
+      duration: 3,
+      cost: 175,
+      popularity: 0.84,
+      ratings: [ { source: 'T+L', score: 90 }, { source: 'AAA', score: 91 } ],
+      badges: ['family-favorite', 'fall-foliage'],
+      pairings: ['mountain', 'family', 'hiking', 'fall'],
+      notes: 'Mount Washington\'s wild weather, the Kancamagus Highway\'s overlooks, and Story Land for the kids. New Hampshire over-delivers.'
+    },
+    {
+      sku: 'TN-SMK-001',
+      name: 'Great Smoky Mountains',
+      region: 'Gatlinburg · Cherokee',
+      state: 'TN / NC',
+      category: 'National Park · Family',
+      scene: 'mountains-fall',
+      colorTint: ['#4a6a4a', '#a85a30', '#7a4a30'],
+      vibe: { scenic: 5, family: 5, adventure: 4, cultural: 3, romantic: 3, relaxed: 4 },
+      tags: ['national-park', 'foliage', 'family', 'wildlife'],
+      bestTime: 'Oct – Early Nov',
+      availability: { state: 'peak', label: 'Peak foliage' },
+      duration: 3,
+      cost: 165,
+      popularity: 0.92,
+      ratings: [ { source: 'AAA', score: 92 }, { source: 'T+L', score: 90 } ],
+      badges: ['national-park', 'family-favorite', 'fall-foliage'],
+      pairings: ['fall', 'family', 'hiking', 'wildlife'],
+      notes: 'The most-visited national park in America, for good reason. Black bears, hidden waterfalls, and Cades Cove at dawn.'
+    },
+    {
+      sku: 'VA-SKY-001',
+      name: 'Shenandoah · Skyline Drive',
+      region: 'Shenandoah National Park',
+      state: 'VA',
+      category: 'National Park · Scenic Drive',
+      scene: 'mountains-fall',
+      colorTint: ['#a85a30', '#7a4a30', '#a3c0d4'],
+      vibe: { scenic: 5, family: 4, adventure: 3, cultural: 3, romantic: 4, relaxed: 5 },
+      tags: ['national-park', 'foliage', 'scenic', 'driving', 'wildlife'],
+      bestTime: 'Oct – Early Nov',
+      availability: { state: 'peak', label: 'Peak foliage' },
+      duration: 3,
+      cost: 135,
+      popularity: 0.85,
+      ratings: [ { source: 'NatGeo', score: 93 }, { source: 'T+L', score: 90 }, { source: 'AAA', score: 92 } ],
+      badges: ['national-park', 'scenic-byway', 'fall-foliage'],
+      pairings: ['fall', 'driving', 'scenic', 'wildlife'],
+      notes: '105 miles of overlooks along Skyline Drive — black bears, hidden waterfalls, and a foliage corridor that rivals New England.'
+    },
+    {
+      sku: 'FL-KEY-001',
+      name: 'Florida Keys',
+      region: 'Key Largo to Key West',
+      state: 'FL',
+      category: 'Island Drive · Tropical',
+      scene: 'coast',
+      colorTint: ['#2a8d8a', '#d4a24a', '#f4ecd8'],
+      vibe: { scenic: 5, family: 4, adventure: 4, cultural: 3, romantic: 4, relaxed: 5 },
+      tags: ['island', 'coastal', 'iconic', 'sunset'],
+      bestTime: 'Dec – Apr',
+      availability: { state: 'good', label: 'Open · winter peak' },
+      duration: 4,
+      cost: 270,
+      popularity: 0.88,
+      ratings: [ { source: 'T+L', score: 92 }, { source: 'CNT', score: 91 } ],
+      badges: ['iconic'],
+      pairings: ['beach', 'sunset', 'seafood', 'driving'],
+      notes: '113 miles of bridges, 42 islands, and a sunset celebration at Mallory Square that the locals still show up for.'
+    },
+    {
+      sku: 'MA-CC-001',
+      name: 'Cape Cod',
+      region: 'Sandwich to Provincetown',
+      state: 'MA',
+      category: 'Coastal Drive · New England',
+      scene: 'coast',
+      colorTint: ['#a3c0d4', '#a85a30', '#f4ecd8'],
+      vibe: { scenic: 5, family: 5, adventure: 2, cultural: 4, romantic: 4, relaxed: 5 },
+      tags: ['beach', 'lighthouses', 'seafood', 'family'],
+      bestTime: 'Jun – Sep',
+      availability: { state: 'good', label: 'Open · beach season' },
+      duration: 3,
+      cost: 235,
+      popularity: 0.84,
+      ratings: [ { source: 'T+L', score: 90 }, { source: 'AAA', score: 89 } ],
+      badges: ['family-favorite', 'beach'],
+      pairings: ['beach', 'family', 'lighthouse', 'seafood'],
+      notes: 'Salty taffy, oyster shacks, and dunes that go on for miles. New England summer in 70 miles of coastline.'
+    },
+    {
+      sku: 'GA-SAV-001',
+      name: 'Savannah',
+      region: 'Coastal Georgia',
+      state: 'GA',
+      category: 'Historic City · Coastal',
+      scene: 'plains',
+      colorTint: ['#a85a30', '#4a6a4a', '#cce0d4'],
+      vibe: { scenic: 4, family: 3, adventure: 2, cultural: 5, romantic: 5, relaxed: 4 },
+      tags: ['historic', 'foodie', 'walkable', 'southern', 'cultural'],
+      bestTime: 'Mar – May · Oct – Nov',
+      availability: { state: 'good', label: 'Open · pleasant weather' },
+      duration: 3,
+      cost: 215,
+      popularity: 0.86,
+      ratings: [ { source: 'T+L', score: 95 }, { source: 'CNT', score: 94 }, { source: 'AAA', score: 91 } ],
+      badges: ['must-visit', 'foodie'],
+      pairings: ['foodie', 'historic', 'walkable', 'romantic'],
+      notes: 'Spanish moss over twenty-two squares, shrimp & grits on every corner, and a haunted history tour you\'ll secretly love.'
+    },
+    {
+      sku: 'PA-POC-001',
+      name: 'Pocono Mountains',
+      region: 'Lake Wallenpaupack · Mount Airy',
+      state: 'PA',
+      category: 'Resort Mountains · Family',
+      scene: 'mountains-fall',
+      colorTint: ['#7a4a30', '#a85a30', '#cce0d4'],
+      vibe: { scenic: 4, family: 5, adventure: 4, cultural: 2, romantic: 4, relaxed: 5 },
+      tags: ['family', 'mountains', 'lake', 'resort', 'foliage'],
+      bestTime: 'Jun – Oct',
+      availability: { state: 'peak', label: 'Peak resort season' },
+      duration: 3,
+      cost: 195,
+      popularity: 0.81,
+      ratings: [ { source: 'T+L', score: 88 }, { source: 'AAA', score: 89 } ],
+      badges: ['family-favorite'],
+      pairings: ['family', 'mountain', 'lake', 'fall'],
+      notes: 'Indoor water parks, lakefront cabins, and ski lodges in summer mode. The original New York/Philly family escape — still over-delivering.'
+    },
+    {
+      sku: 'PA-GBG-001',
+      name: 'Gettysburg',
+      region: 'South-Central Pennsylvania',
+      state: 'PA',
+      category: 'Historic · Civil War',
+      scene: 'plains',
+      colorTint: ['#7a5a30', '#4a6a4a', '#cce0d4'],
+      vibe: { scenic: 4, family: 4, adventure: 2, cultural: 5, romantic: 3, relaxed: 3 },
+      tags: ['historic', 'cultural', 'family', 'walkable', 'must-visit'],
+      bestTime: 'Apr – Oct',
+      availability: { state: 'good', label: 'Open · all major sites' },
+      duration: 2,
+      cost: 130,
+      popularity: 0.83,
+      ratings: [ { source: 'AAA', score: 92 }, { source: 'T+L', score: 88 } ],
+      badges: ['must-visit'],
+      pairings: ['historic', 'family', 'walkable', 'cultural'],
+      notes: 'The most consequential three days in American history, narrated by guides who know every ridge. Hallowed ground the kids will actually remember.'
+    },
+    {
+      sku: 'NJ-CM-001',
+      name: 'Cape May',
+      region: 'Jersey Shore South',
+      state: 'NJ',
+      category: 'Victorian Beach Town',
+      scene: 'coast',
+      colorTint: ['#f0b7b7', '#a3c0d4', '#f4ecd8'],
+      vibe: { scenic: 5, family: 4, adventure: 2, cultural: 4, romantic: 5, relaxed: 5 },
+      tags: ['beach', 'historic', 'romantic', 'walkable', 'foodie'],
+      bestTime: 'May – Oct',
+      availability: { state: 'peak', label: 'Beach season' },
+      duration: 3,
+      cost: 245,
+      popularity: 0.84,
+      ratings: [ { source: 'T+L', score: 91 }, { source: 'CNT', score: 90 }, { source: 'AAA', score: 90 } ],
+      badges: ['iconic', 'must-visit'],
+      pairings: ['beach', 'historic', 'romantic', 'foodie'],
+      notes: "America's oldest seaside resort. Painted ladies, gas-lit streets, dolphins at sunrise, and one of the most underrated restaurant scenes on the East Coast."
+    },
+    {
+      sku: 'NJ-LBI-001',
+      name: 'Long Beach Island',
+      region: 'Jersey Shore',
+      state: 'NJ',
+      category: 'Barrier Island · Family Beach',
+      scene: 'coast',
+      colorTint: ['#a3c0d4', '#d4a24a', '#f4ecd8'],
+      vibe: { scenic: 4, family: 5, adventure: 3, cultural: 2, romantic: 3, relaxed: 5 },
+      tags: ['beach', 'family', 'lighthouses', 'small-town'],
+      bestTime: 'Jun – Aug',
+      availability: { state: 'peak', label: 'Beach season' },
+      duration: 4,
+      cost: 220,
+      popularity: 0.79,
+      ratings: [ { source: 'AAA', score: 89 }, { source: 'T+L', score: 87 } ],
+      badges: ['family-favorite', 'beach'],
+      pairings: ['beach', 'family', 'lighthouse', 'small-town'],
+      notes: '18 miles of clean barrier island, the iconic Barnegat Lighthouse, and mini golf on every block. Classic Jersey Shore in its best form.'
+    },
+    {
+      sku: 'NJ-PRI-001',
+      name: 'Princeton',
+      region: 'Central New Jersey',
+      state: 'NJ',
+      category: 'College Town · Historic',
+      scene: 'plains',
+      colorTint: ['#4a6a4a', '#7a4a30', '#cce0d4'],
+      vibe: { scenic: 3, family: 3, adventure: 2, cultural: 5, romantic: 4, relaxed: 4 },
+      tags: ['cultural', 'historic', 'walkable', 'foodie', 'small-town'],
+      bestTime: 'Mar – Nov',
+      availability: { state: 'good', label: 'Open year-round' },
+      duration: 2,
+      cost: 175,
+      popularity: 0.72,
+      ratings: [ { source: 'T+L', score: 87 }, { source: 'AAA', score: 86 } ],
+      badges: ['hidden-gem', 'foodie'],
+      pairings: ['cultural', 'walkable', 'foodie', 'historic'],
+      notes: "Ivy walls, indie bookshops, and Nassau Street's farm-to-table scene. A college town worth driving out of your way for."
+    },
+    {
+      sku: 'NY-HV-001',
+      name: 'Hudson Valley',
+      region: 'Cold Spring · Hudson · Beacon',
+      state: 'NY',
+      category: 'River Valley · Foodie',
+      scene: 'plains',
+      colorTint: ['#7a5a30', '#a85a30', '#cce0d4'],
+      vibe: { scenic: 5, family: 3, adventure: 3, cultural: 5, romantic: 5, relaxed: 5 },
+      tags: ['foodie', 'romantic', 'scenic', 'small-town', 'cultural', 'foliage'],
+      bestTime: 'Sep – Nov',
+      availability: { state: 'peak', label: 'Peak foliage & harvest' },
+      duration: 3,
+      cost: 245,
+      popularity: 0.78,
+      ratings: [ { source: 'T+L', score: 93 }, { source: 'CNT', score: 92 }, { source: 'AAA', score: 90 } ],
+      badges: ['foodie', 'fall-foliage'],
+      pairings: ['foodie', 'romantic', 'fall', 'small-town'],
+      notes: 'Storm King across the river, farm-to-table dinners in 200-year-old barns, antique shops in every hamlet. The Brooklyn weekend without the Brooklyn.'
+    },
+    {
+      sku: 'NY-CAT-001',
+      name: 'Catskill Mountains',
+      region: 'Woodstock · Phoenicia',
+      state: 'NY',
+      category: 'Mountains · Foliage',
+      scene: 'mountains-fall',
+      colorTint: ['#a85a30', '#4a6a4a', '#a3c0d4'],
+      vibe: { scenic: 5, family: 4, adventure: 4, cultural: 4, romantic: 4, relaxed: 5 },
+      tags: ['mountains', 'foliage', 'hiking', 'small-town', 'romantic'],
+      bestTime: 'Sep – Oct',
+      availability: { state: 'peak', label: 'Peak foliage' },
+      duration: 3,
+      cost: 185,
+      popularity: 0.81,
+      ratings: [ { source: 'T+L', score: 91 }, { source: 'CNT', score: 90 } ],
+      badges: ['fall-foliage', 'hidden-gem'],
+      pairings: ['fall', 'mountain', 'hiking', 'romantic'],
+      notes: "Woodstock's music history, Phoenicia's trout streams, and a foliage corridor 90 minutes from Manhattan. New York's mountain weekend."
+    },
+    {
+      sku: 'NY-NIA-001',
+      name: 'Niagara Falls',
+      region: 'Western New York',
+      state: 'NY',
+      category: 'Iconic · Family',
+      scene: 'coast',
+      colorTint: ['#2a5d6a', '#a3c0d4', '#f4ecd8'],
+      vibe: { scenic: 5, family: 5, adventure: 4, cultural: 4, romantic: 4, relaxed: 3 },
+      tags: ['iconic', 'family', 'family-favorite', 'natural-wonder'],
+      bestTime: 'May – Oct',
+      availability: { state: 'peak', label: 'Open · peak season' },
+      duration: 2,
+      cost: 165,
+      popularity: 0.92,
+      ratings: [ { source: 'T+L', score: 90 }, { source: 'AAA', score: 92 } ],
+      badges: ['iconic', 'family-favorite', 'must-visit'],
+      pairings: ['family', 'iconic', 'natural-wonder'],
+      notes: 'Maid of the Mist into the spray, the Cave of the Winds for the brave, 750,000 gallons of thunder per second. The waterfall everyone remembers.'
+    }
+  ],
+
+  /* Snack pack categories — slot-friendly for any CPG portfolio */
+  snackCategories: {
+    drive: {
+      icon: '🚗',
+      name: 'For the Drive',
+      desc: 'Hand-friendly snacks that won\'t crumb up the seat.',
+      examples: 'chocolate bars · peanut butter cups · pretzel twists · jerky',
+      aisle: 'Front register · drive aisle'
+    },
+    cooler: {
+      icon: '🧊',
+      name: 'For the Cooler',
+      desc: 'Anything that needs to ride cold.',
+      examples: 'string cheese · cold brew · sparkling waters · fresh fruit',
+      aisle: 'Refrigerated aisle'
+    },
+    kids: {
+      icon: '🧒',
+      name: 'For the Backseat',
+      desc: 'Small hands, big mess potential — kept manageable.',
+      examples: 'fruit chews · mini candies · juice boxes · popcorn',
+      aisle: 'Family snacks aisle'
+    },
+    campfire: {
+      icon: '🔥',
+      name: 'For the Campfire',
+      desc: 'Treats that show up in tonight\'s memory.',
+      examples: 's\'mores fixings · graham crackers · marshmallows · chocolate squares',
+      aisle: 'Endcap · seasonal display'
+    },
+    hotel: {
+      icon: '🏨',
+      name: 'For the Hotel Room',
+      desc: 'Late-night minibar replacement.',
+      examples: 'gourmet chocolate · trail mix · sparkling water · cookies',
+      aisle: 'Premium snacks aisle'
+    },
+    refresh: {
+      icon: '💧',
+      name: 'Refreshments',
+      desc: 'Functional hydration for the long haul.',
+      examples: 'electrolyte drinks · iced coffee · sparkling water · juice',
+      aisle: 'Beverage cooler'
+    }
+  },
+
+  /* Iconic East Coast routes */
+  routes: [
+    { id: 'brp',     flag: '🍁', name: 'Blue Ridge Parkway',     desc: 'Asheville to Boone — 469 miles of overlooks and zero stoplights.',                    miles: '~250 miles · 3 days' },
+    { id: 'skyline', flag: '🍂', name: 'Skyline Drive',           desc: 'Front Royal to Waynesboro — 105 miles ridge-running through Shenandoah.',             miles: '~105 miles · 2 days' },
+    { id: 'mecoast', flag: '🦞', name: 'Maine Coast',             desc: 'Bar Harbor to Boothbay — Acadia, lighthouses, and the best lobster rolls of your life.', miles: '~180 miles · 3 days' },
+    { id: 'whitemt', flag: '🏔', name: 'Kancamagus Highway',      desc: 'Lincoln to Conway — 35 miles of White Mountain overlooks and waterfalls.',            miles: '~35 miles · 1 day' },
+    { id: 'padutch', flag: '🚜', name: 'Pennsylvania Dutch Loop', desc: 'Hershey to Lancaster to Gettysburg — Amish country, theme park, and Civil War history.', miles: '~110 miles · 3 days' },
+    { id: 'hudson',  flag: '🍇', name: 'Hudson Valley',           desc: 'Cold Spring to Hudson — farm-to-table, art-filled small towns, river views.',          miles: '~95 miles · 2 days' },
+    { id: 'jersey',  flag: '🌊', name: 'Jersey Shore Drive',      desc: 'LBI to Cape May — Victorian beach towns, lighthouses, boardwalks.',                  miles: '~85 miles · 2 days' },
+    { id: 'cape',    flag: '🐚', name: 'Cape Cod Loop',           desc: 'Sandwich to Provincetown — dunes, oyster shacks, and lighthouse drives.',             miles: '~70 miles · 2 days' }
+  ]
+};
+
+
+/* ── Geo · coordinates for distance calc ───────────────────────── */
+const DESTINATION_COORDS = {
+  'PA-HSY-001': { lat: 40.2861, lng:  -76.6502 },   // Hershey, PA
+  'ME-ACA-001': { lat: 44.3386, lng:  -68.2733 },   // Acadia, ME
+  'NC-BRP-001': { lat: 35.5951, lng:  -82.5515 },   // Blue Ridge · Asheville
+  'RI-NPT-001': { lat: 41.4901, lng:  -71.3128 },   // Newport, RI
+  'PA-LAN-001': { lat: 40.0379, lng:  -76.3055 },   // Lancaster County, PA
+  'NY-FL-001':  { lat: 42.7286, lng:  -76.9277 },   // Finger Lakes, NY
+  'NY-ADK-001': { lat: 44.2795, lng:  -73.9799 },   // Adirondacks · Lake Placid
+  'SC-CHS-001': { lat: 32.7765, lng:  -79.9311 },   // Charleston, SC
+  'NC-OBX-001': { lat: 35.5582, lng:  -75.4665 },   // Outer Banks, NC
+  'VT-STW-001': { lat: 44.4654, lng:  -72.6874 },   // Stowe, VT
+  'NH-WHT-001': { lat: 44.0436, lng:  -71.6726 },   // White Mountains, NH
+  'TN-SMK-001': { lat: 35.6131, lng:  -83.5532 },   // Smokies
+  'VA-SKY-001': { lat: 38.5295, lng:  -78.3658 },   // Shenandoah, VA
+  'FL-KEY-001': { lat: 24.5551, lng:  -81.7800 },   // Florida Keys
+  'MA-CC-001':  { lat: 41.6688, lng:  -70.2962 },   // Cape Cod
+  'GA-SAV-001': { lat: 32.0809, lng:  -81.0912 },   // Savannah, GA
+  /* PA / NJ / NY additions */
+  'PA-POC-001': { lat: 41.2333, lng:  -75.6500 },   // Pocono Mountains, PA
+  'PA-GBG-001': { lat: 39.8309, lng:  -77.2311 },   // Gettysburg, PA
+  'NJ-CM-001':  { lat: 38.9351, lng:  -74.9060 },   // Cape May, NJ
+  'NJ-LBI-001': { lat: 39.6595, lng:  -74.2104 },   // Long Beach Island, NJ
+  'NJ-PRI-001': { lat: 40.3573, lng:  -74.6672 },   // Princeton, NJ
+  'NY-HV-001':  { lat: 41.5298, lng:  -73.9637 },   // Hudson Valley, NY
+  'NY-CAT-001': { lat: 42.0537, lng:  -74.2473 },   // Catskill Mountains, NY
+  'NY-NIA-001': { lat: 43.0962, lng:  -79.0377 }    // Niagara Falls, NY
+};
+CATALOG.destinations.forEach(d => Object.assign(d, DESTINATION_COORDS[d.sku] || {}));
+
+const START_CITIES = [
+  /* New England */
+  { name: 'Boston, MA',         lat: 42.3601, lng: -71.0589, region: 'New England'   },
+  { name: 'Providence, RI',     lat: 41.8240, lng: -71.4128, region: 'New England'   },
+  { name: 'Hartford, CT',       lat: 41.7658, lng: -72.6734, region: 'New England'   },
+  { name: 'Portland, ME',       lat: 43.6591, lng: -70.2568, region: 'New England'   },
+  { name: 'Burlington, VT',     lat: 44.4759, lng: -73.2121, region: 'New England'   },
+  { name: 'Manchester, NH',     lat: 42.9956, lng: -71.4548, region: 'New England'   },
+
+  /* Northeast / Mid-Atlantic */
+  { name: 'New York, NY',       lat: 40.7128, lng: -74.0060, region: 'Mid-Atlantic'  },
+  { name: 'Newark, NJ',         lat: 40.7357, lng: -74.1724, region: 'Mid-Atlantic'  },
+  { name: 'Philadelphia, PA',   lat: 39.9526, lng: -75.1652, region: 'Mid-Atlantic'  },
+  { name: 'Pittsburgh, PA',     lat: 40.4406, lng: -79.9959, region: 'Mid-Atlantic'  },
+  { name: 'Baltimore, MD',      lat: 39.2904, lng: -76.6122, region: 'Mid-Atlantic'  },
+  { name: 'Washington, DC',     lat: 38.9072, lng: -77.0369, region: 'Mid-Atlantic'  },
+  { name: 'Albany, NY',         lat: 42.6526, lng: -73.7562, region: 'Mid-Atlantic'  },
+  { name: 'Buffalo, NY',        lat: 42.8864, lng: -78.8784, region: 'Mid-Atlantic'  },
+
+  /* Southeast */
+  { name: 'Richmond, VA',       lat: 37.5407, lng: -77.4360, region: 'Southeast'     },
+  { name: 'Raleigh, NC',        lat: 35.7796, lng: -78.6382, region: 'Southeast'     },
+  { name: 'Charlotte, NC',      lat: 35.2271, lng: -80.8431, region: 'Southeast'     },
+  { name: 'Atlanta, GA',        lat: 33.7490, lng: -84.3880, region: 'Southeast'     },
+  { name: 'Nashville, TN',      lat: 36.1627, lng: -86.7816, region: 'Southeast'     },
+  { name: 'Jacksonville, FL',   lat: 30.3322, lng: -81.6557, region: 'Southeast'     },
+  { name: 'Orlando, FL',        lat: 28.5383, lng: -81.3792, region: 'Southeast'     },
+  { name: 'Miami, FL',          lat: 25.7617, lng: -80.1918, region: 'Southeast'     }
+];
+
+/* Haversine distance in miles */
+function distance(a, b) {
+  if (!a || !b || a.lat == null || b.lat == null) return null;
+  const R = 3959, toRad = d => d * Math.PI / 180;
+  const dLat = toRad(b.lat - a.lat), dLng = toRad(b.lng - a.lng);
+  const lat1 = toRad(a.lat), lat2 = toRad(b.lat);
+  const x = Math.sin(dLat/2)**2 + Math.sin(dLng/2)**2 * Math.cos(lat1) * Math.cos(lat2);
+  return Math.round(2 * R * Math.asin(Math.sqrt(x)));
+}
+function driveTime(miles) {
+  if (miles == null) return '';
+  const h = miles / 60;
+  if (h < 1) return `${Math.round(h * 60)} min`;
+  if (h < 24) return `${Math.round(h)} hr`;
+  return `${(h / 24).toFixed(1)} days`;
+}
+
+/* ───────────────────────────────────────────────────────────────────
+   3. SCENES  — landscape SVG generator
+   ─────────────────────────────────────────────────────────────────── */
+const SCENES = {
+  mountains([c1, c2, c3]) {
+    const sky = c3 || '#a3c0d4';
+    return `<svg viewBox="0 0 124 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs><linearGradient id="sky-m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky}"/><stop offset="1" stop-color="#f4ecd8"/></linearGradient></defs>
+      <rect width="124" height="100" fill="url(#sky-m)"/>
+      <circle cx="92" cy="28" r="8" fill="#f6e3a3" opacity="0.85"/>
+      <path d="M0 78 L24 48 L42 64 L62 36 L82 58 L104 42 L124 60 L124 100 L0 100 Z" fill="${c1}"/>
+      <path d="M0 90 L18 70 L40 82 L60 64 L84 76 L106 66 L124 80 L124 100 L0 100 Z" fill="${c2}" opacity="0.85"/>
+    </svg>`;
+  },
+  'mountains-fall'([c1, c2, c3]) {
+    const sky = '#e8c79a';
+    return `<svg viewBox="0 0 124 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs><linearGradient id="sky-mf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky}"/><stop offset="1" stop-color="#fbe8c2"/></linearGradient></defs>
+      <rect width="124" height="100" fill="url(#sky-mf)"/>
+      <circle cx="32" cy="24" r="9" fill="#f9d27c" opacity="0.95"/>
+      <path d="M0 76 L26 46 L46 62 L66 34 L88 56 L110 42 L124 56 L124 100 L0 100 Z" fill="${c1}"/>
+      <path d="M0 88 L20 68 L42 80 L62 62 L88 76 L110 66 L124 78 L124 100 L0 100 Z" fill="${c2}" opacity="0.85"/>
+      <circle cx="14" cy="74" r="3" fill="${c3 || '#7a4a30'}" opacity="0.5"/>
+      <circle cx="58" cy="80" r="2.5" fill="${c3 || '#7a4a30'}" opacity="0.4"/>
+      <circle cx="100" cy="78" r="3" fill="${c3 || '#7a4a30'}" opacity="0.5"/>
+    </svg>`;
+  },
+  coast([c1, c2, c3]) {
+    return `<svg viewBox="0 0 124 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="sky-c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c3 || '#a3c0d4'}"/><stop offset="1" stop-color="#f4ecd8"/></linearGradient>
+        <linearGradient id="sea-c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="#1f3b52" stop-opacity="0.7"/></linearGradient>
+      </defs>
+      <rect width="124" height="100" fill="url(#sky-c)"/>
+      <circle cx="94" cy="34" r="10" fill="${c2}" opacity="0.85"/>
+      <rect x="0" y="56" width="124" height="44" fill="url(#sea-c)"/>
+      <path d="M0 60 Q 32 56 64 60 T 124 60" stroke="#fff" stroke-width="0.8" fill="none" opacity="0.5"/>
+      <path d="M0 68 Q 30 64 60 68 T 124 68" stroke="#fff" stroke-width="0.6" fill="none" opacity="0.35"/>
+    </svg>`;
+  },
+  'coast-pine'([c1, c2, c3]) {
+    return `<svg viewBox="0 0 124 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="sky-cp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c3 || '#a3c0d4'}"/><stop offset="1" stop-color="#f4ecd8"/></linearGradient>
+        <linearGradient id="sea-cp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="#1f3b52" stop-opacity="0.8"/></linearGradient>
+      </defs>
+      <rect width="124" height="100" fill="url(#sky-cp)"/>
+      <circle cx="90" cy="28" r="6" fill="#f9d27c"/>
+      <rect x="0" y="58" width="124" height="42" fill="url(#sea-cp)"/>
+      <path d="M0 62 L26 38 L36 60 Z" fill="${c1}" opacity="0.85"/>
+      <path d="M22 64 L42 36 L52 60 L62 38 L72 60 Z" fill="${c1}"/>
+      <path d="M64 62 L82 40 L92 60 Z" fill="${c1}" opacity="0.9"/>
+    </svg>`;
+  },
+  forest([c1, c2, c3]) {
+    return `<svg viewBox="0 0 124 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs><linearGradient id="sky-f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c3 || '#cce0d4'}"/><stop offset="1" stop-color="#f4ecd8"/></linearGradient></defs>
+      <rect width="124" height="100" fill="url(#sky-f)"/>
+      <circle cx="98" cy="26" r="7" fill="#f9d27c"/>
+      <path d="M-2 100 L8 50 L18 100 Z" fill="${c1}"/>
+      <path d="M14 100 L26 38 L38 100 Z" fill="${c1}" opacity="0.85"/>
+      <path d="M34 100 L46 60 L58 100 Z" fill="${c2}"/>
+      <path d="M54 100 L68 32 L82 100 Z" fill="${c1}"/>
+      <path d="M78 100 L90 56 L102 100 Z" fill="${c2}" opacity="0.9"/>
+      <path d="M98 100 L112 44 L124 100 Z" fill="${c1}"/>
+    </svg>`;
+  },
+  plains([c1, c2, c3]) {
+    return `<svg viewBox="0 0 124 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs><linearGradient id="sky-p" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c3 || '#f4d9a4'}"/><stop offset="1" stop-color="#fbe8c2"/></linearGradient></defs>
+      <rect width="124" height="100" fill="url(#sky-p)"/>
+      <circle cx="96" cy="28" r="9" fill="#f9c46a" opacity="0.9"/>
+      <path d="M0 80 Q 30 64 60 76 T 124 70 L124 100 L0 100 Z" fill="${c2}" opacity="0.85"/>
+      <path d="M0 92 Q 36 82 70 90 T 124 86 L124 100 L0 100 Z" fill="${c1}"/>
+      <rect x="60" y="58" width="2" height="22" fill="${c1}" opacity="0.4"/>
+      <path d="M55 60 L67 60 L61 52 Z" fill="${c1}" opacity="0.5"/>
+    </svg>`;
+  },
+  desert([c1, c2, c3]) {
+    return `<svg viewBox="0 0 124 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs><linearGradient id="sky-d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c3 || '#e8a878'}"/><stop offset="0.7" stop-color="#f4d9a4"/><stop offset="1" stop-color="#fbe8c2"/></linearGradient></defs>
+      <rect width="124" height="100" fill="url(#sky-d)"/>
+      <circle cx="64" cy="36" r="11" fill="#f9a455" opacity="0.95"/>
+      <rect x="20" y="56" width="36" height="28" fill="${c1}" opacity="0.85"/>
+      <rect x="20" y="52" width="36" height="4" fill="${c2}"/>
+      <rect x="68" y="62" width="40" height="22" fill="${c2}" opacity="0.9"/>
+      <rect x="68" y="58" width="40" height="4" fill="${c1}"/>
+      <path d="M0 84 L124 84 L124 100 L0 100 Z" fill="${c1}" opacity="0.7"/>
+    </svg>`;
+  }
+};
+
+function renderScene(d) {
+  const fn = SCENES[d.scene] || SCENES.mountains;
+  return fn(d.colorTint || ['#7a4a30', '#a85a30', '#a3c0d4']);
+}
+
+
+/* ───────────────────────────────────────────────────────────────────
+   4. PAIRINGS — text → structured intent
+   ─────────────────────────────────────────────────────────────────── */
+const PAIRINGS = {
+  vibeMap: {
+    'beach|coastal|ocean|island|shore':   { tags: ['beach', 'coastal'] },
+    'mountain|peak|alpine|hike|hiking':   { tags: ['mountains', 'hiking'] },
+    'family|kids|family-friendly':        { tags: ['family'], familyBoost: true },
+    'foliage|fall|leaves|autumn':         { tags: ['fall', 'foliage'] },
+    'wine|food|culinary|foodie|bbq':      { tags: ['foodie', 'culinary'] },
+    'romantic|date|honeymoon':            { tags: ['romantic'] },
+    'national park|park':                 { tags: ['national-park'] },
+    'historic|cultural|history':          { tags: ['historic', 'cultural'] },
+    'desert|red rock|canyon':             { tags: ['desert'] },
+    'small town|quaint|charming':         { tags: ['small-town'] },
+    'adventure|adventurous|surprise':     { adventurous: true },
+    'iconic|classic|americana':           { tags: ['iconic', 'americana'] },
+    'lake|lakeside':                      { tags: ['lake'] }
+  },
+  durationMap: {
+    'weekend|2 day|2-day|short':          { days: 2 },
+    'long weekend|3 day|3-day':           { days: 3 },
+    'week|week-long|7 day|7-day':         { days: 7 },
+    'day trip|same day':                  { days: 1 }
+  },
+  budget: [
+    { match: /under \$?100|cheap|budget/, max: 150 },
+    { match: /under \$?200/,              max: 200 },
+    { match: /under \$?300/,              max: 300 },
+    { match: /under \$?500/,              max: 500 },
+    { match: /premium|fancy|splurge|luxury/, min: 250 }
+  ]
+};
+
+
+/* ───────────────────────────────────────────────────────────────────
+   5. SCORER  — weighted recommendation engine
+   ─────────────────────────────────────────────────────────────────── */
+const Scorer = {
+  parse(text) {
+    const lower = (text || '').toLowerCase();
+    const q = { raw: text, tags: [], modifiers: {} };
+    for (const [pat, m] of Object.entries(PAIRINGS.vibeMap)) {
+      if (new RegExp(pat, 'i').test(lower)) {
+        if (m.tags) m.tags.forEach(t => { if (!q.tags.includes(t)) q.tags.push(t); });
+        if (m.familyBoost) q.modifiers.family = true;
+        if (m.adventurous) q.modifiers.adventurous = true;
+      }
+    }
+    for (const [pat, m] of Object.entries(PAIRINGS.durationMap)) {
+      if (new RegExp(pat, 'i').test(lower)) q.days = m.days;
+    }
+    PAIRINGS.budget.forEach(b => {
+      if (b.match.test(lower)) {
+        if (b.max) q.maxCost = b.max;
+        if (b.min) q.minCost = b.min;
+      }
+    });
+    const m2 = lower.match(/\$(\d+)/);
+    if (m2 && !q.maxCost) q.maxCost = parseInt(m2[1]);
+    return q;
+  },
+
+  rank(q, catalog = CATALOG.destinations) {
+    const w = CONFIG.scoringWeights;
+    return catalog.map(d => {
+      let s = 0;
+      const reasons = [];
+      // vibe / tag overlap
+      const tagHits = q.tags?.filter(t => d.tags.includes(t) || d.pairings.includes(t)).length || 0;
+      if (q.tags?.length) {
+        const r = tagHits / q.tags.length;
+        s += w.vibe * r;
+        if (r > 0.4) reasons.push({ tag: 'vibe-match', strength: r });
+      }
+      // duration
+      if (q.days != null) {
+        const diff = Math.abs(d.duration - q.days);
+        const r = Math.max(0, 1 - diff / 5);
+        s += w.duration * r;
+      }
+      // budget fit
+      if (q.maxCost && d.cost <= q.maxCost) { s += w.budget * (1 - d.cost / q.maxCost); reasons.push({ tag: 'budget-fit', strength: 1 }); }
+      else if (q.maxCost) s -= 0.2;
+      if (q.minCost && d.cost >= q.minCost) s += w.budget * 0.5;
+      // popularity & family modifier
+      s += w.popularity * d.popularity;
+      if (q.modifiers?.family && d.vibe.family >= 4) { s += w.family; reasons.push({ tag: 'family-friendly' }); }
+      if (q.modifiers?.adventurous) { s += 0.10 * (1 - d.popularity); if (d.tags.includes('hidden-gem')) s += 0.08; }
+      // season
+      if (d.availability.state === 'peak') s += w.season;
+      else if (d.availability.state === 'good') s += w.season * 0.5;
+      return { ...d, score: Math.max(0, Math.min(1, s)), reasons };
+    }).sort((a, b) => b.score - a.score);
+  },
+
+  recommend(text, n = 3) {
+    const q = this.parse(text);
+    return { query: q, ranked: this.rank(q).slice(0, n) };
+  }
+};
+
+
+/* ───────────────────────────────────────────────────────────────────
+   6. PASSPORT — stamp book + reward tiers
+   ─────────────────────────────────────────────────────────────────── */
+const Passport = {
+  /** Sample pre-populated stamps to show the mechanic on first open. */
+  stamps: [
+    { id: 'wawa-95', emoji: '⛽', label: 'Wawa · I-95', earnedAt: 'Today' },
+    { id: 'sheetz-pa', emoji: '🥤', label: 'Sheetz · PA Tnpk', earnedAt: 'Tue' },
+    { id: 'pilot-flagstaff', emoji: '🛣', label: 'Pilot · Flagstaff', earnedAt: 'Last week' }
+  ],
+  goal: 10,
+  tiers: [
+    { at: 1,  name: 'Welcome Bundle',                desc: 'Curated road-trip playlist + downloadable snack-pack guide' },
+    { at: 3,  name: 'All-Roads-to-Hershey Itinerary', desc: 'Premium 3-day Hershey getaway plan + Hotel Hershey 10% partner code' },
+    { at: 5,  name: 'Custom Snack Pack',             desc: 'Snack list tailored to any route you save, plus a Co-Pilot badge' },
+    { at: 10, name: 'Hersheypark Fast-Pass',          desc: 'Free Fast-Pass voucher · Chocolatetown experience credit · free product redemption' }
+  ],
+  count() { return this.stamps.length; },
+  nextTier() { return this.tiers.find(t => this.count() < t.at) || this.tiers[this.tiers.length - 1]; },
+  addStamp(stamp) {
+    if (this.stamps.find(s => s.id === stamp.id)) return false;
+    this.stamps.push(stamp);
+    return true;
+  }
+};
+
+
+/* ───────────────────────────────────────────────────────────────────
+   7. SESSION
+   ─────────────────────────────────────────────────────────────────── */
+const Session = {
+  state: { mode: 'discover', history: [], trip: {}, savedTrips: [], startLocation: null }
+};
+
+/* ───────────────────────────────────────────────────────────────────
+   LOCATION  — set-your-start UI + downstream effects
+   ─────────────────────────────────────────────────────────────────── */
+const Location = {
+  /** Persistence wrapper — gracefully degrades on file:// */
+  load() {
+    try {
+      const raw = localStorage.getItem('pitstop.startLocation');
+      if (raw) Session.state.startLocation = JSON.parse(raw);
+    } catch (e) {}
+  },
+  save() {
+    try {
+      if (Session.state.startLocation) localStorage.setItem('pitstop.startLocation', JSON.stringify(Session.state.startLocation));
+    } catch (e) {}
+  },
+
+  set(loc) {
+    Session.state.startLocation = loc;
+    this.save();
+    this.applyAcrossPage();
+    closeLocation();
+    toast(`📍 Start set to ${loc.name}`);
+  },
+
+  /** Re-render every part of the page that depends on the start location */
+  applyAcrossPage() {
+    this.updatePill();
+    this.updateBanner();
+    this.updateHero();
+    renderRail();
+    // If we're on a mode that uses location, re-render it
+    if (Session.state.mode === 'plot') Plot.render();
+    if (Session.state.mode === 'routes') Routes.render();
+  },
+
+  updatePill() {
+    const btn = document.querySelector('#location-btn');
+    const lbl = document.querySelector('#location-label');
+    const loc = Session.state.startLocation;
+    if (loc) {
+      btn.classList.remove('unset');
+      lbl.textContent = loc.name.split(',')[0];
+    } else {
+      btn.classList.add('unset');
+      lbl.textContent = 'Set start';
+    }
+  },
+
+  updateBanner() {
+    const b = document.querySelector('#loc-banner');
+    if (!b) return;
+    if (Session.state.startLocation) b.style.display = 'none';
+    else b.style.display = 'flex';
+  },
+
+  updateHero() {
+    const h1 = document.querySelector('.hero h1');
+    if (!h1) return;
+    // Remove any existing context strip
+    const existing = document.querySelector('.hero-loc');
+    if (existing) existing.remove();
+    const loc = Session.state.startLocation;
+    if (!loc) return;
+    const strip = document.createElement('div');
+    strip.className = 'hero-loc';
+    strip.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-8 8-13a8 8 0 10-16 0c0 5 8 13 8 13z"/><circle cx="12" cy="9" r="2.5" fill="currentColor"/></svg>
+      Starting from ${loc.name}
+      <span class="change">· change</span>
+    `;
+    strip.addEventListener('click', openLocation);
+    h1.parentNode.insertBefore(strip, h1);
+  },
+
+  /** Annotate destinations with miles from start */
+  withDistance(destinations) {
+    const loc = Session.state.startLocation;
+    if (!loc) return destinations;
+    return destinations.map(d => ({ ...d, milesFromStart: distance(loc, d), driveFromStart: driveTime(distance(loc, d)) }));
+  },
+
+  /** Sort destinations by proximity (closest first) — preserves the score order otherwise */
+  byProximity(destinations) {
+    const withD = this.withDistance(destinations);
+    if (!Session.state.startLocation) return withD;
+    return withD.sort((a, b) => (a.milesFromStart || 0) - (b.milesFromStart || 0));
+  }
+};
+
+function openLocation() {
+  renderLocationModal();
+  document.querySelector('#location-modal').classList.add('open');
+}
+function closeLocation() {
+  document.querySelector('#location-modal').classList.remove('open');
+}
+
+function renderLocationModal() {
+  // Group cities by region
+  const byRegion = START_CITIES.reduce((acc, c) => {
+    (acc[c.region] = acc[c.region] || []).push(c);
+    return acc;
+  }, {});
+  const current = Session.state.startLocation;
+
+  document.querySelector('#location-sheet').innerHTML = `
+    <div class="location-head">
+      <button class="close-btn" id="loc-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      <div class="label">Set your start location</div>
+      <h2>Where are you starting from?</h2>
+      <p>I'll personalize the trips, distances, pit stops, and the All-Roads-Lead-to-Hershey route to your home base.</p>
+    </div>
+    <div class="location-body">
+      ${Object.entries(byRegion).map(([region, cities]) => `
+        <div class="region-group">
+          <div class="region-label">${region}</div>
+          <div class="city-grid">
+            ${cities.map(c => `<div class="city-chip ${current?.name === c.name ? 'selected' : ''}" data-name="${c.name}" data-lat="${c.lat}" data-lng="${c.lng}">${c.name}</div>`).join('')}
+          </div>
+        </div>
+      `).join('')}
+
+      <div class="location-input-row">
+        <div class="input-field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+          <input id="loc-custom" placeholder="Or type any city (e.g. Boise, ID)" autocomplete="off"/>
+        </div>
+        <button class="btn-primary" id="loc-custom-go">Set</button>
+      </div>
+    </div>
+  `;
+  document.querySelector('#loc-close').addEventListener('click', closeLocation);
+  document.querySelectorAll('.city-chip').forEach(c => c.addEventListener('click', () => {
+    Location.set({ name: c.dataset.name, lat: parseFloat(c.dataset.lat), lng: parseFloat(c.dataset.lng) });
+  }));
+  document.querySelector('#loc-custom-go').addEventListener('click', () => {
+    const v = document.querySelector('#loc-custom').value.trim();
+    if (!v) return;
+    // Fallback: use the geometric centroid of the US so distance calc still works qualitatively
+    Location.set({ name: v, lat: 39.8283, lng: -98.5795, approximate: true });
+  });
+  document.querySelector('#loc-custom').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.querySelector('#loc-custom-go').click();
+  });
+}
+
+
+/* ───────────────────────────────────────────────────────────────────
+   8. RENDER  — UI per mode
+   ─────────────────────────────────────────────────────────────────── */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+const panel = () => $('#panel');
+
+function badgeHtml(badges = []) {
+  const map = {
+    'national-park':   { cls: 'badge-pine',  label: '🌲 National Park' },
+    'scenic-byway':    { cls: 'badge-honey', label: '🛣 Scenic Byway' },
+    'fall-foliage':    { cls: 'badge-sign',  label: '🍁 Fall Foliage' },
+    'family-favorite': { cls: 'badge-honey', label: '★ Family Favorite' },
+    'hidden-gem':      { cls: 'badge-ocean', label: '✦ Hidden Gem' },
+    'iconic':          { cls: 'badge-terra', label: '◆ Iconic' },
+    'must-visit':      { cls: 'badge-terra', label: '◆ Must Visit' },
+    'foodie':          { cls: 'badge-terra', label: '🍽 Foodie' },
+    'beach':           { cls: 'badge-ocean', label: '🌊 Beach' }
+  };
+  return badges.map(b => map[b] ? `<span class="badge ${map[b].cls}">${map[b].label}</span>` : '').join('');
+}
+
+function seasonHtml(av) {
+  const cls = av.state;
+  const ico = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5l3 2"/></svg>`;
+  return `<span class="season-stamp ${cls}"><span class="dot"></span>${av.label}</span>`;
+}
+
+function ratingsRow(ratings) {
+  if (!ratings || !ratings.length) return '';
+  const avg = Math.round(ratings.reduce((s, r) => s + r.score, 0) / ratings.length);
+  const sources = { 'T+L': 'Travel + Leisure', 'CNT': 'Condé Nast Traveler', 'AAA': 'AAA', 'NatGeo': 'National Geographic', 'LP': 'Lonely Planet', 'TA': 'Tripadvisor' };
+  return `
+    <div class="ratings-row">
+      <div class="rating-score" title="Average critic score">
+        <span class="num">${avg}</span><span class="pts">pts</span>
+      </div>
+      ${ratings.map(r => `<span class="rating-chip" title="${sources[r.source] || r.source}"><span class="src">${r.source}</span><span class="val">${r.score}</span></span>`).join('')}
+    </div>
+  `;
+}
+
+function destCard(d, opts = {}) {
+  const why = opts.why || (d.reasons?.length ? `Matched on ${d.reasons.map(r => r.tag).slice(0, 2).join(' · ')}` : '');
+  const passport = d.passportStop ? `<span class="passport-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21V3a2 2 0 00-2-2H7a2 2 0 00-2 2v18l7-3 7 3z"/></svg> Passport stop</span>` : '';
+  // Distance stamp when a start location is set
+  const loc = Session.state.startLocation;
+  const mi = loc && d.lat != null ? distance(loc, d) : null;
+  const distHtml = mi != null
+    ? `<span class="dist-stamp" title="From ${loc.name}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-8 8-13a8 8 0 10-16 0c0 5 8 13 8 13z"/></svg>${mi} mi · ${driveTime(mi)}</span>`
+    : '';
+  return `
+    <article class="dest-card" data-sku="${d.sku}">
+      <div class="scene">${renderScene(d)}</div>
+      <div class="dest-body">
+        <div class="dest-region">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-8 8-13a8 8 0 10-16 0c0 5 8 13 8 13z"/><circle cx="12" cy="9" r="3"/></svg>
+          ${d.region} · ${d.state}
+        </div>
+        <div class="dest-head">
+          <span class="dest-name">${d.name}</span>
+          <span class="dest-cat">${d.category}</span>
+        </div>
+        ${ratingsRow(d.ratings)}
+        <div class="dest-notes">${d.notes}</div>
+        ${why ? `<div class="dest-why">${why}</div>` : ''}
+        <div class="dest-meta">
+          <span class="cost-tag">$${d.cost}<span style="opacity:0.6;font-weight:500;">/day</span></span>
+          ${distHtml}
+          ${badgeHtml(d.badges)}
+          ${seasonHtml(d.availability)}
+          ${passport}
+        </div>
+        ${d.promotion ? `<div style="margin-top:6px;padding:6px 10px;background:var(--sign-soft);border:1px solid rgba(165,47,42,0.20);border-radius:8px;font-size:0.78rem;color:var(--sign);font-weight:600;display:inline-flex;gap:6px;"><span>✦</span>${d.promotion}</div>` : ''}
+        <div class="dest-actions">
+          <button class="action-btn" data-act="trip" data-sku="${d.sku}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+            Build a trip
+          </button>
+          <button class="action-btn" data-act="save" data-sku="${d.sku}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+            Save
+          </button>
+          <button class="action-btn" data-act="route" data-sku="${d.sku}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8 7l8 9"/></svg>
+            Plot route
+          </button>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function pitBubble(text, role = 'Pit Stop · Trip Planner') {
+  return `
+    <div class="bubble">
+      <div class="bubble-avatar">PS</div>
+      <div class="bubble-content">
+        <div class="bubble-meta"><span class="who">PIT STOP</span><span class="role">${role}</span></div>
+        <div class="bubble-text">${text}</div>
+      </div>
+    </div>
+  `;
+}
+
+function thinking() {
+  return `
+    <div class="bubble">
+      <div class="bubble-avatar">PS</div>
+      <div class="bubble-content">
+        <div class="bubble-meta"><span class="who">PIT STOP</span><span class="role">Thinking</span></div>
+        <div class="thinking"><span class="d"></span><span class="d"></span><span class="d"></span></div>
+      </div>
+    </div>
+  `;
+}
+
+
+/* ── DISCOVER MODE ── */
+const Discover = {
+  prompts: ['Fall foliage weekend', 'Family beach trip under $200/day', 'Adventurous national park', 'Romantic coastal drive', 'Foodie city escape', 'Surprise me with a hidden gem'],
+  render() {
+    panel().innerHTML = `
+      <div class="panel-prompt"><span class="label">Discover</span>Where's the road taking you?</div>
+      <div class="panel-sub">Tell me a season, a vibe, a budget, or just say it out loud — I'll find the right destination.</div>
+      <div class="chips" id="dchips">${this.prompts.map(p => `<span class="chip" data-q="${p}">${p}</span>`).join('')}</div>
+      <div class="input-block">
+        <div class="input-field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+          <input id="dinput" placeholder="e.g. fall foliage weekend with the kids, under $200/day" autocomplete="off"/>
+        </div>
+        <button class="btn-primary" id="dask">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          Ask Pit Stop
+        </button>
+      </div>
+      <div class="thread" id="dthread">${pitBubble("Hi — I'm <strong>PIT STOP</strong>. Tell me about your trip and I'll find the right destinations. Try a suggestion above, or describe what you're after.", 'Greeting')}</div>
+    `;
+    $$('#dchips .chip').forEach(c => c.addEventListener('click', () => { $('#dinput').value = c.dataset.q; Discover.ask(); }));
+    $('#dask').addEventListener('click', () => Discover.ask());
+    $('#dinput').addEventListener('keydown', e => { if (e.key === 'Enter') Discover.ask(); });
+  },
+  ask() {
+    const text = $('#dinput').value.trim();
+    if (!text) return;
+    const thread = $('#dthread');
+    thread.insertAdjacentHTML('beforeend', `<div class="bubble"><div class="bubble-avatar" style="background:linear-gradient(135deg,var(--surface-deep),var(--surface-warm));color:var(--ink);">You</div><div class="bubble-content"><div class="bubble-meta"><span class="who">You</span></div><div class="bubble-text">${text}</div></div></div>`);
+    thread.insertAdjacentHTML('beforeend', thinking());
+    const t = thread.lastElementChild;
+    setTimeout(() => {
+      const { query, ranked } = Scorer.recommend(text, 3);
+      t.remove();
+      thread.insertAdjacentHTML('beforeend', pitBubble(PitStop.compose(text, query, ranked), 'Recommendation'));
+      // Pick a snack pack matching the dominant tag of the top result
+      const top = ranked[0];
+      const snackIds = (top?.tags?.includes('family') || query.modifiers?.family) ? ['drive', 'kids', 'campfire', 'hotel']
+                    : top?.tags?.includes('foodie') ? ['drive', 'hotel', 'refresh']
+                    : top?.tags?.includes('beach') || top?.tags?.includes('coastal') ? ['cooler', 'refresh', 'kids']
+                    : top?.tags?.includes('hiking') || top?.tags?.includes('mountains') ? ['drive', 'refresh', 'campfire']
+                    : ['drive', 'cooler', 'hotel'];
+      thread.insertAdjacentHTML('beforeend', `<div class="bubble"><div class="bubble-avatar">PS</div><div class="bubble-content" style="margin-top:-4px;"><div class="dest-list">${ranked.map(d => destCard(d, { why: PitStop.reason(d, query) })).join('')}</div>${snackPackHtml({ ids: snackIds, label: `Snack Pack for ${top?.name || 'the trip'}`, sub: 'Curated for what you described', foot: `Grab these at your next pit stop` })}</div></div>`);
+      thread.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }, 600);
+  }
+};
+
+
+/* ── BUILD MY TRIP ── */
+const Trip = {
+  state: { type: null, vibe: null, distance: null, budget: null },
+  types:     [{ id: 'weekend', ico: '🚗', name: 'Weekend Escape', sub: '2–3 days' }, { id: 'family', ico: '👨‍👩‍👧', name: 'Family Road Trip', sub: '4–7 days' }, { id: 'romantic', ico: '🌹', name: 'Romantic Getaway', sub: 'Just the two' }, { id: 'adventure', ico: '⛰', name: 'Adventure Week', sub: '5–7 days · active' }],
+  vibes:     [{ id: 'coast', ico: '🌊', name: 'Coast' }, { id: 'mountains', ico: '⛰', name: 'Mountains' }, { id: 'park', ico: '🌲', name: 'National Park' }, { id: 'foodie', ico: '🍽', name: 'Foodie' }, { id: 'small-town', ico: '🏘', name: 'Small Town' }, { id: 'iconic', ico: '🛣', name: 'Iconic Drive' }],
+  distances: [{ id: 'local', ico: '📍', name: 'Local', sub: '~4-hr drive' }, { id: 'regional', ico: '🗺', name: 'Regional', sub: '1–2 day drive' }, { id: 'cross', ico: '🌎', name: 'Cross-country', sub: 'Long haul' }],
+  budgets:   [{ id: 'value', ico: '💵', name: '$', sub: '<$150/day' }, { id: 'mid', ico: '💵', name: '$$', sub: '$150–$250/day' }, { id: 'premium', ico: '💵', name: '$$$', sub: '$250–$400/day' }, { id: 'luxe', ico: '💎', name: '$$$$', sub: '$400+/day' }],
+  render() {
+    panel().innerHTML = `
+      <div class="panel-prompt"><span class="label">Build My Trip</span>Let's plan your getaway end-to-end.</div>
+      <div class="panel-sub">Four quick taps. I'll suggest the destination, build a 3-day itinerary, and pack the cooler.</div>
+
+      <div class="bmt-step">
+        <div class="bmt-num">1</div>
+        <div class="bmt-content">
+          <div class="bmt-title">What kind of trip?</div>
+          <div class="bmt-desc">Sets the pace and the vibe.</div>
+          <div class="option-grid" id="t-types">${this.types.map(t => `<div class="option-card" data-id="${t.id}"><div class="ico">${t.ico}</div><div class="lbl">${t.name}</div><div class="sub">${t.sub}</div></div>`).join('')}</div>
+        </div>
+      </div>
+
+      <div class="bmt-step">
+        <div class="bmt-num">2</div>
+        <div class="bmt-content">
+          <div class="bmt-title">What's the vibe?</div>
+          <div class="bmt-desc">This shapes the destination I recommend.</div>
+          <div class="option-grid" id="t-vibes">${this.vibes.map(t => `<div class="option-card" data-id="${t.id}"><div class="ico">${t.ico}</div><div class="lbl">${t.name}</div></div>`).join('')}</div>
+        </div>
+      </div>
+
+      <div class="bmt-step">
+        <div class="bmt-num">3</div>
+        <div class="bmt-content">
+          <div class="bmt-title">How far are we going?</div>
+          <div class="bmt-desc">Distance from your starting point.</div>
+          <div class="option-grid" id="t-dist">${this.distances.map(t => `<div class="option-card" data-id="${t.id}"><div class="ico">${t.ico}</div><div class="lbl">${t.name}</div><div class="sub">${t.sub}</div></div>`).join('')}</div>
+        </div>
+      </div>
+
+      <div class="bmt-step">
+        <div class="bmt-num">4</div>
+        <div class="bmt-content">
+          <div class="bmt-title">Budget per day?</div>
+          <div class="bmt-desc">Per-person estimate including lodging, food, and gas.</div>
+          <div class="option-grid" id="t-bud">${this.budgets.map(t => `<div class="option-card" data-id="${t.id}"><div class="ico">${t.ico}</div><div class="lbl">${t.name}</div><div class="sub">${t.sub}</div></div>`).join('')}</div>
+        </div>
+      </div>
+
+      <div class="bmt-step">
+        <div class="bmt-num">5</div>
+        <div class="bmt-content" id="t-out">
+          <div class="bmt-title">Your trip plan</div>
+          <div class="bmt-desc" style="color:var(--ink-mute);">Pick four options above and I'll build the whole thing.</div>
+        </div>
+      </div>
+    `;
+    const bind = (rootId, key, list) => $$(`#${rootId} .option-card`).forEach(c => c.addEventListener('click', () => {
+      $$(`#${rootId} .option-card`).forEach(x => x.classList.remove('selected'));
+      c.classList.add('selected');
+      Trip.state[key] = list.find(x => x.id === c.dataset.id);
+      Trip.maybeBuild();
+    }));
+    bind('t-types', 'type', this.types);
+    bind('t-vibes', 'vibe', this.vibes);
+    bind('t-dist', 'distance', this.distances);
+    bind('t-bud', 'budget', this.budgets);
+  },
+  maybeBuild() {
+    if (Trip.state.type && Trip.state.vibe && Trip.state.distance && Trip.state.budget) Trip.build();
+  },
+  build() {
+    const { type, vibe, distance, budget } = Trip.state;
+    const budgetMax = { value: 150, mid: 250, premium: 400, luxe: 1000 }[budget.id];
+    const q = { tags: [vibe.id, ...(type.id === 'family' ? ['family'] : []), ...(type.id === 'romantic' ? ['romantic'] : [])], days: { weekend: 3, family: 5, romantic: 3, adventure: 6 }[type.id], maxCost: budgetMax, modifiers: { family: type.id === 'family' } };
+    const ranked = Scorer.rank(q);
+    const top = ranked[0];
+    const alt = ranked.find(d => d.sku !== top.sku) || ranked[1];
+    const upgrade = ranked.find(d => d.cost > top.cost && d.sku !== top.sku) || ranked[2];
+
+    $('#t-out').innerHTML = `
+      <div class="bmt-title">Your trip plan</div>
+      <div class="bmt-desc">For a <strong style="color:var(--ink);">${type.name.toLowerCase()}</strong> with a <strong style="color:var(--ink);">${vibe.name.toLowerCase()}</strong> vibe, ${distance.name.toLowerCase()}, ${budget.name} per day.</div>
+
+      <div class="thread" style="margin:14px 0;">
+        ${pitBubble(PitStop.tripIntro(type, vibe, top), 'Trip Planner')}
+      </div>
+
+      <div class="dest-list">
+        ${destCard(top, { why: `Top match · ${type.name.toLowerCase()} fit · within budget` })}
+        ${alt && alt.sku !== top.sku ? `<div style="font-size:0.74rem;color:var(--ink-mute);letter-spacing:1px;text-transform:uppercase;margin:6px 0;font-weight:700;">Alternative</div>${destCard(alt, { why: 'A safe second pick — different scenery, same vibe' })}` : ''}
+        ${upgrade && upgrade.sku !== top.sku && upgrade.sku !== alt?.sku ? `<div style="font-size:0.74rem;color:var(--terra);letter-spacing:1px;text-transform:uppercase;margin:6px 0;font-weight:700;">◆ Premium upgrade</div>${destCard(upgrade, { why: 'If you want to make this one extra special' })}` : ''}
+      </div>
+
+      ${Trip.itinerary(top, type)}
+      ${Trip.snackPack(type, top)}
+      ${Trip.playlist(type, vibe)}
+
+      <div style="display:flex;gap:8px;margin-top:18px;flex-wrap:wrap;">
+        <button class="btn-secondary" id="trip-save">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+          Save this trip
+        </button>
+        <button class="btn-secondary" id="trip-share">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
+          Share to phone
+        </button>
+      </div>
+    `;
+    $('#trip-save')?.addEventListener('click', () => toast('Trip saved to your Passport ✨'));
+    $('#trip-share')?.addEventListener('click', () => toast('Link copied — share with the crew 📲'));
+  },
+  itinerary(d, type) {
+    const days = { weekend: 3, family: 4, romantic: 3, adventure: 5 }[type.id] || 3;
+    const plans = {
+      'PA-HSY-001': [
+        { title: 'Drive in & settle in', body: 'Arrive at <strong>Hotel Hershey</strong>, take an evening walk through Chocolatetown, dinner at the lodge.' },
+        { title: 'Hersheypark day', body: 'Full day at <strong>Hersheypark</strong> — Twizzlers Twisted Gravity, the coasters, lunch at the Chocolatetown plaza.' },
+        { title: 'Lancaster County', body: 'Amish farmers markets, covered bridges in <strong>Strasburg</strong>, lunch at a roadside stand on the way out.' }
+      ],
+      'ME-ACA-001': [
+        { title: 'Cadillac at sunrise', body: 'Up at 4:30am. The first sunrise in the country happens on top of <strong>Cadillac Mountain</strong> — worth it.' },
+        { title: 'Park Loop + lobster', body: 'Drive the <strong>Park Loop Road</strong>, picnic at Jordan Pond, lobster roll dinner in Bar Harbor.' },
+        { title: 'Carriage roads', body: 'Bike or walk the carriage roads, sunset at <strong>Otter Cliffs</strong>.' }
+      ],
+      'NC-BRP-001': [
+        { title: 'Asheville start', body: 'Pick up the parkway at <strong>Mile 384</strong>. Lunch at a roadside diner. First overlook stop at sunset.' },
+        { title: 'Drive day', body: 'Roll the parkway north through the highest mileposts. <strong>Linn Cove Viaduct</strong>, Grandfather Mountain, dinner in <strong>Boone</strong>.' },
+        { title: 'Foliage finale', body: 'Wake early for the morning light, hit a few more overlooks, head home with a trunk full of leaves.' }
+      ]
+    };
+    const fallback = [
+      { title: 'Drive in', body: 'Arrive, scout the town, dinner somewhere local.' },
+      { title: 'The headline day', body: `Spend the full day with the main reason you came — <strong>${d.name}</strong>'s top attraction.` },
+      { title: 'Wander day', body: 'Take it slow. Walk somewhere new. Find a sunset spot.' }
+    ];
+    const itin = plans[d.sku] || fallback;
+    return `
+      <div style="font-size:0.66rem;letter-spacing:1.6px;text-transform:uppercase;color:var(--terra);font-weight:700;margin:18px 0 8px;">${days}-day itinerary</div>
+      <div class="itin">
+        ${itin.slice(0, days).map((day, i) => `<div class="itin-day"><div class="day-label">Day ${i+1}</div><div class="day-title">${day.title}</div><div class="day-body">${day.body}</div></div>`).join('')}
+      </div>
+    `;
+  },
+  snackPack(type, d) {
+    const map = { weekend: ['drive', 'cooler', 'hotel'], family: ['drive', 'cooler', 'kids', 'campfire'], romantic: ['hotel', 'refresh', 'cooler'], adventure: ['drive', 'campfire', 'refresh', 'cooler'] };
+    const ids = map[type.id] || ['drive', 'cooler'];
+    return snackPackHtml({
+      ids,
+      label: 'Your Snack Pack',
+      sub: `Packed for a ${type.name.toLowerCase()} · ${d.name}`,
+      foot: `Pick up at your next pit stop — ${ids.length * 3}–${ids.length * 5} items`
+    });
+  },
+  playlist(type, vibe) {
+    const playlists = {
+      'weekend':   { name: 'Two-Day Tape Deck', tracks: [['Tom Petty', 'Free Fallin\''], ['Fleetwood Mac', 'Dreams'], ['John Denver', 'Country Roads'], ['The Cars', 'Drive']] },
+      'family':    { name: 'Backseat Singalong', tracks: [['Journey', 'Don\'t Stop Believin\''], ['ABBA', 'Dancing Queen'], ['Disney', 'Best of Pixar'], ['Queen', 'Bohemian Rhapsody']] },
+      'romantic':  { name: 'Sunset Cruise',     tracks: [['Frank Sinatra', 'Fly Me to the Moon'], ['Norah Jones', 'Come Away with Me'], ['Sade', 'Smooth Operator'], ['Ray LaMontagne', 'You Are the Best Thing']] },
+      'adventure': { name: 'Open Road',         tracks: [['Bruce Springsteen', 'Born to Run'], ['Kings of Leon', 'Use Somebody'], ['CCR', 'Up Around the Bend'], ['Mountain', 'Mississippi Queen']] }
+    };
+    const pl = playlists[type.id] || playlists.weekend;
+    return `
+      <div class="playlist">
+        <div class="pl-head">
+          <div class="pl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+          <div class="pl-title">Playlist — <em>${pl.name}</em></div>
+        </div>
+        <div class="pl-tracks">
+          ${pl.tracks.map(([a, t]) => `<div class="tr"><span class="title">${t}</span><span>${a}</span></div>`).join('')}
+        </div>
+      </div>
+    `;
+  }
+};
+
+
+/* ── Reusable snack-pack atom ─────────────────────────────────── */
+function snackPackHtml(opts = {}) {
+  const ids = opts.ids || ['drive', 'cooler', 'hotel'];
+  const label = opts.label || 'Pack the cooler';
+  const sub = opts.sub || '';
+  return `
+    <div class="snack" style="${opts.style || ''}">
+      <div class="snack-head">
+        <div class="title">🎒 ${label}</div>
+        ${sub ? `<div class="sub">${sub}</div>` : ''}
+      </div>
+      <div class="snack-categories">
+        ${ids.map(id => {
+          const c = CATALOG.snackCategories[id];
+          if (!c) return '';
+          return `<div class="snack-cat"><div class="cat-ico">${c.icon}</div><div class="cat-name">${c.name}</div><div class="cat-list">${c.examples}</div><div class="cat-aisle">${c.aisle}</div></div>`;
+        }).join('')}
+      </div>
+      ${opts.foot ? `<div class="snack-foot" style="border-top:1px solid var(--honey-line);margin-top:14px;padding-top:14px;"><div class="total">${opts.foot}</div></div>` : ''}
+    </div>
+  `;
+}
+
+
+/* ── ACTIVITIES MODE  — browse by what you want to do ── */
+const Activities = {
+  list: [
+    { id: 'foliage',  ico: '🍂', name: 'Fall Foliage',     desc: 'Leaf-peeping season at its peak — overlooks, parkways, mountain towns.',  tags: ['foliage', 'fall', 'mountain', 'scenic'],                snackIds: ['drive', 'hotel', 'cooler']  },
+    { id: 'hiking',   ico: '🥾', name: 'Hiking & Nature',  desc: 'Trails, ridges, and national parks — pack the boots and a good thermos.', tags: ['hiking', 'national-park', 'mountain', 'adventure'],     snackIds: ['drive', 'refresh', 'campfire'] },
+    { id: 'beach',    ico: '🌊', name: 'Beaches & Coast',  desc: 'Sand-between-toes shoreline drives, lighthouses, and lobster shacks.',    tags: ['beach', 'coastal', 'lighthouses', 'family'],            snackIds: ['cooler', 'refresh', 'kids']  },
+    { id: 'foodie',   ico: '🍽', name: 'Foodie Tours',     desc: 'Wine country, oyster shacks, BBQ joints, and the best ice cream stops.', tags: ['foodie', 'wine', 'southern', 'walkable'],               snackIds: ['drive', 'hotel', 'refresh']  },
+    { id: 'family',   ico: '🎢', name: 'Family Fun',       desc: 'Theme parks, beaches, family-friendly small towns, and kid-tested stops.',tags: ['family', 'family-favorite', 'theme-park', 'beach'],   snackIds: ['drive', 'kids', 'campfire', 'hotel'] },
+    { id: 'history',  ico: '🏛', name: 'History & Culture',desc: 'Cobblestones, colonial sites, Gilded-Age mansions, walkable old towns.',  tags: ['historic', 'cultural', 'walkable', 'must-visit'],       snackIds: ['drive', 'refresh', 'hotel']  },
+    { id: 'scenic',   ico: '📸', name: 'Scenic Drives',    desc: 'Byways, parkways, and ridge roads where the route is the destination.',  tags: ['scenic-byway', 'scenic', 'driving', 'iconic'],          snackIds: ['drive', 'cooler', 'hotel']   },
+    { id: 'wine',     ico: '🍷', name: 'Wine & Tasting',   desc: 'Vineyards, tasting rooms, and country lanes between them.',               tags: ['wine', 'foodie', 'romantic', 'small-town'],             snackIds: ['drive', 'hotel', 'refresh']  }
+  ],
+  state: { active: null },
+  render() {
+    panel().innerHTML = `
+      <div class="panel-prompt"><span class="label">Activities</span>What do you want to do?</div>
+      <div class="panel-sub">Pick what you're in the mood for and I'll surface destinations, routes, and a snack pack curated for it.</div>
+      <div class="activity-grid">
+        ${this.list.map(a => `
+          <div class="activity-card" data-id="${a.id}">
+            <div class="activity-ico">${a.ico}</div>
+            <div class="activity-name">${a.name}</div>
+            <div class="activity-desc">${a.desc}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div id="activity-result" style="margin-top:18px;"></div>
+    `;
+    $$('.activity-card').forEach(c => c.addEventListener('click', () => Activities.show(c.dataset.id)));
+    if (Activities.state.active) Activities.show(Activities.state.active);
+  },
+  show(id) {
+    const a = this.list.find(x => x.id === id);
+    if (!a) return;
+    Activities.state.active = id;
+    $$('.activity-card').forEach(c => c.classList.toggle('selected', c.dataset.id === id));
+    const matches = CATALOG.destinations.filter(d =>
+      d.tags.some(t => a.tags.includes(t)) || d.pairings.some(p => a.tags.includes(p)) || d.badges.some(b => a.tags.includes(b))
+    );
+    const sorted = Location.byProximity ? Location.byProximity(matches) : matches;
+    const top4 = sorted.slice(0, 4);
+    $('#activity-result').innerHTML = `
+      <div class="thread">${pitBubble(`<strong>${a.name}.</strong> Here are ${top4.length} destinations that nail it — and a snack pack to match.`, 'Activity')}</div>
+      <div class="dest-list" style="margin-top:14px;">
+        ${top4.map(d => destCard(d, { why: `Strong match for ${a.name.toLowerCase()}` })).join('')}
+      </div>
+      ${snackPackHtml({ ids: a.snackIds, label: `Snack Pack · ${a.name}`, sub: `Curated for ${a.name.toLowerCase()}`, foot: `Pick up at your next pit stop · ${a.snackIds.length * 3}–${a.snackIds.length * 5} items` })}
+    `;
+  }
+};
+
+
+/* ── ROUTES MODE ── */
+const Routes = {
+  render() {
+    panel().innerHTML = `
+      <div class="panel-prompt"><span class="label">Routes</span>America's iconic drives.</div>
+      <div class="panel-sub">Routes hand-curated for a long weekend or longer. Tap one to start planning.</div>
+      <div class="routes-grid">
+        ${CATALOG.routes.map(r => `
+          <div class="route-card" data-id="${r.id}">
+            <div class="route-scene">${renderScene({ scene: ['coast','mountains','plains','mountains-fall','coast-pine','forest'][Math.abs(r.id.length) % 6], colorTint: ['#c25a3a', '#d4a24a', '#a3c0d4'] })}</div>
+            <div class="name">${r.flag} ${r.name}</div>
+            <div class="desc">${r.desc}</div>
+            <div class="miles">${r.miles} →</div>
+          </div>
+        `).join('')}
+      </div>
+      <div id="route-detail" style="margin-top:18px;"></div>
+    `;
+    $$('.route-card').forEach(c => c.addEventListener('click', () => Routes.show(c.dataset.id)));
+  },
+  show(id) {
+    const r = CATALOG.routes.find(x => x.id === id);
+    if (!r) return;
+    const matches = CATALOG.destinations.filter(d => d.tags.some(t => r.name.toLowerCase().includes(t.replace('-', ' ')))).slice(0, 3);
+    $('#route-detail').innerHTML = `
+      <div class="thread">${pitBubble(`<strong>${r.name}.</strong> ${r.desc} Here's what to do, where to stop, and what to pack.`, 'Route')}</div>
+      <div class="dest-list" style="margin-top:14px;">${matches.length ? matches.map(d => destCard(d)).join('') : '<div class="muted" style="color:var(--ink-mute);font-size:0.86rem;">Destinations populate as you tap a route detail card.</div>'}</div>
+      ${snackPackHtml({ ids: ['drive', 'cooler', 'hotel'], label: `Snack Pack · ${r.name}`, sub: 'Curated for this route', foot: 'Pick these up at the pit stops along the way' })}
+    `;
+  }
+};
+
+
+/* ── PLOT MY ROUTE ── */
+const Plot = {
+  render() {
+    panel().innerHTML = `
+      <div class="panel-prompt"><span class="label">Plot My Route</span>Going somewhere? Let me mark every great stop along the way.</div>
+      <div class="panel-sub">Tell me where you're starting and where you're going. I'll plot the route with scenic detours, treat stops, and pit-stop Passport scans.</div>
+
+      <div class="route-form">
+        <div class="input-field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+          <input id="r-from" placeholder="Starting from..." value="${Session.state.startLocation?.name || 'Boston, MA'}"/>
+        </div>
+        <div class="input-field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-8 8-13a8 8 0 10-16 0c0 5 8 13 8 13z"/><circle cx="12" cy="9" r="3"/></svg>
+          <input id="r-to" placeholder="Destination..." value="Hershey, PA"/>
+        </div>
+      </div>
+
+      <div class="chips" id="rchips">
+        <span class="chip" data-from="Boston, MA" data-to="Hershey, PA">Boston → Hershey</span>
+        <span class="chip" data-from="New York, NY" data-to="Hershey, PA">NYC → Hershey</span>
+        <span class="chip" data-from="Washington, DC" data-to="Bar Harbor, ME">DC → Acadia</span>
+        <span class="chip" data-from="Asheville, NC" data-to="Boone, NC">Blue Ridge Parkway</span>
+        <span class="chip" data-from="San Francisco, CA" data-to="Big Sur, CA">SF → Big Sur</span>
+      </div>
+
+      <button class="btn-primary" id="r-plot" style="margin-bottom:18px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        Plot my route
+      </button>
+
+      <div id="r-result"></div>
+    `;
+    $$('#rchips .chip').forEach(c => c.addEventListener('click', () => { $('#r-from').value = c.dataset.from; $('#r-to').value = c.dataset.to; Plot.plot(); }));
+    $('#r-plot').addEventListener('click', () => Plot.plot());
+  },
+  preset({ to }) {
+    if (to) $('#r-to').value = to;
+    Plot.plot();
+  },
+  plot() {
+    const from = $('#r-from').value.trim() || 'Start';
+    const to = $('#r-to').value.trim() || 'Destination';
+    const isHershey = to.toLowerCase().includes('hershey');
+    const stops = Plot.routeFor(from, to, isHershey);
+    $('#r-result').innerHTML = `
+      <div class="route-map">
+        <div class="map-title">${from} → ${to}</div>
+        <div class="map-sub">${stops.length - 2} curated stops · ${stops.filter(s => s.passport).length} passport-eligible · est. ${stops.length * 0.7 + 2}-hour drive total</div>
+        <div class="stops">
+          ${stops.map((s, i) => `
+            <div class="stop ${s.kind}">
+              <div class="stop-dot">${s.kind === 'endpoint' && i === 0 ? 'A' : s.kind === 'endpoint' ? 'B' : s.kind === 'hershey' ? '🎢' : i}</div>
+              <div class="stop-body">
+                <div class="stop-head">
+                  <span class="stop-name">${s.name}</span>
+                  <span class="stop-kind">${s.kindLabel}</span>
+                </div>
+                <div class="stop-meta">${s.note}</div>
+                <div class="stop-detail">
+                  ${s.passport ? `<span class="passport-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21V3a2 2 0 00-2-2H7a2 2 0 00-2 2v18l7-3 7 3z"/></svg> Scan for stamp</span>` : ''}
+                  ${s.dist ? `<span style="font-size:0.74rem;color:var(--ink-mute);">📍 ${s.dist}</span>` : ''}
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      ${snackPackHtml({
+        ids: isHershey ? ['drive', 'kids', 'campfire', 'hotel'] : ['drive', 'cooler', 'hotel'],
+        label: `Snack Pack · ${from.split(',')[0]} → ${to.split(',')[0]}`,
+        sub: `${stops.filter(s => s.passport).length} passport-eligible stops along the way`,
+        foot: 'Pick these up at the pit stops marked along your route'
+      })}
+    `;
+  },
+  routeFor(from, to, isHershey) {
+    if (isHershey) {
+      return [
+        { name: from, kind: 'endpoint', kindLabel: 'Starting point', note: 'Pack the cooler. Coffee for the driver.', dist: '0 mi', passport: false },
+        { name: 'Hartford, CT', kind: 'pitstop', kindLabel: 'Treat Stop', note: 'Quick fill-up at a Wawa on I-91. Grab cold brew and a pretzel.', dist: '~100 mi', passport: true },
+        { name: 'Mystic, CT', kind: 'attraction', kindLabel: 'Detour', note: 'Optional 30-min detour for the seaport and a famous pizza.', dist: '~135 mi', passport: false },
+        { name: 'NYC bypass', kind: 'pitstop', kindLabel: 'Passport Stop', note: 'I-287 bypass. Stretch break + snacks at a Sheetz off the Tappan Zee.', dist: '~205 mi', passport: true },
+        { name: 'Easton, PA', kind: 'pitstop', kindLabel: 'Treat Stop', note: 'Crayola Experience nearby — but the real stop is a treat-stocked WaWa with great donuts.', dist: '~285 mi', passport: true },
+        { name: 'Reading, PA', kind: 'attraction', kindLabel: 'Detour', note: 'Pretzel country. Worth a stop for fresh-from-the-oven snacks.', dist: '~325 mi', passport: false },
+        { name: 'Hershey, PA — Chocolatetown', kind: 'hershey', kindLabel: 'Final destination', note: 'Roll into Chocolatetown. Hotel Hershey for check-in, then Hersheypark in the morning.', dist: '~360 mi', passport: true },
+      ];
+    }
+    return [
+      { name: from, kind: 'endpoint', kindLabel: 'Starting point', note: 'Pack up. Hit the road.', dist: '0 mi', passport: false },
+      { name: 'First scenic overlook', kind: 'attraction', kindLabel: 'Detour', note: 'Worth a 15-minute pull-off for the view and a photo.', dist: '~90 mi', passport: false },
+      { name: 'Mid-route treat stop', kind: 'pitstop', kindLabel: 'Passport Stop', note: 'Travel-plaza pit stop with a great treat selection. Scan for a stamp.', dist: '~180 mi', passport: true },
+      { name: 'Roadside diner', kind: 'attraction', kindLabel: 'Detour', note: 'Local diner with milkshakes worth the detour.', dist: '~250 mi', passport: false },
+      { name: 'Final fill-up', kind: 'pitstop', kindLabel: 'Treat Stop', note: 'Last good gas + snacks before the final stretch.', dist: '~310 mi', passport: true },
+      { name: to, kind: 'endpoint', kindLabel: 'Destination', note: 'You\'re here.', dist: '~380 mi', passport: false }
+    ];
+  }
+};
+
+
+/* ───────────────────────────────────────────────────────────────────
+   9. PIT STOP  — conversational copy
+   ─────────────────────────────────────────────────────────────────── */
+const PitStop = {
+  compose(text, q, ranked) {
+    const top = ranked[0];
+    const bits = [];
+    if (q.tags?.length) bits.push(`for <strong>${q.tags[0].replace('-', ' ')}</strong>`);
+    if (q.days) bits.push(`a <strong>${q.days}-day trip</strong>`);
+    if (q.maxCost) bits.push(`under <strong>$${q.maxCost}/day</strong>`);
+    if (q.modifiers?.adventurous) bits.push('a little <strong>off the beaten path</strong>');
+    if (q.modifiers?.family) bits.push('that <strong>works for the kids</strong>');
+    const frag = bits.length ? ' — ' + bits.join(', ') : '';
+    return `Here are <strong>${ranked.length} destinations</strong> I'd send you to${frag}. My top pick is <strong>${top.name}</strong> — ${top.notes.split(/[.·]/)[0].toLowerCase()}.`;
+  },
+  reason(d, q) {
+    const r = [];
+    if (q.tags?.some(t => d.tags.includes(t))) r.push(`matches your ${q.tags[0].replace('-', ' ')} vibe`);
+    if (q.maxCost && d.cost <= q.maxCost) r.push(`fits at $${d.cost}/day`);
+    if (d.badges.includes('hidden-gem')) r.push('less crowded than the obvious picks');
+    if (d.badges.includes('iconic')) r.push('a classic for a reason');
+    if (d.availability.state === 'peak') r.push('peak season right now');
+    return r.join(' · ');
+  },
+  tripIntro(type, vibe, d) {
+    return `For a <strong>${type.name.toLowerCase()}</strong> with that <strong>${vibe.name.toLowerCase()}</strong> vibe, I'd point you to <strong>${d.name}</strong>. ${d.notes.split(/[.·]/)[0]}. I've laid out the days, picked the playlist, and packed the snacks below.`;
+  }
+};
+
+
+/* ───────────────────────────────────────────────────────────────────
+   FEATURED RAIL renderer
+   ─────────────────────────────────────────────────────────────────── */
+function renderRail() {
+  const rail = $('#rail');
+  const head = document.querySelector('.rail-head .sub');
+  const loc = Session.state.startLocation;
+  let featured = CATALOG.destinations.filter(d => d.promotion || d.popularity > 0.85);
+  if (loc) {
+    // Sort by distance from start, closest first
+    featured = Location.withDistance(featured).sort((a, b) => (a.milesFromStart || 0) - (b.milesFromStart || 0));
+    if (head) head.textContent = `Sorted by distance from ${loc.name.split(',')[0]}`;
+  } else {
+    if (head) head.textContent = 'Curated by Pit Stop · Refreshed daily';
+  }
+  featured = featured.slice(0, 8);
+  rail.innerHTML = featured.map(d => {
+    const avg = d.ratings ? Math.round(d.ratings.reduce((s, r) => s + r.score, 0) / d.ratings.length) : null;
+    const distLabel = d.milesFromStart != null ? `${d.milesFromStart} mi · ${d.driveFromStart}` : `${d.duration} days`;
+    return `
+      <article class="rail-tile" data-sku="${d.sku}">
+        ${avg ? `<div class="tile-score">${avg} pts</div>` : ''}
+        ${d.promotion ? `<div class="tile-savings">${d.promotion.length > 18 ? 'Special' : d.promotion}</div>` : ''}
+        <div class="tile-scene">${renderScene(d)}</div>
+        <div class="tile-body">
+          <div class="tile-name">${d.name}</div>
+          <div class="tile-meta">${d.category.split('·')[0].trim()} · ${d.state}</div>
+          <div class="tile-foot"><span class="price">$${d.cost}/day</span><span class="days">${distLabel}</span></div>
+        </div>
+      </article>
+    `;
+  }).join('');
+  rail.querySelectorAll('.rail-tile').forEach(el => el.addEventListener('click', () => {
+    setMode('discover');
+    setTimeout(() => { $('#dinput').value = el.querySelector('.tile-name').textContent; Discover.ask(); }, 60);
+  }));
+}
+
+
+/* ───────────────────────────────────────────────────────────────────
+   PASSPORT MODAL
+   ─────────────────────────────────────────────────────────────────── */
+function renderPassport() {
+  const count = Passport.count();
+  const goal = Passport.goal;
+  const pct = Math.min(100, (count / goal) * 100);
+  const next = Passport.nextTier();
+  const tiers = Passport.tiers;
+
+  $('#passport-sheet').innerHTML = `
+    <div class="passport-head">
+      <button class="close-btn" id="pp-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      <div class="label">Your Pit Stop Passport</div>
+      <h2>${count} stamps · ${goal - count} to next reward</h2>
+      <div class="progress">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label" style="margin-top:8px;">
+          <span>${count} / ${goal}</span>
+          <span>${next ? next.name : 'All unlocked'}</span>
+        </div>
+      </div>
+    </div>
+    <div class="passport-body">
+      <div style="font-size:0.66rem;letter-spacing:1.6px;text-transform:uppercase;color:var(--terra);font-weight:700;margin-bottom:10px;">Stamp Book</div>
+      <div class="stamp-grid">
+        ${Array.from({ length: goal }, (_, i) => {
+          const s = Passport.stamps[i];
+          return s
+            ? `<div class="stamp earned"><div class="stamp-emoji">${s.emoji}</div><div class="stamp-label">${s.label}</div></div>`
+            : `<div class="stamp locked"><div class="stamp-emoji">📍</div><div class="stamp-label">Locked</div></div>`;
+        }).join('')}
+      </div>
+
+      <div style="font-size:0.66rem;letter-spacing:1.6px;text-transform:uppercase;color:var(--terra);font-weight:700;margin-bottom:10px;">Reward Tiers</div>
+      <div class="tier-list">
+        ${tiers.map(t => {
+          const unlocked = count >= t.at;
+          const isNext = !unlocked && (next && next.at === t.at);
+          const status = unlocked ? '✓ Unlocked' : isNext ? `${t.at - count} away` : `at ${t.at} stamps`;
+          const cls = unlocked ? 'unlocked' : isNext ? 'next' : 'locked';
+          return `<div class="tier ${cls}"><div class="tier-num">${t.at}</div><div><div class="tier-name">${t.name}</div><div class="tier-desc">${t.desc}</div></div><div class="tier-status">${status}</div></div>`;
+        }).join('')}
+      </div>
+
+      <div class="demo-scan">
+        <div class="copy">
+          <div class="t1">Simulate a scan</div>
+          <div class="t2">Tap to add a stamp — this is what happens when a customer scans an in-store QR code.</div>
+        </div>
+        <button class="btn-primary" id="demo-scan-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 12h10"/></svg>
+          Scan +1
+        </button>
+      </div>
+    </div>
+  `;
+  $('#pp-close').addEventListener('click', closePassport);
+  $('#demo-scan-btn').addEventListener('click', () => {
+    const samples = [
+      { emoji: '⛽', label: 'Pilot · OH' },
+      { emoji: '🥨', label: 'Wawa · DE' },
+      { emoji: '☕', label: 'Sheetz · WV' },
+      { emoji: '🍫', label: 'Hershey · PA' },
+      { emoji: '🛣', label: 'Travel Center · TN' },
+      { emoji: '🌽', label: 'Buc-ee\'s · TX' },
+      { emoji: '🥤', label: 'QuikTrip · OK' }
+    ];
+    const next = samples[Passport.count() % samples.length];
+    const id = `${next.label}-${Date.now()}`;
+    Passport.addStamp({ id, emoji: next.emoji, label: next.label, earnedAt: 'Now' });
+    updatePassportPill();
+    renderPassport();
+    toast(`✨ Stamp added — ${next.label}`);
+  });
+}
+
+function openPassport() { $('#passport-modal').classList.add('open'); renderPassport(); }
+function closePassport() { $('#passport-modal').classList.remove('open'); }
+function updatePassportPill() { $('#passport-count').textContent = Passport.count(); }
+
+
+/* ───────────────────────────────────────────────────────────────────
+   TOAST
+   ─────────────────────────────────────────────────────────────────── */
+function toast(text) {
+  const el = $('#toast');
+  $('#toast-text').textContent = text;
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), 2400);
+}
+
+
+/* ───────────────────────────────────────────────────────────────────
+   10. BOOT
+   ─────────────────────────────────────────────────────────────────── */
+const Modes = { discover: Discover, trip: Trip, activities: Activities, routes: Routes, plot: Plot };
+
+function setMode(mode) {
+  Session.state.mode = mode;
+  $$('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
+  Modes[mode].render();
+}
+
+function bindQuickShortcuts() {
+  $$('.hero-shortcut').forEach(s => s.addEventListener('click', () => {
+    const map = {
+      'weekend':  { mode: 'discover', q: 'Weekend escape under $200/day' },
+      'family':   { mode: 'trip' },
+      'fall':     { mode: 'discover', q: 'Fall foliage trip with cabins' },
+      'surprise': { mode: 'discover', q: 'Surprise me with a hidden gem' }
+    };
+    const target = map[s.dataset.quick];
+    if (!target) return;
+    setMode(target.mode);
+    if (target.q) setTimeout(() => { $('#dinput').value = target.q; Discover.ask(); }, 80);
+  }));
+}
+
+function bindGlobal() {
+  $$('.mode-tab').forEach(t => t.addEventListener('click', () => setMode(t.dataset.mode)));
+
+  $('#passport-btn').addEventListener('click', openPassport);
+  $('#passport-modal').addEventListener('click', e => { if (e.target.id === 'passport-modal') closePassport(); });
+
+  // Location pill + banner
+  $('#location-btn').addEventListener('click', openLocation);
+  $('#loc-banner-cta')?.addEventListener('click', openLocation);
+  $('#location-modal').addEventListener('click', e => { if (e.target.id === 'location-modal') closeLocation(); });
+
+  // Locale cycler — demo only
+  const locs = ['EN', 'ES', 'FR', 'JA'];
+  $('#locale-btn').addEventListener('click', () => {
+    const span = $('#locale-btn').querySelector('span:not(.dot):not(.count)');
+    const cur = span.textContent;
+    span.textContent = locs[(locs.indexOf(cur) + 1) % locs.length];
+  });
+
+  // Alert CTA
+  $('#alert-cta').addEventListener('click', () => {
+    setMode('discover');
+    setTimeout(() => { $('#dinput').value = 'Fall foliage Blue Ridge cabin'; Discover.ask(); }, 80);
+  });
+
+  // Rail tile clicks bound inside renderRail()
+
+  // Delegated card actions
+  document.body.addEventListener('click', e => {
+    const btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    const sku = btn.dataset.sku;
+    const dest = CATALOG.destinations.find(d => d.sku === sku);
+    if (!dest) return;
+    if (btn.dataset.act === 'save') toast('Saved to your Passport trips ✨');
+    if (btn.dataset.act === 'trip') {
+      setMode('trip');
+      toast('Pre-filling your trip plan');
+    }
+    if (btn.dataset.act === 'route') {
+      setMode('plot');
+      setTimeout(() => { $('#r-to').value = `${dest.name}, ${dest.state}`; Plot.plot(); }, 60);
+    }
+  });
+}
+
+function boot() {
+  Location.load();                 // restore any persisted start location
+  bindGlobal();
+  bindQuickShortcuts();
+  setMode('discover');
+  renderRail();
+  updatePassportPill();
+  Location.applyAcrossPage();      // applies hero strip, feature card mileage, banner, pill
+}
+
+document.addEventListener('DOMContentLoaded', boot);
+</script>
+</body>
+</html>
