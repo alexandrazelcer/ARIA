@@ -3556,6 +3556,35 @@ const Plot = {
     const to = $('#r-to').value.trim() || 'Destination';
     const isHershey = to.toLowerCase().includes('hershey');
     const stops = Plot.routeFor(from, to, isHershey);
+
+    /* When the destination is Hershey, append a full 3-day itinerary + playlist
+       to the output and smooth-scroll to the itinerary block after render. */
+    const itineraryHtml = isHershey ? `
+      <section id="hershey-itinerary" style="margin-top:22px; padding:24px 26px; border-radius:var(--r-xl); background:linear-gradient(135deg, var(--surface-warm) 0%, var(--surface) 100%); border:1px solid var(--honey-line); box-shadow:var(--shadow-sm); scroll-margin-top:90px;">
+        <div style="display:inline-flex;align-items:center;gap:8px;font-size:0.66rem;letter-spacing:1.8px;text-transform:uppercase;color:var(--hershey-accent);font-weight:700;margin-bottom:6px;">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 .587l3.668 7.568L24 9.428l-6 5.851 1.416 8.265L12 19.771l-7.416 3.773L6 15.279 0 9.428l8.332-1.273z"/></svg>
+          Your Trip Plan
+        </div>
+        <div style="font-family:var(--font-serif);font-size:1.35rem;font-weight:600;color:var(--ink);letter-spacing:-0.3px;margin-bottom:4px;">3 Days in Hershey</div>
+        <div style="font-size:0.88rem;color:var(--ink-mute);margin-bottom:16px;line-height:1.55;">A full plan for when you arrive at Chocolatetown — meals, attractions, and the surrounding Lancaster County drive on day three.</div>
+        <div class="itin">
+          <div class="itin-day"><div class="day-label">Day 1 · Arrival</div><div class="day-title">Drive in &amp; settle in</div><div class="day-body">Check in at <strong>Hotel Hershey</strong>, take an evening walk through <strong>Chocolatetown</strong>, dinner at the lodge. Easy day so the kids have energy for tomorrow.</div></div>
+          <div class="itin-day"><div class="day-label">Day 2 · Headline</div><div class="day-title">Hersheypark all day</div><div class="day-body">Open at the gates. Front-load the new <strong>Twizzlers Twisted Gravity</strong>, work through the classic coasters, lunch at the Chocolatetown plaza, finish with the trolley tour at golden hour.</div></div>
+          <div class="itin-day"><div class="day-label">Day 3 · Lancaster County</div><div class="day-title">Amish country on the way out</div><div class="day-body">Farmers market in <strong>Bird-in-Hand</strong>, covered bridges in <strong>Strasburg</strong>, shoofly pie at a roadside stand, then home. ~45 minutes from Hershey.</div></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="toast('Trip saved to your Passport ✨')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+            Save this trip
+          </button>
+          <button class="btn-secondary" onclick="toast('Link copied — share with the crew 📲')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
+            Share to phone
+          </button>
+        </div>
+      </section>
+    ` : '';
+
     $('#r-result').innerHTML = `
       <div class="route-map">
         <div class="map-title">${from} → ${to}${isHershey ? ' · <span style="color:var(--hershey-accent);font-style:italic;">All Roads Lead to Hershey</span>' : ''}</div>
@@ -3579,13 +3608,23 @@ const Plot = {
           `).join('')}
         </div>
       </div>
+      ${itineraryHtml}
       ${snackPackHtml({
         ids: isHershey ? ['drive', 'kids', 'campfire', 'hotel'] : ['drive', 'cooler', 'hotel'],
         label: `Snack Pack · ${from.split(',')[0]} → ${to.split(',')[0]}`,
         sub: `${stops.filter(s => s.passport).length} passport-eligible stops along the way`,
         foot: 'Pick these up at the pit stops marked along your route'
       })}
+      ${isHershey ? Trip.playlist({ id: 'family', name: 'Family Road Trip' }, { id: 'family', name: 'Family' }) : ''}
     `;
+
+    /* Jump straight to the itinerary when planning the featured Hershey route */
+    if (isHershey) {
+      setTimeout(() => {
+        const target = document.querySelector('#hershey-itinerary');
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 180);
+    }
   },
   routeFor(from, to, isHershey) {
     if (isHershey) {
@@ -3860,6 +3899,12 @@ function boot() {
   renderRail();
   updatePassportPill();
   Location.applyAcrossPage();      // applies hero strip, feature card mileage, banner, pill
+
+  // First-time prompt: open the location modal after a brief beat so the
+  // hero settles in first, then ask the visitor where they're starting from.
+  if (!Session.state.startLocation) {
+    setTimeout(openLocation, 900);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', boot);
