@@ -1,195 +1,112 @@
-# ARIA — Aisle Retail Intelligence Assistant
+# PIT STOP
 
-**Built by BEL (Brand Experience Lab)**
-A premium, conversational AI kiosk experience for the retail floor — wine and spirits, with an architecture designed to scale to grocery, convenience, and specialty retail.
+**The Road Trip Planner that Knows the Way · by BEL**
 
----
-
-## What this is
-
-ARIA is a kiosk-ready conversational assistant that meets shoppers where they are — at the fixture, in the aisle, on their phone, or at an unattended terminal. It reduces abandonment at locked cabinets, replaces the friction of waiting for an associate, and turns a passive endcap into an active selling surface.
-
-The current build is a single-file demo (`index.html`) that runs anywhere — touchscreen kiosks, tablets, phones, browsers. It contains the full design system, a 16-wine sample catalog with rich metadata, a pairing engine, a four-step "Build My Dinner" workflow, region exploration, scan-a-bottle, and mock adapters for the retail integration stack.
+A mobile-first concept mock of an AI road-trip planning experience. Built as a single self-contained HTML file — no build step, no server. Drop into any static host (GitHub Pages, Vercel, Netlify) and it runs.
 
 ---
 
-## File layout
+## What's in here
 
 ```
-/
-├── index.html          — entire experience (HTML + CSS + JS, ~1900 lines)
-└── README.md           — this file
+pitstop/
+├── index.html   — the entire app (HTML + CSS + JS, ~3,200 lines)
+└── README.md    — this file
 ```
 
-The script section of `index.html` is partitioned into nine numbered modules so the eventual extraction into a build pipeline is trivial.
+## How to ship to GitHub Pages
 
----
+Add the folder to a GitHub repo and turn on Pages — that's it.
 
-## Code modules
+```
+# new repo route
+git init pitstop && cd pitstop
+cp /path/to/index.html .
+git add . && git commit -m "PIT STOP mock"
+git push origin main
+# then enable Pages on the main branch in repo Settings
+```
 
-The `<script>` block in `index.html` is structured as follows:
+To add it alongside the existing ARIA site:
 
-1. **CONFIG** — brand identity, store metadata, scoring weights.
-2. **CATALOG** — wine database (16 SKUs) and complementary pantry SKUs used by the shopping list builder.
-3. **PAIRINGS** — food-dish keyword taxonomy, occasion modifiers, preference shortcuts, budget tiers.
-4. **SCORER** — natural-language query parser plus a weighted ranking engine.
-5. **SESSION** — user state (mode, history, cart, preferences, associate flag).
-6. **INTEGRATIONS** — adapters with `async` signatures matching real retail endpoints: inventory, POS handoff, loyalty, QR handoff, voice, analytics, i18n.
-7. **RENDER** — per-mode UI controllers (Discover, Dinner, Pair, Region, Scan) and the shared atoms used by all of them.
-8. **ARIA** — the conversational micro-agent that composes natural-language explanations, dinner intros, and dish suggestions.
-9. **BOOT** — wiring, event binding, mode switching, clock tick, analytics ping.
+```
+# in the alexandrazelcer.github.io/ARIA repo
+mkdir pitstop
+cp /path/to/index.html pitstop/
+git add pitstop && git commit -m "Add PIT STOP mock"
+git push
+# → live at alexandrazelcer.github.io/ARIA/pitstop/
+```
 
----
+## What's in the demo
+
+**Five modes:**
+
+- **Discover** — conversational *"where should we go?"* free text + chip shortcuts.
+- **Build My Trip** — 4-step guided flow (type → vibe → distance → budget) that outputs a destination, alternative, premium upgrade, 3-day itinerary, **snack pack**, and playlist.
+- **Pair** — match a destination with the right snacks, soundtrack, and timing.
+- **Routes** — iconic American road trips (Pacific Coast Highway, Route 66, Blue Ridge Parkway, Maine Coast, Door County, Texas Hill Country, Oregon Coast, plus the featured *All Roads Lead to Hershey*).
+- **Plot My Route** — enter Start + Destination, app maps the route with curated treat-stops, scenic detours, and passport-scannable locations.
+
+**Featured at the top of every screen:**
+
+- **All Roads Lead to Hershey** — a dedicated route card that plots a full Hershey getaway from any starting point.
+- **Today's Pick alert bar** — urgency banner with a curated weekend deal.
+- **Today's Featured Adventures rail** — horizontal scrollable strip of destinations with critic scores, promotions, and per-day pricing.
+
+**Pit Stop Passport (top-right pill):**
+
+- Sticker book of every scanned location (3 sample stamps pre-populated).
+- Reward tier ladder — Welcome Bundle → Hershey itinerary → Custom snack pack → Hersheypark Fast-Pass voucher.
+- **Demo "Scan +1" button** simulates an in-store QR scan and adds a stamp live.
+- Passport markers also appear on Plot My Route stops, showing which locations along a planned drive are scan-eligible.
 
 ## Data model
 
-### Wine record
+Sixteen destinations in `CATALOG.destinations`. Each carries:
 
-Every bottle in `CATALOG.wines` exposes the full retail data model:
+```
+sku · name · region · state · category · scene (landscape SVG type) ·
+colorTint · vibe{scenic, family, adventure, cultural, romantic, relaxed} 0-5 ·
+tags[] · bestTime · availability{state, label} · duration · cost · popularity ·
+ratings[] (T+L, CNT, AAA, NatGeo, LP, TA) · badges[] · pairings[] ·
+notes · promotion
+```
 
-| Field | Example | Notes |
-|---|---|---|
-| `sku` | `JC-CAB-750` | Stable SKU for inventory + POS handoff. |
-| `name`, `vintage`, `varietal` | `Josh Cellars Cabernet · 2021 · Cabernet Sauvignon` | Display. |
-| `region`, `country` | `North Coast · USA` | Used by the Region explorer. |
-| `tasting` | `{ acidity, tannin, sweetness, body, alcohol }` | 0–5 scale for the visual profile bars; `alcohol` is ABV. |
-| `notes` | Long-form tasting text | Shown in card and in scan view. |
-| `pairings` | `['beef','lamb','aged-cheese']` | Canonical tags that join with the food taxonomy. |
-| `price`, `msrp` | `15.99`, `16.99` | Used by the price-fit scorer and the cart total. |
-| `inventory` | `{ stock: 'in'|'low'|'out', count }` | Wired to `Integrations.inventory`. |
-| `popularity` | `0.94` | 0–1, drives velocity bonus in the scorer. |
-| `colorTint` | `['#5a1f2b','#2d0e14']` | Bottle SVG gradient (placeholder for real label art). |
-| `aisle` | `A14 · Shelf 3` | Shown in every card so the shopper can find it. |
-| `badges` | `['bestseller','premium-pick']` | Render as colored chips. |
-| `tags` | `['bold-red','crowd-pleaser']` | Free-form discoverability. |
+Six snack-pack categories — Drive · Cooler · Backseat · Campfire · Hotel · Refreshments — each with icon, description, sample items, and aisle placeholder. Eight curated iconic routes, including the featured Hershey route.
 
-### Food taxonomy
-
-`PAIRINGS.dishMap` maps regex-friendly dish patterns ("salmon\|trout\|halibut") to canonical tags. The same pattern model also covers `prefMap` (body/acidity/tannin shortcuts), `occasionMap` (party / weeknight / gift), and `budget` tiers.
-
-A shopper can describe a meal any way they like — "salmon dinner under twenty bucks for a Tuesday" — and the parser produces a structured query with pairings, profile, modifiers, and a price cap that the scorer ranks against.
-
----
-
-## Recommendation scoring
-
-`Scorer.rank(query)` walks every wine in the catalog and computes a single `score` between 0 and 1 from six weighted axes (`CONFIG.scoringWeights`):
-
-| Axis | Weight | What it captures |
-|---|---|---|
-| `pairing` | 0.40 | Overlap of `wine.pairings` with `query.pairings`. |
-| `preference` | 0.25 | Distance between `wine.tasting` and the parsed user profile. |
-| `price` | 0.15 | Reward for fitting under `maxPrice`, penalty for going over. |
-| `inventory` | 0.10 | Bonus for in-stock, half-bonus for low-stock, zero for out. |
-| `popularity` | 0.05 | Velocity nudge — doubled when the user signals they want a crowd-pleaser. |
-| `premium` | 0.05 | Upsell handle for premium-pick badges. |
-
-Modifier flags (`adventurous`, `premium`, `budget`) reshape the curve — adventurous favours less-popular wines, premium favours `premium-pick` and price ≥ $25, budget favours `best-value` and price ≤ $15.
-
-The scorer is the single point where future ML can plug in: drop in a learned model for the `score` function and the rest of the system (UI, conversational copy, cart) needs no change.
-
----
-
-## Conversational layer
-
-`Aria.compose(input, query, ranked)` writes the natural-language intro the shopper sees above a recommendation set. It assembles fragments dynamically from the parsed query — pairings, budget, modifiers, sparkling intent — so the same explanation never appears twice.
-
-`Aria.reason(wine, query)` writes the short italic "why we matched" line under each card.
-
-`Aria.dinnerIntro(protein, style, wine)` produces protein-specific sommelier copy for the Build My Dinner flow.
-
-`Aria.dishesForWine(wine)` powers the Wine → Food direction with a curated bank of dish suggestions.
-
-All ARIA copy is concise, retail-aware, and confident — sommelier-warm rather than chatbot-cheery.
-
----
-
-## Modes
-
-| Mode | What it does |
-|---|---|
-| **Discover** | Conversational find-a-wine. Chips + free text. ARIA proposes three ranked bottles with rationales. |
-| **Build My Dinner** | Four-step guided flow: protein → occasion → budget → plan. Produces top pick, alternative, premium upgrade, and a complete shopping list with aisle locations and a QR handoff. |
-| **Pair** | Two-way pairing — Food → Wine (uses the scorer) or Wine → Food (uses a curated dish library). |
-| **Explore (Region)** | Region cards that filter the catalog by region/country. |
-| **Scan** | Tap a sample SKU and see the full tasting profile with animated bar chart. Hooks for a real barcode/vision scanner. |
-
----
-
-## Integrations (mock adapters)
-
-All adapters live under `Integrations.*` and match the shape of a real production endpoint. Swap each `Mock` for a `fetch()` and the rest of the app is unchanged.
-
-| Adapter | Method | Real endpoint contract |
-|---|---|---|
-| `inventory` | `checkStock(sku)` | `GET /api/inventory/:sku` returning `{ stock, count }`. |
-| `pos` | `addToCart(sku)` | `POST /api/cart/add` returning `{ ok, sku, ts }`. |
-| `loyalty` | `profile()` | `GET /api/loyalty/:memberId` returning `{ tier, preferences }`. |
-| `qr` | `createHandoff(payload)` | `POST /api/handoff` returning `{ id, url, payload }`. |
-| `voice` | `listen()` | Web Speech API hook. |
-| `analytics` | `track(event, props)` | `POST /api/telemetry`. |
-| `i18n` | `t(str)` | Locale catalog lookup. |
-
-A status panel in the right-hand sidebar shows each integration's wire-up state (`Live` vs `Mock`) so operators can see at a glance what's hooked up in a given deployment.
-
----
+The Scorer module ranks destinations on six weighted axes (vibe, duration, budget, season, family, popularity) with modifiers for adventurous/family intent. The same engine powers Discover, Build My Trip, and Pair.
 
 ## Design system
 
-A single `:root` variable block defines the entire visual language so the experience can be re-skinned for different retailers without touching component code.
+Warm cream road-map aesthetic, all driven from CSS custom properties at the top of `<style>`:
 
-| Token | Value | Use |
-|---|---|---|
-| `--bg`, `--surface`, `--surface-2/3` | Near-black to charcoal | Page + card surfaces. |
-| `--ink`, `--ink-soft`, `--ink-mute`, `--ink-faint` | Soft white scale | All typography. |
-| `--gold`, `--gold-bright` | `#c9a861`, `#e2c184` | Primary accent — buttons, badges, ARIA bubble. |
-| `--wine`, `--wine-deep` | `#8a2f3f`, `#5a1f2b` | Secondary accent for wine-specific UI. |
-| `--font-serif` | Fraunces | Editorial headlines, wine names, panel prompts. |
-| `--font-sans` | Inter | UI, copy. |
-| `--r-pill`, `--r-lg`, `--r-xl` | 999px / 20px / 28px | Apple-Store style radii. |
-| `--shadow-md`, `--glow-gold` | Soft + warm | Depth + warmth on hover. |
+- Background `#faf4e8` (warm cream) · surface white · ink `#2a1d14` (deep espresso)
+- Primary accent **terracotta** `#c25a3a` · honey amber `#d4a24a`
+- Vintage road-sign red `#a52f2a` for promos · deep ocean `#1f3b52` for trust elements
+- Cocoa accent `#6e2820` reserved exclusively for the *All Roads Lead to Hershey* feature
+- Fraunces serif for editorial headlines + Inter for UI
+- Inline-SVG landscape backgrounds per destination (mountain, coast, coast-pine, forest, plains, desert, fall-mountain variants) — colored by the destination's `colorTint`
 
-The aesthetic target — modern, premium, conversational — sits at the intersection of Apple Store retail, Eataly, and an upscale wine bar. Generous touch targets (≥44px), kiosk-friendly spacing, and a hard ceiling on visual density.
+Fully responsive: mobile-first at 360–480px, tablet at 768px, laptop at 1024px+, ultra-wide kiosk-ready. Reduced-motion + touch-target sizing respected.
 
----
+## What this is not (yet)
 
-## Extending to other categories
+- No backend — saves and shares are toast notifications today
+- No real geolocation, weather, or route API — Plot My Route uses curated sample stops
+- QR scanning is simulated through the Passport modal's *Scan +1* button
+- No real i18n catalog — locale pill cycles labels only
 
-The architecture is deliberately category-agnostic. To extend ARIA to (e.g.) cheese, coffee, or whisky:
+All of those are single-adapter swaps when the program goes live (see `Integrations` patterns in the ARIA build for the same architecture).
 
-1. Add records to `CATALOG.wines` (rename or duplicate to `CATALOG.cheeses`, etc.) with the same data shape — tasting axes can be relabelled (`acidity` → `funk`, `tannin` → `sharpness`).
-2. Update `PAIRINGS.dishMap` with the new domain's pairing vocabulary.
-3. Adjust mode pills and copy in `Discover`, `Pair`, and `Region`.
-4. The scorer, ARIA conversational layer, and rendering atoms are reused as-is.
+## Why this is built the way it is
 
-The same chassis can host any guided-discovery retail problem where a shopper needs a confident recommendation grounded in inventory and a few preferences.
-
----
-
-## What's intentionally placeholder
-
-The following are **mock** in this build and explicitly noted in the right-hand "Retail Stack" panel:
-
-- Live inventory sync — replace `Integrations.inventory.checkStock` with the real endpoint.
-- POS handoff — replace `Integrations.pos.addToCart`.
-- Loyalty personalization — return real preferences from `Integrations.loyalty.profile`.
-- QR handoff URL — currently a placeholder host (`aria.bel.io/handoff/...`).
-- Voice — the adapter is wired but the recognizer is not started in this demo.
-- Multilingual — the locale pill cycles `EN → ES → FR → JA` and emits an analytics event; the i18n catalog is a passthrough.
-- Associate mode — the toggle flips a session flag and is wired for future associate-only UI affordances.
-
-Each is a single-line swap from mock to live.
-
----
-
-## How to run
-
-Open `index.html` in any modern browser. No build step, no server.
-
-For kiosk deployment, recommend launching in fullscreen kiosk mode (`--kiosk --noerrdialogs` in Chromium) at 1920×1080 or 1080×1920.
-
----
+The architecture is deliberately CPG-channel friendly. Every Pit Stop in a plotted route maps cleanly to a c-store, travel center, or retail location. The Passport stamps are designed to attribute physical in-store scans to digital app engagement. The Snack Pack output suggests treat categories without naming brands, making it a drop-in mechanism for a CPG sponsor's product lineup to populate by category.
 
 ## Brand positioning
 
-Throughout the experience BEL's positioning is reinforced subtly: the top bar carries the BEL + ARIA co-brand, the footer reads *"Powered by BEL + ARIA · Retail Intelligence by Brand Experience Lab,"* the version line marks the build as a kiosk concept, and the right-hand panel telegraphs the production-grade integration surface that BEL brings to deployments. The intent is for any pilot site visit to read as *"a premium AI-powered retail intelligence kiosk built by BEL and powered by ARIA."*
+The footer reads *"Powered by BEL + PIT STOP — Experiential Intelligence by Brand Experience Lab"* so anyone evaluating the mock sees who built it. The conversational entity, the brand mark, and the cohesion across modes are all the BEL platform proof — PIT STOP is the consumer-facing skin on top.
+
+---
+
+*v1.0 · Concept · Mock build for client review*
