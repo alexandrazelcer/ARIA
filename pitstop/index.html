@@ -2894,6 +2894,70 @@ const Session = {
   state: { mode: 'discover', history: [], trip: {}, savedTrips: [], startLocation: null }
 };
 
+/* ── SAVED TRIPS — persisted in this browser, shown in the Passport ── */
+const SavedTrips = {
+  KEY: 'pitstop.savedTrips',
+  load() {
+    try { Session.state.savedTrips = JSON.parse(localStorage.getItem(this.KEY)) || []; }
+    catch (e) { Session.state.savedTrips = []; }
+  },
+  persist() { try { localStorage.setItem(this.KEY, JSON.stringify(Session.state.savedTrips)); } catch (e) {} },
+  list() { return Session.state.savedTrips; },
+  key(t) { return [t.sku, t.type, t.vibe, t.distance, t.budget].join('|'); },
+  add(t) {
+    const exists = this.list().some(x => this.key(x) === this.key(t));
+    if (!exists) { this.list().unshift({ ...t, savedAt: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) }); this.persist(); }
+    updatePassportPill();
+    return !exists;
+  },
+  remove(i) { this.list().splice(i, 1); this.persist(); updatePassportPill(); }
+};
+
+/* ── SHAREABLE TRIP LINKS — #trip=SKU.type.vibe.distance.budget ── */
+const TripLink = {
+  build(t) {
+    const parts = [t.sku, t.type || '', t.vibe || '', t.distance || '', t.budget || ''].map(encodeURIComponent).join('.');
+    return `${location.href.split('#')[0]}#trip=${parts}`;
+  },
+  parse() {
+    const m = location.hash.match(/^#trip=(.+)$/);
+    if (!m) return null;
+    const [sku, type, vibe, distance, budget] = m[1].split('.').map(decodeURIComponent);
+    return CATALOG.destinations.some(d => d.sku === sku) ? { sku, type, vibe, distance, budget } : null;
+  },
+  async share(t, dest) {
+    const url = this.build(t);
+    const title = `PIT STOP · ${dest.name}`;
+    if (navigator.share) {
+      try { await navigator.share({ title, text: `Road trip plan: ${dest.name}`, url }); return 'shared'; }
+      catch (e) { if (e.name === 'AbortError') return 'cancelled'; }
+    }
+    try { await navigator.clipboard.writeText(url); return 'copied'; } catch (e) {}
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = url; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      const ok = document.execCommand('copy'); ta.remove();
+      if (ok) return 'copied';
+    } catch (e) {}
+    return 'manual';
+  }
+};
+
+/* Opens a saved or shared trip in Build My Trip */
+function openTripPlan(t) {
+  const pick = (list, id) => list.find(x => x.id === id) || null;
+  Trip.state = {
+    type: pick(Trip.types, t.type), vibe: pick(Trip.vibes, t.vibe),
+    distance: pick(Trip.distances, t.distance), budget: pick(Trip.budgets, t.budget), pinnedSku: null
+  };
+  const dest = CATALOG.destinations.find(d => d.sku === t.sku);
+  if (Session.state.mode !== 'trip') setMode('trip');
+  Trip.prefill(dest);
+  Trip.render();
+  setTimeout(() => $('#t-out')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+}
+
 /* ───────────────────────────────────────────────────────────────────
    LOCATION  — set-your-start UI + downstream effects
    ─────────────────────────────────────────────────────────────────── */
@@ -3284,22 +3348,53 @@ const Trip = {
       $$(`#${rootId} .option-card`).forEach(x => x.classList.remove('selected'));
       c.classList.add('selected');
       Trip.state[key] = list.find(x => x.id === c.dataset.id);
+      Trip.state.pinnedSku = null;
       Trip.maybeBuild();
     }));
     bind('t-types', 'type', this.types);
     bind('t-vibes', 'vibe', this.vibes);
     bind('t-dist', 'distance', this.distances);
     bind('t-bud', 'budget', this.budgets);
+    // Re-highlight any choices already made (state persists across tab switches)
+    [['t-types','type'],['t-vibes','vibe'],['t-dist','distance'],['t-bud','budget']].forEach(([rootId, key]) => {
+      const sel = Trip.state[key];
+      if (sel) $(`#${rootId} .option-card[data-id="${sel.id}"]`)?.classList.add('selected');
+    });
+    const { type, vibe, distance, budget } = Trip.state;
+    if (type && vibe && distance && budget) Trip.build(Trip.state.pinnedSku);
   },
   maybeBuild() {
     if (Trip.state.type && Trip.state.vibe && Trip.state.distance && Trip.state.budget) Trip.build();
   },
-  build() {
+  // Fill any unanswered steps from a destination, then build the plan around it
+  prefill(dest) {
+    const tags = dest.tags || [];
+    const has = (...t) => t.some(x => tags.includes(x));
+    const pick = (list, id) => list.find(x => x.id === id);
+    if (!Trip.state.type) Trip.state.type = pick(this.types,
+      has('romantic') ? 'romantic' : has('adventure', 'hiking') ? 'adventure' : has('family') ? 'family' : 'weekend');
+    if (!Trip.state.vibe) Trip.state.vibe = pick(this.vibes,
+      has('coastal', 'beach', 'island', 'lighthouses') ? 'coast' :
+      has('national-park') ? 'park' :
+      has('mountains') ? 'mountains' :
+      has('foodie', 'culinary', 'wine') ? 'foodie' :
+      has('small-town') ? 'small-town' : 'iconic');
+    if (!Trip.state.distance) {
+      const loc = Session.state.startLocation;
+      const mi = loc && dest.lat != null ? distance(loc, dest) : null;
+      Trip.state.distance = pick(this.distances, mi == null ? 'regional' : mi <= 240 ? 'local' : mi <= 900 ? 'regional' : 'cross');
+    }
+    if (!Trip.state.budget) Trip.state.budget = pick(this.budgets,
+      dest.cost <= 150 ? 'value' : dest.cost <= 250 ? 'mid' : dest.cost <= 400 ? 'premium' : 'luxe');
+    Trip.state.pinnedSku = dest.sku;
+  },
+  build(pinnedSku = null) {
     const { type, vibe, distance, budget } = Trip.state;
     const budgetMax = { value: 150, mid: 250, premium: 400, luxe: 1000 }[budget.id];
     const q = { tags: [vibe.id, ...(type.id === 'family' ? ['family'] : []), ...(type.id === 'romantic' ? ['romantic'] : [])], days: { weekend: 3, family: 5, romantic: 3, adventure: 6 }[type.id], maxCost: budgetMax, modifiers: { family: type.id === 'family' } };
     const ranked = Scorer.rank(q);
-    const top = ranked[0];
+    const pinned = pinnedSku ? (ranked.find(d => d.sku === pinnedSku) || CATALOG.destinations.find(d => d.sku === pinnedSku)) : null;
+    const top = pinned || ranked[0];
     const alt = ranked.find(d => d.sku !== top.sku) || ranked[1];
     const upgrade = ranked.find(d => d.cost > top.cost && d.sku !== top.sku) || ranked[2];
 
@@ -3312,7 +3407,7 @@ const Trip = {
       </div>
 
       <div class="dest-list">
-        ${destCard(top, { why: `Top match · ${type.name.toLowerCase()} fit · within budget` })}
+        ${destCard(top, { why: pinned ? `Your pick · plan built around ${top.name}` : `Top match · ${type.name.toLowerCase()} fit · within budget` })}
         ${alt && alt.sku !== top.sku ? `<div style="font-size:0.74rem;color:var(--ink-mute);letter-spacing:1px;text-transform:uppercase;margin:6px 0;font-weight:700;">Alternative</div>${destCard(alt, { why: 'A safe second pick — different scenery, same vibe' })}` : ''}
         ${upgrade && upgrade.sku !== top.sku && upgrade.sku !== alt?.sku ? `<div style="font-size:0.74rem;color:var(--terra);letter-spacing:1px;text-transform:uppercase;margin:6px 0;font-weight:700;">◆ Premium upgrade</div>${destCard(upgrade, { why: 'If you want to make this one extra special' })}` : ''}
       </div>
@@ -3331,9 +3426,32 @@ const Trip = {
           Share to phone
         </button>
       </div>
+      <div id="trip-link-box" style="display:none;gap:8px;margin-top:10px;align-items:center;">
+        <input readonly style="flex:1;min-width:0;padding:9px 12px;border:1px solid var(--line, rgba(42,29,20,0.15));border-radius:10px;font:inherit;font-size:0.8rem;color:var(--ink);background:var(--surface, #fff);" onclick="this.select()">
+      </div>
     `;
-    $('#trip-save')?.addEventListener('click', () => toast('Trip saved to your Passport ✨'));
-    $('#trip-share')?.addEventListener('click', () => toast('Link copied — share with the crew 📲'));
+    const current = { sku: top.sku, type: type.id, vibe: vibe.id, distance: distance.id, budget: budget.id };
+    const markSaved = btn => { btn.classList.add('is-saved'); btn.lastChild.textContent = ' Saved · View in Passport'; };
+    const saveBtn = $('#trip-save');
+    if (SavedTrips.list().some(x => SavedTrips.key(x) === SavedTrips.key(current))) markSaved(saveBtn);
+    saveBtn?.addEventListener('click', () => {
+      if (saveBtn.classList.contains('is-saved')) { openPassport(); return; }
+      SavedTrips.add(current);
+      markSaved(saveBtn);
+      toast(`${top.name} saved to your Passport ✨`);
+    });
+    $('#trip-share')?.addEventListener('click', async () => {
+      const url = TripLink.build(current);
+      const result = await TripLink.share(current, top);
+      if (result === 'copied') toast('Link copied — paste it to the crew 📲');
+      else if (result === 'shared') toast('Trip shared 📲');
+      if (result === 'manual' || result === 'copied') {
+        const box = $('#trip-link-box');
+        box.style.display = 'flex';
+        box.querySelector('input').value = url;
+        if (result === 'manual') { box.querySelector('input').select(); toast('Copy the link below to share'); }
+      }
+    });
   },
   itinerary(d, type) {
     const days = { weekend: 3, family: 4, romantic: 3, adventure: 5 }[type.id] || 3;
@@ -3743,6 +3861,23 @@ function renderPassport() {
       </div>
     </div>
     <div class="passport-body">
+      <div style="font-size:0.66rem;letter-spacing:1.6px;text-transform:uppercase;color:var(--terra);font-weight:700;margin-bottom:10px;">Saved Trips</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:22px;">
+        ${SavedTrips.list().length ? SavedTrips.list().map((t, i) => {
+          const d = CATALOG.destinations.find(x => x.sku === t.sku);
+          if (!d) return '';
+          const detail = [Trip.types.find(x => x.id === t.type)?.name, Trip.vibes.find(x => x.id === t.vibe)?.name, Trip.budgets.find(x => x.id === t.budget)?.name].filter(Boolean).join(' · ') || 'Saved destination';
+          return `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid rgba(42,29,20,0.12);border-radius:12px;background:#fff;">
+            <div style="flex:1;min-width:0;">
+              <div style="font-weight:700;color:var(--ink);font-size:0.9rem;">${d.name}</div>
+              <div style="font-size:0.74rem;color:var(--ink-mute);">${detail} · saved ${t.savedAt}</div>
+            </div>
+            <button class="btn-secondary" data-saved-open="${i}" style="padding:6px 12px;font-size:0.78rem;">Open</button>
+            <button data-saved-remove="${i}" aria-label="Remove ${d.name}" style="border:none;background:none;color:var(--ink-mute);font-size:1.1rem;cursor:pointer;padding:4px 6px;">×</button>
+          </div>`;
+        }).join('') : `<div style="font-size:0.82rem;color:var(--ink-mute);padding:10px 0;">No saved trips yet. Tap <strong>Save</strong> on any destination or trip plan.</div>`}
+      </div>
+
       <div style="font-size:0.66rem;letter-spacing:1.6px;text-transform:uppercase;color:var(--terra);font-weight:700;margin-bottom:10px;">Stamp Book</div>
       <div class="stamp-grid">
         ${Array.from({ length: goal }, (_, i) => {
@@ -3777,6 +3912,15 @@ function renderPassport() {
     </div>
   `;
   $('#pp-close').addEventListener('click', closePassport);
+  $$('[data-saved-open]').forEach(b => b.addEventListener('click', () => {
+    const t = SavedTrips.list()[+b.dataset.savedOpen];
+    closePassport();
+    openTripPlan(t);
+  }));
+  $$('[data-saved-remove]').forEach(b => b.addEventListener('click', () => {
+    SavedTrips.remove(+b.dataset.savedRemove);
+    renderPassport();
+  }));
   $('#demo-scan-btn').addEventListener('click', () => {
     const samples = [
       { emoji: '⛽', label: 'Pilot · OH' },
@@ -3879,10 +4023,17 @@ function bindGlobal() {
     const sku = btn.dataset.sku;
     const dest = CATALOG.destinations.find(d => d.sku === sku);
     if (!dest) return;
-    if (btn.dataset.act === 'save') toast('Saved to your Passport trips ✨');
+    if (btn.dataset.act === 'save') {
+      const added = SavedTrips.add({ sku: dest.sku, type: null, vibe: null, distance: null, budget: null });
+      btn.lastChild.textContent = ' Saved ✓';
+      toast(added ? `${dest.name} saved to your Passport ✨` : `${dest.name} is already in your Passport`);
+    }
     if (btn.dataset.act === 'trip') {
-      setMode('trip');
-      toast('Pre-filling your trip plan');
+      if (Session.state.mode !== 'trip') setMode('trip');
+      Trip.prefill(dest);
+      Trip.render();
+      toast(`Building your trip to ${dest.name}`);
+      setTimeout(() => $('#t-out')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
     }
     if (btn.dataset.act === 'route') {
       setMode('plot');
@@ -3893,6 +4044,7 @@ function bindGlobal() {
 
 function boot() {
   Location.load();                 // restore any persisted start location
+  SavedTrips.load();               // restore saved trips for the Passport
   bindGlobal();
   bindQuickShortcuts();
   setMode('discover');
@@ -3902,7 +4054,12 @@ function boot() {
 
   // First-time prompt: open the location modal after a brief beat so the
   // hero settles in first, then ask the visitor where they're starting from.
-  if (!Session.state.startLocation) {
+  // Shared trip link → open that plan straight away
+  const shared = TripLink.parse();
+  if (shared) {
+    openTripPlan(shared);
+    toast('Here\'s the trip that was shared with you 🚗');
+  } else if (!Session.state.startLocation) {
     setTimeout(openLocation, 900);
   }
 }
